@@ -1,6 +1,6 @@
 const path = require('path');
+var webpack = require('webpack');
 var htmlWebpackPlugin = require('html-webpack-plugin');
-var TerserPlugin = require('terser-webpack-plugin');
 var nodeExternals = require('webpack-node-externals')
 //var nodeExternals = require('web')
 
@@ -8,7 +8,8 @@ const clientConfig = {
 	target: 'web',
 	entry: './src/index.js',
 	node: {
-		fs: 'empty'
+		fs: 'empty',
+		net: 'empty'
 	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
@@ -38,7 +39,13 @@ const clientConfig = {
       }
 	  ]
 	},
-  plugins: [new htmlWebpackPlugin()]
+  plugins: [new htmlWebpackPlugin(),
+  	new webpack.DefinePlugin({
+    'process.env': {
+      'REACH_CONNECTOR_MODE': JSON.stringify('ETH-test-browser-window')
+  		}
+    })
+  ]
   //watch: true
 };
 
