@@ -110,21 +110,47 @@ const home = {
 		}
 	}
 }
+const confirmGame = {
+	props: ['game', 'action', 'blocktime'],
+	template: `
+		<div id="confirm-game" class="page-container column">
+			<h1 class="row">{{ this.action }} Game?</h1>
+			<p class="row">(Your ETH will be committed unless there's a timeout)</p>
+			<p class="row v-if="game.title"> {{game.title}}</p>
+			<p class="row"> {{ game.wager }} ETH </p>
+			<p class="row"> {{ game.delay }} block timeout (Est. time with {{this.blocktime}} per block: {{ game.delay * this.blocktime }}) </p>
+			<p v-if="action === 'create'" class="row"> {{ game.permissions }} </p>
+			<p v-else class="row"> {{ game.p1 }}</p>
+			<div id="buttons" class="row">
+			<button id="go" class="column" v-on:click="$emit('confirm')">Yes!</button>
+			<button id="go" class="column" v-on:click="$emit('deny')">Back</button>
+			</div>
+	`
+
+}
 const createGame = {
 	// "creating..." --> "Game Created!" & Home screen, w/ Added to list of Games
 	props: ['prevopponents', 'walletaddr'],
+	components: {
+		confirmGame: confirmGame
+	},
 	data: function() {
 		return {
 			'wager': null,
 			'delay': null,
 			'title': null,
 			'addrentry': null,
-			'addrprev': null
+			'addrprev': null,
+			'err_msg': null,
+			'confirm': false,
+			'game': {}
 		}
 	},
 	template: `
 		<div id="create-game" class="page-container">
+				<confirmGame v-if="this.confirm" class="confirmPopup" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>
 				<form id="game-settings" class="column" v-on:submit.prevent>
+					<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>
 					<h3 class="row form-caption">Wager</h3>
 					<input v-model="this.wager" class="row column form-input" type="number" name="wager" step="0.01" min="0" default="0" placeholder="ETH">
 					<h3 class="row form-caption">Delay</h3>
@@ -137,32 +163,7 @@ const createGame = {
 						<option selected="selected">select from previous opponents</option>
 						<option v-for="player in prevopponents" v-bind:value="player.walletAddr" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 					</select>
-					<button id="go" class="row" v-on:click="(function() {
-						if(this.wager && this.delay && (this.addrprev || this.addrentry)) {
-							var p2;
-							if (this.addrprev) {
-								p2 = {walletaddr: this.addrprev};
-							} else {
-								p2 = {walletaddr: this.addrentry};
-							}
-							$emit('ongamecreate',
-									 {title: this.title, 
-									 	wager: this.wager, 
-									 	delay: this.delay, 
-									 	p1: {walletaddr: this.walletaddr}, 
-									 	p2: p2});
-							this.wager = null;
-							this.delay = null;
-							this.title = null;
-							this.addrentry = null;
-							this.addrprev = null;
-						} else {
-							/*this.console.log(this.wager);
-							this.console.log(this.delay);
-							this.console.log(this.addrprev);
-							this.console.log(this.addrentry);
-							this.console.log('not completed');*/
-				}})()">Go!</button>
+					<button id="go" class="row" v-on:click="onSubmit(this.wager, this.delay, this.title, this.addrentry, this.addrprev, this.walletaddr)">Go!</button>
 				</form>
 			</div>
 `,
@@ -170,31 +171,46 @@ const createGame = {
 		game: function(title, wager, delay, p1addr, p2addrentry, p2select) {
 			var game = {};
 		},
+		err: function(err_msg) {
+
+		},
 		onClick: function() {
 
 		},
-		onSubmit: function(wager, delay, title, addrentry, addrprev, walletaddr, $emit) {
+		onSubmit: function(wager, delay, title, addrentry, addrprev, walletaddr, emit) {
+			/*var incomplete_fields = [];
+			if (!wager) {
+				incomplete_fields.push("Wager");
+			}
+			if (!delay) {
+				incomplete_fields.push("Delay");
+			} 
+			if (!title) {
+				incomplete_fields.push("Title");
+			}
+			if (!(addrprev || addrentry)) {
+				incomplete_fields.push("Who");
+			}
+			if (incomplete_fields) {
+				this.err_msg = "Please enter a value for " + incomplete_fields;
+			}
 			//this could maybe just be an 
-			if(wager && delay && (addrprev || addrentry)) {
+			else */if(wager && delay && (addrprev || addrentry)) {
 				var p2;
 				if (addrprev) {
 					p2 = {walletaddr: addrprev};
 				} else {
 					p2 = {walletaddr: addrentry};
 				}
-				$emit('ongamecreate', {
+				this.game = {
 					title: title,
 					wager: wager,
 					delay: delay,
 					p1: {walletaddr: walletaddr},
 					p2: p2,
 					status: "pending"
-				});
-				this.wager = null;
-				this.delay = null;
-				this.title = null;
-				this.addrentry = null;
-				this.addrprev = null;
+				}
+				this.confirm = true;
 			} else {
 				//alert("HEY!");
 				//alert(this);
@@ -204,6 +220,21 @@ const createGame = {
 				console.log(this.addrentry);
 				console.log('not completed');
 			}
+		},
+		confirmm: function() {
+			console.log("conf");
+			console.log(this.game);
+			this.$emit('ongamecreate', this.game);
+			this.wager = null;
+			this.delay = null;
+			this.title = null;
+			this.addrentry = null;
+			this.addrprev = null;
+			this.err_msg = null;
+		},
+		deny: function() {
+			console.log("received");
+			this.confirm = false;
 		}
 }};
 const searchGame = {
@@ -225,8 +256,8 @@ const searchGame = {
 			<h3 class="row form-caption">Who</h3>
 			<input class="row form-input" type="text" name="who-addr-entry" placeholder="enter a wallet address">
 			<select class="row form-input" type="text" name="who" placeholder="">
-				<option selected="selected">select from previous opponents</option>
 				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
+				<option selected="selected">select from previous opponents</option>
 			</select>
 			<button id="go" class="row" v-on:submit.prevent="onSubmit" v-on:click="$emit('ongamesearch',
 					 {title: title, 
