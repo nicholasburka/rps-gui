@@ -41,9 +41,9 @@ const clientConfig = {
 	},
   plugins: [new htmlWebpackPlugin(),
   	new webpack.DefinePlugin({
-    'process.env': {
-      'REACH_CONNECTOR_MODE': JSON.stringify('ETH-test-browser-window')
-  		}
+      'process.env': {
+        'REACH_CONNECTOR_MODE': "'ETH-test-browser-window'"
+      }
     })
   ]
   //watch: true
