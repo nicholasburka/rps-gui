@@ -1,5 +1,6 @@
 const path = require('path');
 var htmlWebpackPlugin = require('html-webpack-plugin');
+var TerserPlugin = require('terser-webpack-plugin');
 var nodeExternals = require('webpack-node-externals')
 //var nodeExternals = require('web')
 
@@ -7,8 +8,7 @@ const clientConfig = {
 	target: 'web',
 	entry: './src/index.js',
 	node: {
-		fs: 'empty',
-		net: 'empty'
+		fs: 'empty'
 	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
@@ -38,7 +38,7 @@ const clientConfig = {
       }
 	  ]
 	},
-  plugins: [new htmlWebpackPlugin()],
+  plugins: [new htmlWebpackPlugin()]
   //watch: true
 };
 
