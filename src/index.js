@@ -118,7 +118,8 @@ const confirmGame = {
 			<p class="row">(Your ETH will be committed unless there's a timeout)</p>
 			<p class="row v-if="game.title"> {{game.title}}</p>
 			<p class="row"> {{ game.wager }} ETH </p>
-			<p class="row"> {{ game.delay }} block timeout (Est. time with {{this.blocktime}} per block: {{ game.delay * this.blocktime }}) </p>
+			<p class="row"> {{ game.delay }} block timeout (Est. time with {{ ~15s }} per block: {{ game.delay * 15 }}s) </p>
+			<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
 			<p v-if="action === 'create'" class="row"> {{ game.permissions }} </p>
 			<p v-else class="row"> {{ game.p1 }}</p>
 			<div id="buttons" class="row">
@@ -130,7 +131,7 @@ const confirmGame = {
 }
 const createGame = {
 	// "creating..." --> "Game Created!" & Home screen, w/ Added to list of Games
-	props: ['prevopponents', 'walletaddr', 'balance'],
+	props: ['prevopponents', 'walletaddr', 'balance', 'currency'],
 	components: {
 		confirmGame: confirmGame
 	},
@@ -152,9 +153,13 @@ const createGame = {
 				<form id="game-settings" class="column" v-on:submit.prevent>
 					<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>
 					<h3 class="row form-caption">Wager</h3>
-					<input v-model="this.wager" class="row column form-input" type="number" name="wager" v-bind:max="balance" step="0.01" min="0" default="0" placeholder="ETH">
+					<div class="row">
+					<input v-model="this.wager" class="form-input" type="number" name="wager" v-bind:max="balance" step="0.01" min="0" default="0"><p>\ ETH</p>
+					</div>
 					<h3 class="row form-caption">Delay</h3>
-					<input v-model="this.delay" class="row form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default">
+					<div class="row">
+					<input v-model="this.delay" class="form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default"><p>\ blocks until timeout</p></div>
+					<p class="row">(Est. time per block ~15s, see https://etherscan.io/chart/blocktime for current blocktime)</p>
 					<h3 class="row form-caption">Title</h3>
 					<input v-model="this.title" class="row form-input" type="text" name="title" placeholder="">
 					<h3 class="row form-caption">Who</h3>
