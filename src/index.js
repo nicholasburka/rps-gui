@@ -512,24 +512,13 @@ const app = new Vue({
 				}
 			},
 			reqEthAccount: function() {
-				ethereum.request({ method: 'eth_requestAccounts'})
+				/*ethereum.request({ method: 'eth_requestAccounts'})
 					.then((res) => {
 						console.log(res);
 						this.walletAddr = res[0];
 						this.walletText = "Wallet address: " + this.walletAddr;
 						console.log(this.walletText);
 						console.log(this.walletAddr);
-
-						var r_connected;
-						var r_acc = stdlib.getDefaultAccount().then(function(res) {
-							console.log("account promise resolved");
-							console.log(res);
-							r_connected = stdlib.connectAccount(res).then(function(res) {
-								console.log("account connected");
-								console.log(res);
-							});
-						});
-						console.log(plain_conn);
 
 
 						this.updateBalance();
@@ -546,7 +535,18 @@ const app = new Vue({
 						//fetch account info
 				})	.catch((err) => {
 					this.walletText = "Connection denied, please connect a wallet.";
-				})
+				})*/
+				var r_connected;
+				console.log(stdlib.getDefaultAccount);
+				var r_acc = stdlib.getDefaultAccount().then(function(res) {
+					console.log("account promise resolved");
+					console.log(res);
+					r_connected = stdlib.connectAccount(res).then(function(res) {
+						console.log("account connected");
+						console.log(res);
+					});
+				});
+
 			},
 			updateBalance: function() {
 				ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
