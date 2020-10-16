@@ -84,7 +84,7 @@ const home = {
 			<transition appear appear-active-class="slideInRight">
 			<div id="home-th">
 				<ul id="open-games">
-					<div id="open-games-header" class="row"><div class="column"><h3 class="row">Wallet addr: <!--{{wallet-addr}}--></h3><h3 class="row">Balance uncommitted: <!--{{balance}}--></h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
+					<div id="open-games-header" class="row"><div class="column"><h3 class="row">Wallet addr: {{wallet-addr}}</h3><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 					<li class="row activeitem" v-for="game in opengames" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wager}} {{game.currency}} : status - {{game.status()}} : time left - {{game.timeLeft()}}</li>
 				</ul>
 				<h2 id="game-history" v-on:click="$router.push('history')">history</h2>
@@ -511,7 +511,7 @@ const app = new Vue({
 					return false;
 				}
 			},
-			reqEthAccount: function() {
+			reqEthAccount: async function() {
 				/*ethereum.request({ method: 'eth_requestAccounts'})
 					.then((res) => {
 						console.log(res);
@@ -538,7 +538,8 @@ const app = new Vue({
 				})*/
 				var r_connected;
 				console.log(stdlib.getDefaultAccount);
-				var r_acc = stdlib.getDefaultAccount().then(function(res) {
+				var self = this;
+				/*var r_acc = await stdlib.getDefaultAccount().then(function(res) {
 					console.log("account promise resolved");
 					console.log(res);
 					console.log(res.networkAccount);
@@ -547,10 +548,14 @@ const app = new Vue({
 					res.networkAccount.getAddress().then(function(res) {
 						console.log("got address");
 						console.log(res);
-						this.walletAddr = res;
+						self.walletAddr = res;
+						self.balance = 
 					});
-				});
-
+				});*/
+				var acc = await stdlib.getDefaultAccount();
+				this.walletAddr = await acc.networkAccount.getAddress();
+				var atomicBalance = await stdlib.balanceOf(acc);
+				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 			},
 			updateBalance: function() {
 				ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
