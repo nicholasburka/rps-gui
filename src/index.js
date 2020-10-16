@@ -541,6 +541,9 @@ const app = new Vue({
 				var r_acc = stdlib.getDefaultAccount().then(function(res) {
 					console.log("account promise resolved");
 					console.log(res);
+					console.log(res.networkAccount);
+					console.log(res.networkAccount.getAddress);
+					console.log("trying to get address");
 					res.networkAccount.getAddress().then(function(res) {
 						console.log("got address");
 						console.log(res);
