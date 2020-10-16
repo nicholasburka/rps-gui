@@ -552,10 +552,15 @@ const app = new Vue({
 						self.balance = 
 					});
 				});*/
+				console.log("get account");
 				var acc = await stdlib.getDefaultAccount();
+				console.log("get address");
 				this.walletAddr = await acc.networkAccount.getAddress();
+				console.log(this.walletAddr);
+				console.log("get balance");
 				var atomicBalance = await stdlib.balanceOf(acc);
 				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
+				console.log(this.balance);
 			},
 			updateBalance: function() {
 				ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
