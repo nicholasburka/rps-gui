@@ -130,7 +130,7 @@ const confirmGame = {
 }
 const createGame = {
 	// "creating..." --> "Game Created!" & Home screen, w/ Added to list of Games
-	props: ['prevopponents', 'walletaddr'],
+	props: ['prevopponents', 'walletaddr', 'balance'],
 	components: {
 		confirmGame: confirmGame
 	},
@@ -152,7 +152,7 @@ const createGame = {
 				<form id="game-settings" class="column" v-on:submit.prevent>
 					<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>
 					<h3 class="row form-caption">Wager</h3>
-					<input v-model="this.wager" class="row column form-input" type="number" name="wager" step="0.01" min="0" default="0" placeholder="ETH">
+					<input v-model="this.wager" class="row column form-input" type="number" name="wager" v-bind:max="balance" step="0.01" min="0" default="0" placeholder="ETH">
 					<h3 class="row form-caption">Delay</h3>
 					<input v-model="this.delay" class="row form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default">
 					<h3 class="row form-caption">Title</h3>
