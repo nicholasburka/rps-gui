@@ -520,8 +520,17 @@ const app = new Vue({
 						console.log(this.walletText);
 						console.log(this.walletAddr);
 
-						var conn = stdlib.connectAccount(res[0]);
-						console.log(stdlib.connectAccount(res[0]));
+						var r_connected;
+						var r_acc = stdlib.getDefaultAccount().then(function(res) {
+							console.log("account promise resolved");
+							console.log(res);
+							r_connected = stdlib.connectAccount(res).then(function(res) {
+								console.log("account connected");
+								console.log(res);
+							});
+						});
+						console.log(plain_conn);
+
 
 						this.updateBalance();
 
