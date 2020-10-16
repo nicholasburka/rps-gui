@@ -541,9 +541,10 @@ const app = new Vue({
 				var r_acc = stdlib.getDefaultAccount().then(function(res) {
 					console.log("account promise resolved");
 					console.log(res);
-					r_connected = stdlib.connectAccount(res).then(function(res) {
-						console.log("account connected");
+					res.networkAccount.getAddress().then(function(res) {
+						console.log("got address");
 						console.log(res);
+						this.walletAddr = res;
 					});
 				});
 
