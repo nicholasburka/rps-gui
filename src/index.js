@@ -807,6 +807,7 @@ const app = new Vue({
 				this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
 				var self = this;
+				console.log("deploying");
 				try {
 					game.address = await this.acc.deploy(backend);
 					this.balance = this.acc.getBalance();
