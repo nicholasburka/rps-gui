@@ -30,12 +30,13 @@ const Player =
 	  informTimeout: Fun([], Null) };
 const Alice = 
     { ...Player,
-      wager: UInt256 };
+      wager: UInt256,
+      delay: UInt256 };
 const Bob = 
     { ...Player,
       acceptWager: Fun([UInt256], Null)};
 
-const DEADLINE = 10;
+//const DEADLINE = 10;
 
 export const main =
   Reach.App(
@@ -50,9 +51,11 @@ export const main =
 
   		A.only(() => {
   			const wager = declassify(interact.wager);
+        const DEADLINE = declassify(interact.delay);
   		});
   		A.publish(wager)
   		  .pay(wager);
+      //A.publish(DEADLINE);
   		commit();
  
   		B.only(() => {
