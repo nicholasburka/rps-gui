@@ -104,7 +104,7 @@ const home = {
 			<div id="home-bh">
 				<h1 id="create-game" class="row active" v-on:click="$router.push('create')">create</h1>
 				<h1 id="search" class="row active" v-on:click="$router.push('search')">search</h1>
-				<h1 id="join" class="row active" v-on:click="$router.push('join')">join by contract</h1>
+				<h1 id="join" class="row active" v-on:click="$router.push('join')">join with contract</h1>
 			</div>
 			</transition>
 		</div>
@@ -615,6 +615,11 @@ const app = new Vue({
 					return false;
 				}
 			},
+			getBalance: async function() {
+				var atomicBalance = await stdlib.balanceOf(this.acc);
+				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
+				return this.balance;
+			},
 			reqEthAccount: async function() {
 				/*ethereum.request({ method: 'eth_requestAccounts'})
 					.then((res) => {
@@ -801,10 +806,16 @@ const app = new Vue({
 				var game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, timeCreated: t, dateCreated: d, p1: game.p1});
 				this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
+				var self = this;
 				try {
 					game.address = await this.acc.deploy(backend);
-					this.setpopup("Deployed at " + game.address);
+					this.balance = this.acc.getBalance();
+					console.log("contract address");
+					console.log(game.address);
+					this.setpopup("Deploying at " + game.address);
+					console.log("awaiting contract info");
 					this.displaytext = JSON.stringify(await game.address.getInfo(), null, 2);
+					console.log(this.displaytext);
 					this.opengames.push(game);
 					var game_res = await backend.Alice(stdlib, game.address, {
 						...Player('Alice', game.address),
