@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import detectProvider from "@metamask/detect-provider";
-import Axios from "axios";
+import * as axios from "axios";
 import * as stdlib from "@reach-sh/stdlib/ETH.mjs";
 import * as backend from "../build/index.main.mjs"
 
@@ -675,7 +675,7 @@ const app = new Vue({
 				console.log(this.balance);
 
 				//get price of crypto
-				Axios({
+				axios({
 					method: 'get',
 					url: 'https://_/v1/cryptocurrency/quotes/latest/items?slug=ethereum',
 					headers: {'X-CMC_PRO_API_KEY': '22193dce-f532-4c64-98ea-bd408903ae8f'}
