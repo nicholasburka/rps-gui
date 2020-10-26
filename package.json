@@ -26,6 +26,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack && cp src/index.html dist/indexx.html",
+    "buildwatch": "webpack --watch && cp src/index.html dist/indexx.html",
     "buildverbose": "webpack --display-modules && cp src/index.html dist/indexx.html"
   },
   "author": "",

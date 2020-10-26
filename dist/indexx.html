@@ -119,13 +119,14 @@
 			align-self: center;
 			text-align: center;
 			border: solid;
-			top: 5vh;
+			top: 3vh;
 			height: 90vh;
 			left: 15vw;
 			width: 70vw;
 			font-size: 20px;
 			background-color: gray;
-			opacity: 80%;
+			opacity: 95%;
+			z-index:5;
 		}
 		#displaytext {
 			position: absolute;
@@ -148,6 +149,11 @@
 			margin-left: 30%;
 			align-self: center;
 			/*padding-top: 1%;*/
+		}
+		.form-detail-text {
+			flex-basis: 60%;
+			font-size: 10px;
+			margin: 0;
 		}
 		#go {
 			display: flex;
@@ -358,7 +364,7 @@
 <body>
 	<div id="app" style="display: flex; height: 100vh;">
 		<!-- Bind all necessary props for components in router from vue data here --->
-		<router-view class="view" :prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :opengames="opengames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect"></router-view>
+		<router-view class="view" :prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect"></router-view>
 		<div v-if="($router.currentRoute.path === '/')">
 			<h3 class="bottomBanner row" v-if="walletLoading && (walletAddr === null)">Detecting ETH service...</h3>
 			<div v-else-if="walletFound && displayWalletText" id="wallet" class="bottomBanner">
@@ -373,7 +379,7 @@
 			<popupC v-for="popup in popups" v-bind:key="popups" message="popup.message">
 		</div>
 		<p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
-		<displaytext v-if="displaytext" v-bind:text="displaytext" id="displaytext"></displaytext>
+		<displaytextarea v-if="displaytext" v-bind:text="displaytext" id="displaytext"></displaytextarea>
 		</transition>
 	</div>
 	<script src="client.bundle.js"></script>

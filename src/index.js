@@ -144,27 +144,41 @@ const displaytext = {
 		<button id="go" class="column" v-on:click="$emit('dismiss')">Dismiss</button>
 	`
 };
-const confirmGame = {
+const confirmaGame = {
 	props: ['game', 'action', 'blocktime'],
 	template: `
-		<div id="confirm-game" class="page-container column">
-			<h1 class="row">{{ this.action }} Game?</h1>
+		<div id="confirm-game" class="row confirmPopup">
+			<h1 class="row"> Create game?</h1>
 			<p class="row">(Your ETH will be committed unless there's a timeout)</p>
-			<p class="row" v-if="game.title"> {{game.title}}</p>
+			<p class="row"> {{ game.title }}</p>
 			<p class="row"> {{ game.wager }} ETH </p>
-			<p class="row"> {{ game.delay }} block timeout (Est. time with {{ ~15s }} per block: {{ game.delay * 15 }}s) </p>
+			<p class="row"> {{ game.delay }} block timeout (Est. time with ~15s per block: {{ game.delay * 15 }}s) </p>
 			<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
-			<p v-if="action === 'create'" class="row"> {{ game.permissions }} </p>
-			<p v-else class="row"> {{ game.p1 }}</p>
+			<p class="row"> Permissions: {{ game.permissions }} </p>
 			<div id="buttons" class="row">
-			<button id="go" class="column" v-on:click="$emit('confirm')">Yes!</button>
-			<button id="go" class="column" v-on:click="$emit('deny')">Back</button>
+			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('confirm')">Yes!</button>
+			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('deny')">Back</button>
 			</div>
 		</div>
 	`
 
 }
 /*
+
+<div id="confirm-game" class="column confirmPopup">
+	<h1 class="row">{{ this.action }} Game?</h1>
+	<p class="row">(Your ETH will be committed unless there's a timeout)</p>
+	<p class="row" v-if="game.title"> {{game.title}}</p>
+	<p class="row"> {{ game.wager }} ETH </p>
+	<p class="row"> {{ game.delay }} block timeout (Est. time with {{ ~15s }} per block: {{ game.delay * 15 }}s) </p>
+	<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
+	<p v-if="action === 'create'" class="row"> {{ game.permissions }} </p>
+	<p v-else class="row"> {{ game.p1 }}</p>
+	<div id="buttons" class="row">
+	<button id="go" class="column" v-on:click="$emit('confirm')">Yes!</button>
+	<button id="go" class="column" v-on:click="$emit('deny')">Back</button>
+	</div>
+</div>
 				<confirmGame v-if="this.confirm" class="confirmPopup" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>
 				<p v-if="this.confirm">hello</p>
 
@@ -183,63 +197,86 @@ const confirmGame = {
 					</div>
 				</div>
 
+<div v-if="this.confirm" id="confirm-game" class="column confirmPopup">
+	<h1 class="row"> Create game?</h1>
+	<div id="buttons" class="row">
+	<button id="go" class="column" v-on:click="$emit('confirm')">Yes!</button>
+	<button id="go" class="column" v-on:click="$emit('deny')">Back</button>
+	</div>
+</div>
 */
 const createGame = {
 	// "creating..." --> "Game Created!" & Home screen, w/ Added to list of Games
-	props: ['prevopponents', 'walletaddr', 'balance', 'currency', 'private', 'invite'],
+	props: ['prevopponents', 'walletaddr', 'balance', 'currency', 'invite', 'private', 'price'], //'confirm'
 	components: {
-		confirmGame: confirmGame
+		confirmaGame
 	},
 	data: function() {
+		const titles = ["Rock Paper Swizzors", "I always choose paper", "Rock lovers only", "Srossics repar kcor", "My R-P-S Game"];
+		const rand_title = titles[Math.floor(Math.random()*titles.length)];
+		confirm = false;
 		return {
-			'wager': null,
-			'delay': null,
-			'title': null,
+			'wager': .01,
+			'delay': 100,
+			'title': rand_title,
 			'addrentry': null,
 			'addrprev': null,
 			'err_msg': null,
 			'confirm': false,
+			//'private': false,
+			//<!---<confirmGame v-if="confirm" class="confirmPopup row" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>-->
 			'game': {}
 		}
 	},
 	template: `
 		<div id="create-game" class="column">
-				<confirmGame v-if="this.confirm" class="confirmPopup row" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>
 				<form id="game-settings" class="column" v-on:submit.prevent>
-					<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>
+					<!--<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>-->
 					<h3 class="row form-caption">Wager</h3>
 					<div class="row">
-					<input v-model="this.wager" class="form-input" type="number" name="wager" v-bind:max="balance" step="0.01" min="0" default="0"><p>ETH</p>
+						<p class="column" style="flex-basis:10%"></p>
+						<input v-model="this.wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.01" min="0" default="0">
+						<p class="column" style="flex-basis: 5%">ETH</p>
+						<p class="column" style="flex-basis: 5%"></p>
 					</div>
+					<p v-if="price" class="row" class="form-detail-text">1 ETH to {{ price }} USD * {{ this. wager }}, est. invested {{ price * this.wager }}</p>
 					<h3 class="row form-caption">Delay</h3>
-					<div class="row">
-					<input v-model="this.delay" class="form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default"><p>blocks until timeout</p></div>
-					<p class="row">(Est. time per block ~15s, see https://etherscan.io/chart/blocktime for current blocktime)</p>
+					<div class="row" style="justify-content: center">
+						<p class="column" style="flex-basis: 10%"></p>
+						<input v-model="this.delay" class="form-input column" style="flex-grow: 3;" type="number" name="delay" step="1" min="1" default="100" placeholder="default">
+						<p class="column" style="flex-basis:5%">blocks until timeout</p>
+						<p class="column" style="flex-basis: 5%"></p>
+					</div>
+					<p class="row" class="form-detail-text">(Est. time per block ~15s, see https://etherscan.io/chart/blocktime for current blocktime)</p>
 					<h3 class="row form-caption">Title</h3>
-					<input v-model="this.title" class="row form-input" type="text" name="title" placeholder="">
+					<input v-model="this.title" class="form-input" style="flex-basis:50%" type="text" name="title" placeholder="">
 					<h3 class="row form-caption">Who</h3>
 					<div class="row" id="priv-pub">
+						<p style="flex-basis: 30%"></p>
 						<label class="column">
-							<input type="radio" name="permissions"  v-on:click="private = false;">Public 
+							<input id="public" type="radio" style="flex-basis:20%" name="permissions" checked="true" v-on:click="private = false;">Public 
 						</label>
 						<label class="column">
-							<input id="priv" type="radio" name="permissions" v-on:click="private = true; console.log(private);">Private
+							<input id="priv" type="radio" style="flex-basis:20%" name="permissions" v-on:click="private = true; console.log(private);">Private
 						</label>
+						<p style="flex-basis: 30%"></p>
 					</div>
 					<div v-if="private" class="column">
+						<p class="row" style="flex-basis: 60%; font-size: 10px;">Optional: specify opponents to invite - you can also share the invite link after submitting.</p>
 						<input v-model="this.addrentry" class="row form-input" type="text" name="who-addr-entry" placeholder="enter a wallet address">
-						<select v-model="this.addrprev" class="row form-input" type="text" name="who" placeholder="">
+						<select v-model="this.addrprev" class="row form-input" type="text" name="who" placeholder="select from previous opponents">
 							<option selected="selected">select from previous opponents</option>
 							<option v-for="player in prevopponents" v-bind:value="player.walletAddr" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 						</select>
-						<label class="row">
+						<!---<label class="row">
 							<input type="radio" v-on:click="invite = true;">Invite link
-						</label>
+						</label>-->
 					</div>
 					<div v-else>
 					</div>
 					<button id="go" class="row" v-on:click="onSubmit(this.wager, this.delay, this.title, this.addrentry, this.addrprev, this.walletaddr, $emit)">Go!</button>
 				</form>
+				<confirmaGame v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmaGame>
 		</div>
 `,
 	methods: {
@@ -270,7 +307,7 @@ const createGame = {
 				this.err_msg = "Please enter a value for " + incomplete_fields;
 			}
 			//this could maybe just be an 
-			else */if(wager && delay) {
+			else */if(this.wager && this.delay) {
 				var p2;
 				var permissions;
 				if (addrprev) {
@@ -284,9 +321,9 @@ const createGame = {
 					permissions = "public";
 				}
 				this.game = {
-					title: title,
-					wager: wager,
-					delay: delay,
+					title: this.title,
+					wager: this.wager,
+					delay: this.delay,
 					p1: {walletaddr: walletaddr},
 					p2: p2,
 					status: "pending",
@@ -296,9 +333,9 @@ const createGame = {
 				console.log("this.game");
 				console.log(this.game);
 				console.log("confirmed");
-				console.log(this.confirm);
-				console.log(this.confirmGame);
-				this.$emit('ongamecreate', this.game);
+				console.log(confirm);
+				console.log(confirmaGame);
+				//this.$emit('ongamecreate', this.game);
 			} else {
 				//alert("HEY!");
 				//alert(this);
@@ -543,7 +580,8 @@ const app = new Vue({
 		el: "#app",
 		components: {
 			'landing': landing,
-			'popupC': popupC
+			'popupC': popupC,
+			'displaytextarea': displaytext
 		},
 		data: function() {
 			return { walletLoading: true, walletFound: null, walletUnavailable: null, 
@@ -558,8 +596,9 @@ const app = new Vue({
 				opengames: exampleGames,
 				invites: null,
 				currentgame: null,
+				price: null,
 				popup: null,
-				popuptime: 2500,
+				popuptime: 3000,
 				popups: [],
 				displaytext: null
 			}
@@ -621,46 +660,9 @@ const app = new Vue({
 				return this.balance;
 			},
 			reqEthAccount: async function() {
-				/*ethereum.request({ method: 'eth_requestAccounts'})
-					.then((res) => {
-						console.log(res);
-						this.walletAddr = res[0];
-						this.walletText = "Wallet address: " + this.walletAddr;
-						console.log(this.walletText);
-						console.log(this.walletAddr);
-
-
-						this.updateBalance();
-
-						setTimeout(() => {
-							console.log(router.currentRoute.path);
-							console.log(router);
-							if (router.path === "/") {
-								router.push("/home");
-							}
-							this.displayWalletText = false;
-						}, 2000)
-
-						//fetch account info
-				})	.catch((err) => {
-					this.walletText = "Connection denied, please connect a wallet.";
-				})*/
-				var r_connected;
+				
 				console.log(stdlib.getDefaultAccount);
-				var self = this;
-				/*var r_acc = await stdlib.getDefaultAccount().then(function(res) {
-					console.log("account promise resolved");
-					console.log(res);
-					console.log(res.networkAccount);
-					console.log(res.networkAccount.getAddress);
-					console.log("trying to get address");
-					res.networkAccount.getAddress().then(function(res) {
-						console.log("got address");
-						console.log(res);
-						self.walletAddr = res;
-						self.balance = 
-					});
-				});*/
+				
 				console.log("get account");
 				var acc = await stdlib.getDefaultAccount();
 				this.acc = acc;
@@ -671,6 +673,15 @@ const app = new Vue({
 				var atomicBalance = await stdlib.balanceOf(acc);
 				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 				console.log(this.balance);
+
+				//get price of crypto
+				axios({
+					method: 'get',
+					url: 'https://_/v1/cryptocurrency/quotes/latest/items?slug=ethereum',
+					headers: {'X-CMC_PRO_API_KEY': '22193dce-f532-4c64-98ea-bd408903ae8f'}
+					})
+					.then(response => {console.log(response); this.price = response.data['1']['quote']['usd'];})
+					.catch(error => {console.log(error)});
 			},
 			updateBalance: function() {
 				ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
@@ -825,6 +836,7 @@ const app = new Vue({
 					});
 					//axios -> send game to DB
 				} catch (error) {
+					this.displaytext = "Deploy failed" ;
 					this.setpopup("Deploy failed.");
 					console.log("Deploy failed");
 					console.log(error);
