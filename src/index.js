@@ -677,6 +677,7 @@ const app = new Vue({
 				//get price of crypto
 				axios({
 					method: 'get',
+					withCredentials: true,
 					url: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest/items?slug=ethereum',
 					headers: {'X-CMC_PRO_API_KEY': '22193dce-f532-4c64-98ea-bd408903ae8f'}
 					})
