@@ -663,6 +663,7 @@ const app = new Vue({
 				return this.balance;
 			},
 			reqEthAccount: async function() {
+				//right now this requires the user to click "Enable Ethereum" to run
 				
 				console.log(stdlib.getDefaultAccount);
 				
@@ -678,14 +679,14 @@ const app = new Vue({
 				console.log(this.balance);
 
 				//get price of crypto
-				axios({
+				/*axios({
 					method: 'get',
 					withCredentials: true,
 					url: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest/items?slug=ethereum',
 					headers: {'X-CMC_PRO_API_KEY': '22193dce-f532-4c64-98ea-bd408903ae8f'}
 					})
 					.then(response => {console.log(response); this.price = response.data['1']['quote']['usd'];})
-					.catch(error => {console.log(error)});
+					.catch(error => {console.log(error)});*/
 			},
 			updateBalance: function() {
 				ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
