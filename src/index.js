@@ -508,7 +508,7 @@ function getTime() {
 	return t;
 };
 
-function Player(walletAddr, nickname) {
+function aPlayer(walletAddr, nickname) {
 	this.walletAddr = walletAddr;
 	this.nickname = nickname;
 };
@@ -564,9 +564,9 @@ function Game(obj) {
 };
 
 var examplePlayers = [];
-examplePlayers.push(new Player("0588xf01", "jherod"));
-examplePlayers.push(new Player("1125fxf01", "sunduz"));
-examplePlayers.push(new Player("015aa39v", "mo"));
+examplePlayers.push(new aPlayer("0588xf01", "jherod"));
+examplePlayers.push(new aPlayer("1125fxf01", "sunduz"));
+examplePlayers.push(new aPlayer("015aa39v", "mo"));
 
 var exampleGames = [];
 const moonLanding = new Date('July 20, 69 00:20:18 GMT+00:00');
