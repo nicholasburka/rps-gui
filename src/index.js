@@ -207,16 +207,16 @@ const confirmaGame = {
 */
 const createGame = {
 	// "creating..." --> "Game Created!" & Home screen, w/ Added to list of Games
-	props: ['prevopponents', 'walletaddr', 'balance', 'currency', 'invite', 'private', 'price'], //'confirm'
+	props: ['prevopponents', 'walletaddr', 'balance', 'currency', 'invite', 'private_game', 'price'], //'confirm'
 	components: {
 		confirmaGame
 	},
 	data: function() {
-		const titles = ["Rock Paper Swizzors", "I always choose paper", "Rock lovers only", "Srossics repar kcor", "My R-P-S Game"];
+		const titles = ["Rock Paper Skissors", "I always choose paper", "Rock lovers only", "Srossics repar kcor", "My R-P-S Game"];
 		const rand_title = titles[Math.floor(Math.random()*titles.length)];
 		confirm = false;
 		return {
-			'wager': .01,
+			'wager': .001,
 			'delay': 100,
 			'title': rand_title,
 			'addrentry': null,
@@ -235,7 +235,7 @@ const createGame = {
 					<h3 class="row form-caption">Wager</h3>
 					<div class="row">
 						<p class="column" style="flex-basis:10%"></p>
-						<input v-model="this.wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.01" min="0" default="0">
+						<input v-model="this.wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.001" min="0" default="0">
 						<p class="column" style="flex-basis: 5%">ETH</p>
 						<p class="column" style="flex-basis: 5%"></p>
 					</div>
@@ -254,14 +254,14 @@ const createGame = {
 					<div class="row" id="priv-pub">
 						<p style="flex-basis: 30%"></p>
 						<label class="column">
-							<input id="public" type="radio" style="flex-basis:20%" name="permissions" checked="true" v-on:click="private = false;">Public 
+							<input id="public" type="radio" style="flex-basis:20%" name="permissions" checked="true" v-on:click="private_game = false;">Public 
 						</label>
 						<label class="column">
-							<input id="priv" type="radio" style="flex-basis:20%" name="permissions" v-on:click="private = true; console.log(private);">Private
+							<input id="priv" type="radio" style="flex-basis:20%" name="permissions" v-on:click="private_game = true; console.log(private_game);">Private
 						</label>
 						<p style="flex-basis: 30%"></p>
 					</div>
-					<div v-if="private" class="column">
+					<div v-if="private_game" class="column">
 						<p class="row" style="flex-basis: 60%; font-size: 10px;">Optional: specify opponents to invite - you can also share the invite link after submitting.</p>
 						<input v-model="this.addrentry" class="row form-input" type="text" name="who-addr-entry" placeholder="enter a wallet address">
 						<select v-model="this.addrprev" class="row form-input" type="text" name="who" placeholder="select from previous opponents">
@@ -274,7 +274,7 @@ const createGame = {
 					</div>
 					<div v-else>
 					</div>
-					<button id="go" class="row" v-on:click="onSubmit(this.wager, this.delay, this.title, this.addrentry, this.addrprev, this.walletaddr, $emit)">Go!</button>
+					<button id="go" class="row" v-on:click="onSubmit(this.wager, this.delay, this.title, this.addrentry, this.addrprev, this.walletaddr, private_game, $emit)">Go!</button>
 				</form>
 				<confirmaGame v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmaGame>
 		</div>
@@ -289,7 +289,7 @@ const createGame = {
 		onClick: function() {
 
 		},
-		onSubmit: function(wager, delay, title, addrentry, addrprev, walletaddr, emit) {
+		onSubmit: function(wager, delay, title, addrentry, addrprev, walletaddr, private_game, emit) {
 			/*var incomplete_fields = [];
 			if (!wager) {
 				incomplete_fields.push("Wager");
@@ -315,6 +315,9 @@ const createGame = {
 					permissions = "private";
 				} else if(addrentry) {
 					p2 = {walletaddr: addrentry};
+					permissions = "private";
+				} else if (private_game) {
+					p2 = undefined;
 					permissions = "private";
 				} else {
 					p2 = undefined;
