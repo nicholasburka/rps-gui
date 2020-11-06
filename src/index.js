@@ -670,6 +670,7 @@ const app = new Vue({
 				console.log("get account");
 				var acc = await stdlib.getDefaultAccount();
 				this.acc = acc;
+				console.log(this.acc);
 				console.log("get address");
 				this.walletAddr = await acc.networkAccount.getAddress();
 				console.log(this.walletAddr);
