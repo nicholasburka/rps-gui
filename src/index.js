@@ -827,7 +827,7 @@ const app = new Vue({
 				console.log("deploying");
 				try {
 					game.address = await this.acc.deploy(backend);
-					this.balance = this.acc.getBalance();
+					this.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
 					console.log("contract address");
 					console.log(game.address);
 					this.setpopup("Deploying at " + game.address);
