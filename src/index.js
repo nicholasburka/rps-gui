@@ -207,7 +207,7 @@ const confirmaGame = {
 */
 const createGame = {
 	// "creating..." --> "Game Created!" & Home screen, w/ Added to list of Games
-	props: ['prevopponents', 'walletaddr', 'balance', 'currency', 'invite', 'private_game', 'price'], //'confirm'
+	props: ['walletaddr', 'prevopponents', 'balance', 'currency', 'invite', 'private_game', 'price'], //'confirm'
 	components: {
 		confirmaGame
 	},
@@ -215,6 +215,8 @@ const createGame = {
 		const titles = ["Rock Paper Skissors", "I always choose paper", "Rock lovers only", "Srossics repar kcor", "My R-P-S Game"];
 		const rand_title = titles[Math.floor(Math.random()*titles.length)];
 		confirm = false;
+		//console.log("wallet addr");
+		//console.log(walletAddr);
 		return {
 			'wager': .001,
 			'delay': 100,
@@ -223,6 +225,7 @@ const createGame = {
 			'addrprev': null,
 			'err_msg': null,
 			'confirm': false,
+			'walletaddress': this.walletaddr,
 			//'private': false,
 			//<!---<confirmGame v-if="confirm" class="confirmPopup row" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>-->
 			'game': {}
@@ -232,7 +235,7 @@ const createGame = {
 		<div id="create-game" class="column">
 				<form id="game-settings" class="column" v-on:submit.prevent>
 					<!--<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>-->
-					<h3 class="row form-caption">Wager</h3>
+					<h3 class="row form-caption">Wager {{walletaddr}}</h3>
 					<div class="row">
 						<p class="column" style="flex-basis:10%"></p>
 						<input v-model="this.wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.001" min="0" default="0">
@@ -274,7 +277,7 @@ const createGame = {
 					</div>
 					<div v-else>
 					</div>
-					<button id="go" class="row" v-on:click="onSubmit(this.wager, this.delay, this.title, this.addrentry, this.addrprev, this.walletaddr, private_game, $emit)">Go!</button>
+					<button id="go" class="row" v-on:click="onSubmit(this.wager, this.delay, this.title, this.addrentry, this.addrprev, this.walletaddress, private_game, $emit)">Go!</button>
 				</form>
 				<confirmaGame v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmaGame>
 		</div>
@@ -290,6 +293,10 @@ const createGame = {
 
 		},
 		onSubmit: function(wager, delay, title, addrentry, addrprev, walletaddr, private_game, emit) {
+			console.log("walletaddr");
+			console.log(walletaddr);
+			console.log(this.walletaddr);
+			console.log(this.walletaddress);
 			/*var incomplete_fields = [];
 			if (!wager) {
 				incomplete_fields.push("Wager");
@@ -327,7 +334,7 @@ const createGame = {
 					title: this.title,
 					wager: this.wager,
 					delay: this.delay,
-					p1: {walletaddr: walletaddr},
+					p1: this.walletaddr,
 					p2: p2,
 					status: "pending",
 					permissions: permissions
@@ -603,10 +610,16 @@ const app = new Vue({
 				popup: null,
 				popuptime: 3000,
 				popups: [],
-				displaytext: null
+				displaytext: null,
+				TEST: true
 			}
 		},
 		created: function() {
+			if (this.TEST) {
+				this.runTests();
+				this.walletAddr = 12345931;
+			}
+
 			console.log("created Vue app");
 			console.log(this);
 			this.getEthProvider();
@@ -820,8 +833,8 @@ const app = new Vue({
 				console.log(game);
 				var d = new Date();
 				var t = d.toDateString() + d.toTimeString();
-				var game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, timeCreated: t, dateCreated: d, p1: game.p1});
-				this.setpopup("Deploying...");
+				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, timeCreated: t, dateCreated: d, p1: game.p1});
+				/*this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
 				var self = this;
 				console.log("deploying");
@@ -836,7 +849,7 @@ const app = new Vue({
 					console.log(this.displaytext);
 					this.opengames.push(game);
 					var game_res = await backend.Alice(stdlib, game.address, {
-						...Player('Alice', game.address),
+						...Player('Alice', game.address), //this does not work, how to test without being on net
 						wager: game.wager,
 						delay: game.delay
 					});
@@ -846,7 +859,40 @@ const app = new Vue({
 					this.setpopup("Deploy failed.");
 					console.log("Deploy failed");
 					console.log(error);
+				}*/
+
+				console.log("game");
+				console.log(the_game);
+				console.log(the_game.p1);
+				//this should be set by result of Reach backend deploy
+				var gameOnChain = true;
+
+				//send game to backend
+				//
+				if (gameOnChain) {
+					axios({
+						method: "POST",
+						url: "https://zwmoxwgvz2.execute-api.us-east-2.amazonaws.com/Prod/",
+						data: {
+							ContractAddress: (String(the_game.p1)+t),
+							title: the_game.title,
+							wager: the_game.wager,
+							currency: "ETH",
+							delay: the_game.delay,
+							starttime: t,
+							p1: the_game.p1
+						}
+					}).then(function(response) {
+						console.log(response);
+						console.log(response.data);
+					});
 				}
+			},
+			runTests: function() {
+				//how to do await within synchronous function as a Promise
+
+				//test Player function, does not seem to be working
+				
 			}
 		},
 		watch: {
@@ -857,4 +903,13 @@ const app = new Vue({
 	});
 
 //app.$mount('#app');
+/*
+live game on ropsten chain
+{
+  "address": "0xB887a0D282486754E237813Dc269bb9301aD3A73",
+  "creation_block": 9019484,
+  "creator": "0x690bd024a6EE65719bd70be0F91D5099B6255951",
+  "transactionHash": "0xad903dcf7decc569ce68d9181454517d1878908d10a5a671f21b82e44971d2bc"
+}
+*/
 
