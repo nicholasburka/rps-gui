@@ -834,7 +834,7 @@ const app = new Vue({
 				try {
 				axios({
 						method: "GET",
-						url: ("https://zwmoxwgvz2.execute-api.us-east-2.amazonaws.com/Prod/?walletAddress=".concat(String(this.walletAddr)))
+						url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps/getgamesbywalletaddress?walletAddress=".concat(String(this.walletAddr)))
 					}).then(function(response) {
 						console.log(response);
 						console.log(response.data);
