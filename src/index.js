@@ -373,24 +373,41 @@ const createGame = {
 		}
 }};
 const searchGame = {
-	props: ['prevopponents', 'sign'],
+	props: ['prevopponents', 'balance'],
+	data: function() {
+
+		return {
+			'wager': 0.001,
+			'sign': undefined,
+			'min': .001,
+			'max': .0015,
+			'addrprev': undefined,
+			'addrentry': undefined
+		}
+	},
 	template: `
 		<div id="search-game" class="page-container">
 		<form id="game-settings" class="column">
 			<h3 class="row form-caption">Wager</h3>
-			<input class="row form-input" type="number" name="wager" step="0.01" min="0" default="0" placeholder="ETH">
-			<div class="row" style="flex-basis: 40%; width: 60%; align-self: center;">
-				<div class="column"><input v-model="sign" v-bind:value="l" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
-				<div class="column"><input v-model="sign" v-bind:value="l" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
-				<div class="column"><input v-model="sign" v-bind:value="l" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
+				<div class="row" style="flex-basis: 40%; width: 60%; align-self: center;">
+				<div class="column" style="flex-basis: 10%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
+				<div class="column" style="flex-basis: 10%;"><input v-model="sign" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
+				<div class="column" style="flex-basis: 10%;"><input v-model="sign" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
+				<input class="column form-input"  v-model="wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
 			</div>
-			<h3 class="row form-caption">Delay</h3>
-			<input class="row form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default">
+			<br/>
+			<div class="row" style="flex-basis: 40%; width: 60%; align-self: center;">
+			<div class="column"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between</label></div>
+				<label>min&nbsp;</label><input v-model="min" class="column form-input" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH"><label>&nbsp;and&nbsp;</label>
+				<label>max&nbsp;</label><input v-model="max" class="column form-input" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
+			</div>
+			<!---<h3 class="row form-caption">Delay</h3>
+			<input class="row form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default">--->
 			<h3 class="row form-caption">Title</h3>
 			<input class="row form-input" type="text" name="wager" placeholder="">
 			<h3 class="row form-caption">Who</h3>
-			<input class="row form-input" type="text" name="who-addr-entry" placeholder="enter a wallet address">
-			<select class="row form-input" type="text" name="who" placeholder="">
+			<input class="row form-input" v-model="addrentry" type="text" name="who-addr-entry" placeholder="enter a wallet address">
+			<select class="row form-input" v-model="addrprev" type="text" name="who" placeholder="">
 				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 				<option selected="selected">select from previous opponents</option>
 			</select>
@@ -405,7 +422,33 @@ const searchGame = {
 					 	p2prev: addrprev});">Go!</button>
 		</form>
 	</div>
-	`
+	`,
+	methods: {
+		onSubmit: function() {
+			if (this.addrprev) {
+
+			} else if (this.addrentry) {
+
+			} else {
+
+			}
+
+			var params = {
+				title: this.title,
+				wager: undefined,
+				sign: this.sign
+			};
+			if (!this.sign) {
+
+			} else if (this.sign === "between") {
+
+			} else {
+
+			}
+
+			this.$emit('ongamesearch', params);
+		}
+	}
 };
 const searchResult = {
 	props: ["title", "wager", "playerAddr"],
@@ -645,6 +688,12 @@ const app = new Vue({
 
 				});
 			};
+
+			try {
+				this.getGames();
+			} catch (err) {
+				console.log(err);
+			}
 			//exampleActions();
 			//console.log(this.$router.name);
 			//console.log(this.$router.currentRoute.path);
@@ -781,7 +830,23 @@ const app = new Vue({
 				this.displaytext = null;
 			},
 			getGames: function() {
-				//
+				//need to edit to ensure correct form of request
+				try {
+				axios({
+						method: "GET",
+						url: ("https://zwmoxwgvz2.execute-api.us-east-2.amazonaws.com/Prod/?walletAddress=".concat(String(this.walletAddr)))
+					}).then(function(response) {
+						console.log(response);
+						console.log(response.data);
+						this.opengames = response.data.filter((game) => {return ((game.status === "open") ||
+																				 (game.status === "accepted"));
+																});
+						console.log("open games from DB");
+						console.log(this.opengames);
+					});
+				} catch (err) {
+					console.log(err);
+				}
 			},
 			askHand_: async(ctc) => {
 				return new Promise((resolve) => {
