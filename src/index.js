@@ -937,7 +937,7 @@ const app = new Vue({
 				if (gameOnChain) {
 					axios({
 						method: "POST",
-						url: "https://zwmoxwgvz2.execute-api.us-east-2.amazonaws.com/Prod/",
+						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-newGameFunction-3AXA73S81IZH",
 						data: {
 							ContractAddress: (String(the_game.p1)+t),
 							title: the_game.title,
