@@ -613,6 +613,59 @@ function Game(obj) {
 	};
 };
 
+// Source: http://stackoverflow.com/questions/497790
+var dates = {
+    convert:function(d) {
+        // Converts the date in d to a date-object. The input can be:
+        //   a date object: returned without modification
+        //  an array      : Interpreted as [year,month,day]. NOTE: month is 0-11.
+        //   a number     : Interpreted as number of milliseconds
+        //                  since 1 Jan 1970 (a timestamp) 
+        //   a string     : Any format supported by the javascript engine, like
+        //                  "YYYY/MM/DD", "MM/DD/YYYY", "Jan 31 2009" etc.
+        //  an object     : Interpreted as an object with year, month and date
+        //                  attributes.  **NOTE** month is 0-11.
+        return (
+            d.constructor === Date ? d :
+            d.constructor === Array ? new Date(d[0],d[1],d[2]) :
+            d.constructor === Number ? new Date(d) :
+            d.constructor === String ? new Date(d) :
+            typeof d === "object" ? new Date(d.year,d.month,d.date) :
+            NaN
+        );
+    },
+    compare:function(a,b) {
+        // Compare two dates (could be of any type supported by the convert
+        // function above) and returns:
+        //  -1 : if a < b
+        //   0 : if a = b
+        //   1 : if a > b
+        // NaN : if a or b is an illegal date
+        // NOTE: The code inside isFinite does an assignment (=).
+        return (
+            isFinite(a=this.convert(a).valueOf()) &&
+            isFinite(b=this.convert(b).valueOf()) ?
+            (a>b)-(a<b) :
+            NaN
+        );
+    },
+    inRange:function(d,start,end) {
+        // Checks if date in d is between dates in start and end.
+        // Returns a boolean or NaN:
+        //    true  : if d is between start and end (inclusive)
+        //    false : if d is before start or after end
+        //    NaN   : if one or more of the dates is illegal.
+        // NOTE: The code inside isFinite does an assignment (=).
+       return (
+            isFinite(d=this.convert(d).valueOf()) &&
+            isFinite(start=this.convert(start).valueOf()) &&
+            isFinite(end=this.convert(end).valueOf()) ?
+            start <= d && d <= end :
+            NaN
+        );
+    }
+};
+
 var examplePlayers = [];
 examplePlayers.push(new aPlayer("0588xf01", "jherod"));
 examplePlayers.push(new aPlayer("1125fxf01", "sunduz"));
@@ -805,6 +858,7 @@ const app = new Vue({
 			},
 			ongamecomplete: function(game) {
 				var outcome = game.outcome();
+				//send complete message to the DB, if that's not already handled on the backend (open q)
 				popupmsg = "Game " + game.title + " complete. (wager: " + game.wager + game.currency + ")<br>";
 				if (outcome === "tie") {
 					popupmsg += " Tie!";
@@ -829,20 +883,23 @@ const app = new Vue({
 			dismiss: function() {
 				this.displaytext = null;
 			},
+			gameStatus: function(game) {
+				//if (!(game.p2) && game.
+			},
 			getGames: function() {
 				//need to edit to ensure correct form of request
+				var self = this;
 				try {
 				axios({
 						method: "GET",
-						url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress=".concat(String(this.walletAddr)))
+						url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?p1=".concat(String(this.walletAddr)))
 					}).then(function(response) {
 						console.log(response);
 						console.log(response.data);
-						this.opengames = response.data.filter((game) => {return ((game.status === "open") ||
-																				 (game.status === "accepted"));
+						self.opengames = response.data.filter((game) => {return ((game.status !== "complete"));
 																});
 						console.log("open games from DB");
-						console.log(this.opengames);
+						console.log(self.opengames);
 					});
 				} catch (err) {
 					console.log(err);
@@ -896,9 +953,10 @@ const app = new Vue({
 				router.replace('home');
 				this.setpopup("Processing...");
 				console.log(game);
-				var d = new Date();
-				var t = d.toDateString() + d.toTimeString();
-				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, timeCreated: t, dateCreated: d, p1: game.p1});
+				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
+				d = d.toUTCString();
+				//var t = d.toDateString() + d.toTimeString();
+				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, dateCreated: d, p1: game.p1});
 				/*this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
 				var self = this;
