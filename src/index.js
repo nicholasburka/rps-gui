@@ -898,7 +898,7 @@ const app = new Vue({
 						console.log(response.data);
 						console.log("SELF");
 						console.log(self);
-						self.opengames = response.data.filter((game) => {return ((game.status !== "complete"));
+						self.opengames = response.data.filter((game) => {return (game.status !== "complete");
 																});
 						console.log("open games from DB");
 						console.log(self.opengames);
@@ -958,7 +958,7 @@ const app = new Vue({
 				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
 				d = d.toUTCString();
 				//var t = d.toDateString() + d.toTimeString();
-				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, dateCreated: d, p1: game.p1});
+				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, dateCreated: d, p1: game.p1, status: "open"});
 				/*this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
 				var self = this;
