@@ -699,7 +699,7 @@ const app = new Vue({
 				balance: null,
 				walletCurrency: "ETH",
 				prevopponents: examplePlayers, //this would be a function
-				opengames: exampleGames,
+				opengames: [],//exampleGames,
 				invites: null,
 				currentgame: null,
 				price: null,
