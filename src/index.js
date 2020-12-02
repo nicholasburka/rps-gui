@@ -896,6 +896,7 @@ const app = new Vue({
 					}).then(function(response) {
 						console.log(response);
 						console.log(response.data);
+						console.log("SELF");
 						console.log(self);
 						self.opengames = response.data.filter((game) => {return ((game.status !== "complete"));
 																});
