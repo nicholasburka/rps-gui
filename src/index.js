@@ -85,7 +85,7 @@ const home = {
 			<div id="home-th">
 				<ul id="open-games">
 					<div id="open-games-header" class="row"><div class="column"><h3 class="row">Wallet addr: {{walletaddr}}</h3><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
-					<li class="row activeitem" v-for="game in opengames" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wager}} {{game.currency}} : status - {{game.status}} : time left - {{game.timeLeft()}}</li>
+					<li class="row activeitem" v-for="game in opengames" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wager}} {{game.currency}} : status - {{game.status}} : time left - {{}}</li>
 				</ul>
 				<ul id="invites">
 					<li class="row activeitem" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
