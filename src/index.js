@@ -1008,7 +1008,7 @@ const app = new Vue({
 							wager: the_game.wager,
 							currency: "ETH",
 							delay: the_game.delay,
-							starttime: t,
+							starttime: d,
 							p1: the_game.p1
 						}
 					}).then(function(response) {
