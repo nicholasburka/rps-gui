@@ -1003,7 +1003,7 @@ const app = new Vue({
 						method: "POST",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-newGameFunction-3AXA73S81IZH",
 						data: {
-							ContractAddress: (String(the_game.p1)+t),
+							ContractAddress: (String(the_game.p1)+d), /*need to change this field title, semantically misaligned*/
 							title: the_game.title,
 							wager: the_game.wager,
 							currency: "ETH",
