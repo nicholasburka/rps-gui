@@ -389,25 +389,25 @@ const searchGame = {
 		<div id="search-game" class="page-container">
 		<form id="game-settings" class="column">
 			<h3 class="row form-caption">Wager</h3>
-				<div class="row" style="flex-basis: 40%; width: 60%; align-self: center;">
-				<div class="column" style="flex-basis: 10%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
-				<div class="column" style="flex-basis: 10%;"><input v-model="sign" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
-				<div class="column" style="flex-basis: 10%;"><input v-model="sign" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
-				<input class="column form-input"  v-model="wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
+				<div class="row" style="flex-basis: 40%; width: 80%; align-self: center;">
+				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
+				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
+				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
+				<input class="column form-input" style="max-width: 25%;"  v-model="wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
 			</div>
 			<br/>
-			<div class="row" style="flex-basis: 40%; width: 60%; align-self: center;">
-			<div class="column"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between</label></div>
-				<label>min&nbsp;</label><input v-model="min" class="column form-input" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH"><label>&nbsp;and&nbsp;</label>
-				<label>max&nbsp;</label><input v-model="max" class="column form-input" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
+			<div class="row" style="flex-basis: 40%; width: 80%; margin-top:2%; align-self: center;">
+			<div class="column" style="max-width: 30%;"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between</label></div>
+				<label>min&nbsp;</label><input v-model="min" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH"><label>&nbsp;and&nbsp;</label>
+				<label>max&nbsp;</label><input v-model="max" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
 			</div>
 			<!---<h3 class="row form-caption">Delay</h3>
 			<input class="row form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default">--->
 			<h3 class="row form-caption">Title</h3>
-			<input class="row form-input" type="text" name="wager" placeholder="">
+			<input class="row form-input" type="text" name="wager" placeholder="(optional)">
 			<h3 class="row form-caption">Who</h3>
-			<input class="row form-input" v-model="addrentry" type="text" name="who-addr-entry" placeholder="enter a wallet address">
-			<select class="row form-input" v-model="addrprev" type="text" name="who" placeholder="">
+			<input class="row form-input" v-model="addrentry" type="text" name="who-addr-entry" placeholder="(optional) enter a wallet address">
+			<select class="row form-input" v-model="addrprev" type="text" name="who" placeholder="choose from previous opponents">
 				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 				<option selected="selected">select from previous opponents</option>
 			</select>
