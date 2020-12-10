@@ -83,8 +83,8 @@ const home = {
 		<div id="home" class="column page-container">
 			<transition appear appear-active-class="slideInRight">
 			<div id="home-th">
+				<div id="open-games-header" class="row"><div class="column"><h3 class="row">Wallet addr: {{walletaddr}}</h3><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 				<ul id="open-games">
-					<div id="open-games-header" class="row"><div class="column"><h3 class="row">Wallet addr: {{walletaddr}}</h3><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 					<li class="row activeitem" v-for="game in opengames" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wager}} {{game.currency}} : status - {{game.status}} : time left - {{}}</li>
 				</ul>
 				<ul id="invites">
@@ -96,7 +96,7 @@ const home = {
 						</div>
 					</li>
 				</ul>
-				<h2 id="game-history" v-on:click="$router.push('history')">history</h2>
+				<h2 id="game-history" v-on:click="$router.push('history')">game history</h2>
 			</div>
 			</transition>
 			<hr style="width: 80%; text-align: center;">
