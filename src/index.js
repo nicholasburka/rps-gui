@@ -956,11 +956,12 @@ const app = new Vue({
 				}
 			}),
 			ongamecreate: async function(game) {
+				var self = this;
 				router.replace('home');
 				this.setpopup("Processing...");
 				console.log(game);
 				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
-				d = d.toUTCString();
+				d = d.toUTCString(); //time format, does this convert back functionally
 				//var t = d.toDateString() + d.toTimeString();
 				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, dateCreated: d, p1: game.p1, status: "open"});
 				/*this.setpopup("Deploying...");
@@ -1014,6 +1015,7 @@ const app = new Vue({
 					}).then(function(response) {
 						console.log(response);
 						console.log(response.data);
+						self.opengames.push(response.data);
 					});
 				}
 			},
