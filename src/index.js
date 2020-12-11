@@ -373,7 +373,7 @@ const createGame = {
 		}
 }};
 const searchGame = {
-	props: ['prevopponents', 'balance'],
+	props: ['walletaddr', 'prevopponents', 'balance'],
 	data: function() {
 
 		return {
@@ -382,12 +382,14 @@ const searchGame = {
 			'min': .001,
 			'max': .0015,
 			'addrprev': undefined,
-			'addrentry': undefined
+			'addrentry': undefined,
+			'title': undefined,
+			'walletaddr': this.walletaddr
 		}
 	},
 	template: `
 		<div id="search-game" class="page-container">
-		<form id="game-settings" class="column">
+		<form id="game-settings" class="column" v-on:submit-prevent>
 			<h3 class="row form-caption">Wager</h3>
 				<div class="row" style="flex-basis: 40%; width: 80%; align-self: center;">
 				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
@@ -404,49 +406,58 @@ const searchGame = {
 			<!---<h3 class="row form-caption">Delay</h3>
 			<input class="row form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default">--->
 			<h3 class="row form-caption">Title</h3>
-			<input class="row form-input" type="text" name="wager" placeholder="(optional)">
+			<input class="row form-input" v-model="title" type="text" name="title" placeholder="(optional)">
 			<h3 class="row form-caption">Who</h3>
 			<input class="row form-input" v-model="addrentry" type="text" name="who-addr-entry" placeholder="(optional) enter a wallet address">
 			<select class="row form-input" v-model="addrprev" type="text" name="who" placeholder="choose from previous opponents">
 				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 				<option selected="selected">select from previous opponents</option>
 			</select>
-			<button id="go" class="row" v-on:submit.prevent="onSubmit" v-on:click="$emit('ongamesearch',
-					 {title: title, 
-					 	wager: wager,
-					 	sign: sign,
-					 	delay: delay, 
-					 	p1: {walletaddr: walletaddr}, 
-					 	p2: undefined, 
-					 	p2addrentry: addrentry, 
-					 	p2prev: addrprev});">Go!</button>
+			<button id="go" class="row" v-on:click="onSubmit(this.wager, this.sign, this.min, this.max, this.title, this.walletaddr, this.addrentry, this.addrprev);">Go!</button>
 		</form>
 	</div>
 	`,
 	methods: {
-		onSubmit: function() {
-			if (this.addrprev) {
-
-			} else if (this.addrentry) {
-
-			} else {
-
-			}
-
+		onSubmit: function(wager, sign, min, max, title, p1, p2addrentry, p2prevselection) {
 			var params = {
-				title: this.title,
-				wager: undefined,
-				sign: this.sign
+				title: title,
+				sign: sign,
+				min: min,
+				max: max,
+				wager: wager,
+				searchfromaddr: p1,
+				searchforaddr: undefined
 			};
-			if (!this.sign) {
-
-			} else if (this.sign === "between") {
-
+			//fill these in
+			if (p2prevselection) {
+				params["searchforaddr"] = p2prevselection;
+			} else if (p2addrentry) {
+				params["searchforaddr"] = p2addrentry;
 			} else {
 
 			}
 
-			this.$emit('ongamesearch', params);
+			if (!this.sign) {
+				// do not do anything since sign is necessary
+				// can display a message here for user "please choose wager condition"
+			} else {
+
+
+				this.$emit('ongamesearch', params);
+
+				//clear all local vars / component data to null
+			}
+			/*$emit('ongamesearch',
+					 {title: title, 
+					 	wager: wager,
+					 	sign: sign,
+					 	min: min,
+					 	max: max, 
+					 	delay: delay,
+					 	p1: {walletaddr: walletaddr}, 
+					 	p2: undefined, 
+					 	p2addrentry: addrentry, 
+					 	p2prev: addrprev});*/
 		}
 	}
 };
@@ -845,7 +856,7 @@ const app = new Vue({
 			},
 			ongamesearch: function(gameparams) {
 				console.log(gameparams);
-				router.replace('home');
+				//router.replace('home');
 			},
 			onmoveselect: function(game, move) {
 				console.log(game);
@@ -906,6 +917,8 @@ const app = new Vue({
 																});
 						console.log("open games from DB");
 						console.log(self.opengames);
+					}).catch((error) => {
+						console.log(error);
 					});
 				} catch (err) {
 					console.log(err);
