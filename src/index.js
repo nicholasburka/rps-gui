@@ -389,27 +389,27 @@ const searchGame = {
 	},
 	template: `
 		<div id="search-game" class="page-container">
-		<form id="game-settings" class="column" v-on:submit-prevent>
+		<form id="game-settings" class="column" v-on:submit.prevent>
 			<h3 class="row form-caption">Wager</h3>
 				<div class="row" style="flex-basis: 40%; width: 80%; align-self: center;">
-				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
-				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
-				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
-				<input class="column form-input" style="max-width: 25%;"  v-model="wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
+				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="this.sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
+				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="this.sign" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
+				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="this.sign" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
+				<input class="column form-input" style="max-width: 25%;"  v-model="this.wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
 			</div>
 			<br/>
 			<div class="row" style="flex-basis: 40%; width: 80%; margin-top:2%; align-self: center;">
-			<div class="column" style="max-width: 30%;"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between</label></div>
-				<label>min&nbsp;</label><input v-model="min" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH"><label>&nbsp;and&nbsp;</label>
-				<label>max&nbsp;</label><input v-model="max" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
+			<div class="column" style="max-width: 30%;"><input v-model="this.sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between</label></div>
+				<label>min&nbsp;</label><input v-model="this.min" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH"><label>&nbsp;and&nbsp;</label>
+				<label>max&nbsp;</label><input v-model="this.max" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
 			</div>
 			<!---<h3 class="row form-caption">Delay</h3>
-			<input class="row form-input" type="number" name="delay" step="5" min="0" default="0" placeholder="default">--->
+			<input class="row form-input" v-model="this.timeleft" type="number" name="delay" step="5" min="0" default="0" placeholder="default">--->
 			<h3 class="row form-caption">Title</h3>
-			<input class="row form-input" v-model="title" type="text" name="title" placeholder="(optional)">
+			<input class="row form-input" v-model="this.title" type="text" name="title" placeholder="(optional)">
 			<h3 class="row form-caption">Who</h3>
-			<input class="row form-input" v-model="addrentry" type="text" name="who-addr-entry" placeholder="(optional) enter a wallet address">
-			<select class="row form-input" v-model="addrprev" type="text" name="who" placeholder="choose from previous opponents">
+			<input class="row form-input" v-model="this.addrentry" type="text" name="who-addr-entry" placeholder="(optional) enter a wallet address">
+			<select class="row form-input" v-model="this.addrprev" type="text" name="who" placeholder="choose from previous opponents">
 				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 				<option selected="selected">select from previous opponents</option>
 			</select>
@@ -419,31 +419,31 @@ const searchGame = {
 	`,
 	methods: {
 		onSubmit: function(wager, sign, min, max, title, p1, p2addrentry, p2prevselection) {
-			var params = {
-				title: title,
+			var searchparams = {
+				title: this.title,
 				sign: sign,
-				min: min,
-				max: max,
-				wager: wager,
-				searchfromaddr: p1,
+				min: this.min,
+				max: this.max,
+				wager: this.wager,
+				searchfromaddr: this.walletaddr,
 				searchforaddr: undefined
 			};
 			//fill these in
 			if (p2prevselection) {
-				params["searchforaddr"] = p2prevselection;
+				gameparams["searchforaddr"] = this.addrprev//p2prevselection;
 			} else if (p2addrentry) {
-				params["searchforaddr"] = p2addrentry;
+				gameparams["searchforaddr"] = this.addrentry//p2addrentry;
 			} else {
 
 			}
 
-			if (!this.sign) {
+			if (!sign) {
 				// do not do anything since sign is necessary
 				// can display a message here for user "please choose wager condition"
 			} else {
 
 
-				this.$emit('ongamesearch', params);
+				this.$emit('ongamesearch', searchparams);
 
 				//clear all local vars / component data to null
 			}
@@ -461,6 +461,24 @@ const searchGame = {
 		}
 	}
 };
+const confirmAcceptGame = {
+	props: ['game', 'action', 'blocktime'],
+	template: `
+		<div id="confirm-game" class="row confirmPopup">
+			<h1 class="row">Accept game?</h1>
+			<p class="row">(Your ETH will be committed unless there's a timeout)</p>
+			<p class="row"> {{ game.title }}</p>
+			<p class="row"> {{ game.wager }} ETH </p>
+			<p class="row"> {{ game.delay }} block timeout (Est. time with ~15s per block: {{ game.delay * 15 }}s) </p>
+			<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
+			<p class="row"> {{ game.p1 }}</p>
+			<div id="buttons" class="row">
+			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('confirm')">Yes!</button>
+			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('deny')">Back</button>
+			</div>
+		</div>
+	`
+};
 const searchResult = {
 	props: ["title", "wager", "playerAddr"],
 	template: `
@@ -473,6 +491,9 @@ const searchResult = {
 		</div>
 	`
 };
+
+//add "new search" button to return to search
+//also need to add back buttons (?)
 const gameSearchResults = {
 	props: ["results"],
 	components: {
@@ -482,6 +503,7 @@ const gameSearchResults = {
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
 			<searchResult v-for="game in results" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1.walletAddr" v-on:click="$router.push('play', game)">
 			</searchResult>
+			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
 	`
 };
@@ -553,7 +575,7 @@ const routes = [
 	{path: '/home', component: home},
 	{path: '/create', component: createGame},
 	{path: '/search', component: searchGame},
-	{path: '/search-results', component: gameSearchResults},
+	//{path: '/search-results', component: gameSearchResults},
 	{path: '/play', component: gameplay},
 	{path: '/join', component: joinGame}
 ];
@@ -711,6 +733,7 @@ const app = new Vue({
 				walletCurrency: "ETH",
 				prevopponents: examplePlayers, //this would be a function
 				opengames: [],//exampleGames,
+				foundgames: [],
 				invites: null,
 				currentgame: null,
 				price: null,
@@ -827,59 +850,6 @@ const app = new Vue({
 						console.log("ERR getting balance, " + err);
 					})
 			},
-			ongameselect: function(game) {
-				//console.log("on game select");
-				//console.log(game);
-				this.currentgame = game;
-				game.gameid = "fafa"; //temp
-				console.log(game);
-				//TO DO, right HERE
-				router.push({path: 'play', query: {game: game.gameid}});
-			},
-			ongameaccept: async function(contract) {
-				console.log("on game accept");
-				router.replace('home');
-				this.setpopup("Connecting to contract provided...");
-				try {
-					var ctcbob = await this.acc.attach(backend, ctc);
-					var result = await backend.Bob(stdlib, ctcbob,
-						{...Player('Bob', ctcbob),
-						acceptWager: (amt) => {
-							return true;
-						}}
-						);
-				} catch (error) {
-					this.setpopup("Could not connect to contract.");
-					console.log("Could not connect to contract.");
-					console.log(error);
-				}
-			},
-			ongamesearch: function(gameparams) {
-				console.log(gameparams);
-				//router.replace('home');
-			},
-			onmoveselect: function(game, move) {
-				console.log(game);
-				console.log(move);
-
-				games[game.ctcAddr].onMove(move);
-				//submit the move to the game
-				router.replace('home');
-				this.setpopup("Move submitted!");
-			},
-			ongamecomplete: function(game) {
-				var outcome = game.outcome();
-				//send complete message to the DB, if that's not already handled on the backend (open q)
-				popupmsg = "Game " + game.title + " complete. (wager: " + game.wager + game.currency + ")<br>";
-				if (outcome === "tie") {
-					popupmsg += " Tie!";
-				} else if (outcome.walletaddr === this.walletaddr) {
-					 popupmsg += "You won!";
-				} else {
-					popupmsg += "You lost...";
-				}
-				this.setpopup(popupmsg);
-			},
 			setpopup: function(msg) {
 				
 				this.popup = msg;
@@ -970,7 +940,7 @@ const app = new Vue({
 			}),
 			ongamecreate: async function(game) {
 				var self = this;
-				router.replace('home');
+				router.push('home');
 				this.setpopup("Processing...");
 				console.log(game);
 				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
@@ -1032,6 +1002,74 @@ const app = new Vue({
 						console.log(self.opengames);
 					});
 				}
+			},
+			ongameselect: function(game) {
+				//console.log("on game select");
+				//console.log(game);
+				this.currentgame = game;
+				game.gameid = "fafa"; //temp
+				console.log(game);
+				//TO DO, right HERE
+				router.push({path: 'play', query: {game: game.gameid}});
+			},
+			ongameaccept: async function(contract) {
+				console.log("on game accept");
+				router.push('home');
+				this.setpopup("Connecting to contract provided...");
+				try {
+					var ctcbob = await this.acc.attach(backend, ctc);
+					var result = await backend.Bob(stdlib, ctcbob,
+						{...Player('Bob', ctcbob),
+						acceptWager: (amt) => {
+							return true;
+						}}
+						);
+				} catch (error) {
+					this.setpopup("Could not connect to contract.");
+					console.log("Could not connect to contract.");
+					console.log(error);
+				}
+			},
+			ongamesearch: function(gameparams) {
+				console.log(gameparams);
+				//router.replace('home');
+				this.setpopup('searching...');
+				var search_param_str = Object.keys(gameparams).map(key => key + "=" + gameparams[key]).join("&");
+				console.log(param_str);
+				axios({
+						method: "GET",
+						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-searchGamesFunction-ZR0MD8OA2QNR?".concat(search_param_str)
+					}).then(function(response) {
+						console.log("search results");
+						console.log(response);
+						console.log(response.data);
+						self.foundgames = response.data;
+						console.log(self.foundgames);
+					}).catch((error) => {
+						console.log(error);
+					});
+			},
+			onmoveselect: function(game, move) {
+				console.log(game);
+				console.log(move);
+
+				games[game.ctcAddr].onMove(move);
+				//submit the move to the game
+				router.push('home');
+				this.setpopup("Move submitted!");
+			},
+			ongamecomplete: function(game) {
+				var outcome = game.outcome();
+				//send complete message to the DB, if that's not already handled on the backend (open q)
+				popupmsg = "Game " + game.title + " complete. (wager: " + game.wager + game.currency + ")<br>";
+				if (outcome === "tie") {
+					popupmsg += " Tie!";
+				} else if (outcome.walletaddr === this.walletaddr) {
+					 popupmsg += "You won!";
+				} else {
+					popupmsg += "You lost...";
+				}
+				this.setpopup(popupmsg);
 			},
 			runTests: function() {
 				//how to do await within synchronous function as a Promise
