@@ -1035,7 +1035,7 @@ const app = new Vue({
 				//router.replace('home');
 				this.setpopup('searching...');
 				var search_param_str = Object.keys(gameparams).map(key => key + "=" + gameparams[key]).join("&");
-				console.log(param_str);
+				console.log(search_param_str);
 				axios({
 						method: "GET",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-searchGamesFunction-ZR0MD8OA2QNR?".concat(search_param_str)
