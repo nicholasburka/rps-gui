@@ -496,16 +496,31 @@ const searchResult = {
 //also need to add back buttons (?)
 const gameSearchResults = {
 	props: ["results"],
+	data: function() {
+		return {
+			confirm: false,
+			game: undefined
+		};
+	},
 	components: {
 		'searchResult': searchResult
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
-			<searchResult v-for="game in results" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1.walletAddr" v-on:click="$router.push('play', game)">
+			<searchResult v-for="game in results" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1.walletAddr" v-on:click="this.game = game; this.confirm = true;">
 			</searchResult>
 			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
-	`
+	`,
+	methods: {
+		confirm: function() {
+			//send to chain or to page?
+			$emit('ongameaccept', this.game);
+		},
+		deny: function() {
+			this.confirm = false;
+		}
+	}
 };
 const joinGame = {
 	props: ["contract"],
@@ -615,10 +630,46 @@ function Game(obj) {
 	this.p1move = obj.p1move;
 	this.p2move = obj.p2move;
 	this.completed = false;
+	this.starttime = obj.starttime;
 	this.timeLeft = function() {
+		var blocktime_est = 100;
+		function isoToObj(s) {
+		    var b = s.split(/[-TZ:]/i);
+
+		    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5]));
+
+		}
+
+
+		function timeToGo(s) {
+
+		    // Utility to add leading zero
+		    function z(n) {
+		      return (n < 10? '0' : '') + n;
+		    }
+
+		    // Convert string to date object
+		    var d = isoToObj();
+		    var diff = d - new Date();
+
+		    // Allow for previous times
+		    var sign = diff < 0? '-' : '';
+		    diff = Math.abs(diff);
+
+		    // Get time components
+		    var hours = diff/3.6e6 | 0;
+		    var mins  = diff%3.6e6 / 6e4 | 0;
+		    var secs  = Math.round(diff%6e4 / 1e3);
+
+		    // Return formatted string
+		    return sign + z(hours) + ':' + z(mins) + ':' + z(secs);   
+		}
 		//need to check units
 		//this will actually be a call to Reach or a blockchain API
-		return (this.delay + this.timeCreated) - (new Date()).getTime();
+		//return (this.delay + this.timeCreated) - (new Date()).getTime();
+		var enddate = new Date(this.starttime);
+		enddate = enddate.setSeconds(enddate.getSeconds() + blocktime*this.delay); //assuming that blocktime is in seconds
+		return timeToGo(enddate.toISOString());
 	};
 	this.status = function() {
 		if (!this.p2) {
@@ -733,6 +784,7 @@ const app = new Vue({
 				walletCurrency: "ETH",
 				prevopponents: examplePlayers, //this would be a function
 				opengames: [],//exampleGames,
+				opengamesasgameobjs: [],
 				foundgames: [],
 				invites: null,
 				currentgame: null,
@@ -944,7 +996,7 @@ const app = new Vue({
 				this.setpopup("Processing...");
 				console.log(game);
 				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
-				d = d.toUTCString(); //time format, does this convert back functionally
+				d = d.toISOString(); //time format, does this convert back functionally
 				//var t = d.toDateString() + d.toTimeString();
 				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, dateCreated: d, p1: game.p1, status: "open"});
 				/*this.setpopup("Deploying...");
