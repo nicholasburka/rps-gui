@@ -371,7 +371,7 @@
 <body>
 	<div id="app" style="display: flex; height: 100vh;">
 		<!-- Bind all necessary props for components in router from vue data here --->
-		<router-view class="view" :prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect"></router-view>
+		<router-view class="view" :prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect"></router-view>
 		<div v-if="($router.currentRoute.path === '/')">
 			<h3 class="bottomBanner row" v-if="walletLoading && (walletAddr === null)">Detecting ETH service...</h3>
 			<div v-else-if="walletFound && displayWalletText" id="wallet" class="bottomBanner">

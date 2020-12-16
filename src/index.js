@@ -495,7 +495,7 @@ const searchResult = {
 //add "new search" button to return to search
 //also need to add back buttons (?)
 const gameSearchResults = {
-	props: ["results"],
+	props: ["foundgames"],
 	data: function() {
 		return {
 			confirm: false,
@@ -507,7 +507,7 @@ const gameSearchResults = {
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
-			<searchResult v-for="game in results" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1.walletAddr" v-on:click="this.game = game; this.confirm = true;">
+			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1.walletAddr" v-on:click="this.game = game; this.confirm = true;">
 			</searchResult>
 			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
@@ -590,7 +590,7 @@ const routes = [
 	{path: '/home', component: home},
 	{path: '/create', component: createGame},
 	{path: '/search', component: searchGame},
-	//{path: '/search-results', component: gameSearchResults},
+	{path: '/search-results', component: gameSearchResults},
 	{path: '/play', component: gameplay},
 	{path: '/join', component: joinGame}
 ];
@@ -999,10 +999,12 @@ const app = new Vue({
 				d = d.toISOString(); //time format, does this convert back functionally
 				//var t = d.toDateString() + d.toTimeString();
 				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, dateCreated: d, p1: game.p1, status: "open"});
-				/*this.setpopup("Deploying...");
+				this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
 				var self = this;
 				console.log("deploying");
+
+				var gameOnChain = true;
 				try {
 					game.address = await this.acc.deploy(backend);
 					this.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
@@ -1019,18 +1021,19 @@ const app = new Vue({
 						delay: game.delay
 					});
 					//axios -> send game to DB
+					gameOnChain = true;
 				} catch (error) {
 					this.displaytext = "Deploy failed" ;
 					this.setpopup("Deploy failed.");
 					console.log("Deploy failed");
 					console.log(error);
-				}*/
+					gameOnChain = false;
+				}
 
 				console.log("game");
 				console.log(the_game);
 				console.log(the_game.p1);
 				//this should be set by result of Reach backend deploy
-				var gameOnChain = true;
 
 				//send game to backend
 				//
@@ -1052,6 +1055,7 @@ const app = new Vue({
 						console.log(response.data);
 						self.opengames.push(response.data);
 						console.log(self.opengames);
+						this.setpopup("Game \"" + response.data.title + "\" deployed!");
 					});
 				}
 			},
@@ -1064,18 +1068,22 @@ const app = new Vue({
 				//TO DO, right HERE
 				router.push({path: 'play', query: {game: game.gameid}});
 			},
-			ongameaccept: async function(contract) {
+			ongameaccept: async function(game) {
 				console.log("on game accept");
 				router.push('home');
 				this.setpopup("Connecting to contract provided...");
 				try {
-					var ctcbob = await this.acc.attach(backend, ctc);
+					console.log("game chosen");
+					console.log(game);
+					console.log("game contract address");
+					console.log(game.contractAddress);
+					/*var ctcbob = await this.acc.attach(backend, ctc);
 					var result = await backend.Bob(stdlib, ctcbob,
 						{...Player('Bob', ctcbob),
 						acceptWager: (amt) => {
 							return true;
 						}}
-						);
+						);*/
 				} catch (error) {
 					this.setpopup("Could not connect to contract.");
 					console.log("Could not connect to contract.");
@@ -1097,6 +1105,7 @@ const app = new Vue({
 						console.log(response.data);
 						self.foundgames = response.data;
 						console.log(self.foundgames);
+						router.push('search-results')
 					}).catch((error) => {
 						console.log(error);
 					});
