@@ -499,7 +499,90 @@ const gameSearchResults = {
 	data: function() {
 		return {
 			confirm: false,
-			game: undefined
+			game: undefined,
+			test_games: [
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Fri, 11 Dec 2020 16:48:36 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Fri, 11 Dec 2020 16:48:36 GMT",
+    "title": "I always choose paper"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Fri, 11 Dec 2020 16:48:48 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Fri, 11 Dec 2020 16:48:48 GMT",
+    "title": "Rock Paper Skissors"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Fri, 11 Dec 2020 23:36:03 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Fri, 11 Dec 2020 23:36:03 GMT",
+    "title": "Rock lovers only"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Fri, 11 Dec 2020 23:36:18 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Fri, 11 Dec 2020 23:36:18 GMT",
+    "title": "Srossics repar kcor"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Thu, 10 Dec 2020 20:21:29 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Thu, 10 Dec 2020 20:21:29 GMT",
+    "title": "Rock lovers only"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Thu, 10 Dec 2020 20:57:03 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Thu, 10 Dec 2020 20:57:03 GMT",
+    "title": "Rock Paper Skissors"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Thu, 10 Dec 2020 21:06:11 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Thu, 10 Dec 2020 21:06:11 GMT",
+    "title": "Rock lovers only"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Thu, 10 Dec 2020 21:22:18 GMT",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Thu, 10 Dec 2020 21:22:18 GMT",
+    "title": "I always choose paper"
+  },
+  {
+    "p1": 12345931,
+    "currency": "ETH",
+    "starttime": "Tue Dec 01 202012:52:12 GMT-0500 (Eastern Standard Time)",
+    "wager": 0.001,
+    "delay": 100,
+    "ContractAddress": "12345931Tue Dec 01 202012:52:12 GMT-0500 (Eastern Standard Time)",
+    "title": "I always choose paper"
+  }
+]
 		};
 	},
 	components: {
@@ -507,12 +590,17 @@ const gameSearchResults = {
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
-			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1.walletAddr" v-on:click="this.game = game; this.confirm = true;">
+			<searchResult v-for="game in test_games" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-on:click="onclick(game);">
 			</searchResult>
 			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
 	`,
 	methods: {
+		onclick: function(game) {
+			console.log("clicked " + game.title);
+			this.game = game;
+			this.confirm = true;
+		},
 		confirm: function() {
 			//send to chain or to page?
 			$emit('ongameaccept', this.game);
