@@ -592,7 +592,7 @@ const gameSearchResults = {
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
-			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-on:click.native="onclick(game);">
+			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()} v-on:click.native="onclick(game);">
 			</searchResult>
 			<confirmAcceptGame v-if="this.confirm" v-bind:game="this.game" v-bind:blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
@@ -611,6 +611,11 @@ const gameSearchResults = {
 		},
 		deny: function() {
 			this.confirm = false;
+		},
+		randomcolor: function() { 
+		  return "hsl(" + 360 * Math.random() + ',' +
+		             (25 + 70 * Math.random()) + '%,' + 
+		             (65 + 10 * Math.random()) + '%)'
 		}
 	}
 };
