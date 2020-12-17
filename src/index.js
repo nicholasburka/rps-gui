@@ -418,30 +418,32 @@ const searchGame = {
 	</div>
 	`,
 	methods: {
-		onSubmit: function(wager, sign, min, max, title, p1, p2addrentry, p2prevselection) {
+		onSubmit: function(wager, sign, min, max, title, searchfromaddr, p2addrentry, p2prevselection) {
 			var searchparams = {
-				title: this.title,
+				title: title,
 				sign: sign,
-				min: this.min,
-				max: this.max,
-				wager: this.wager,
-				searchfromaddr: this.walletaddr,
+				min: min,
+				max: max,
+				wager: wager,
+				searchfromaddr: searchfromaddr,
 				searchforaddr: undefined
 			};
 			//fill these in
 			if (p2prevselection) {
-				gameparams["searchforaddr"] = this.addrprev//p2prevselection;
+				gameparams["searchforaddr"] = p2prevselection;//this.addrprev//
 			} else if (p2addrentry) {
-				gameparams["searchforaddr"] = this.addrentry//p2addrentry;
+				gameparams["searchforaddr"] = p2addrentry;//this.addrentry//p2addrentry;
 			} else {
 
 			}
+
+			console.log("search params");
+			console.log(searchparams);
 
 			if (!sign) {
 				// do not do anything since sign is necessary
 				// can display a message here for user "please choose wager condition"
 			} else {
-
 
 				this.$emit('ongamesearch', searchparams);
 
