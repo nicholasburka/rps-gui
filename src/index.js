@@ -439,6 +439,9 @@ const searchGame = {
 
 			console.log("search params");
 			console.log(searchparams);
+			console.log(this);
+			console.log("max");
+			console.log(this.max);
 
 			if (!sign) {
 				// do not do anything since sign is necessary
