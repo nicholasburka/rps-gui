@@ -612,7 +612,7 @@ const gameSearchResults = {
 		},
 		confirmgame: function() {
 			//send to chain or to page?
-			$emit('ongameaccept', this.game);
+			this.$emit('ongameaccept', this.game);
 		},
 		deny: function() {
 			this.confirm = false;
