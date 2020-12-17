@@ -599,7 +599,7 @@ const gameSearchResults = {
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
 			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 			</searchResult>
-			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
+			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirmgame()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
 	`,
 	methods: {
@@ -610,7 +610,7 @@ const gameSearchResults = {
 			console.log(this);
 			console.log(this.confirm);
 		},
-		confirm: function() {
+		confirmgame: function() {
 			//send to chain or to page?
 			$emit('ongameaccept', this.game);
 		},
