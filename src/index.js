@@ -1107,14 +1107,14 @@ const app = new Vue({
 				var gameOnChain = true;
 				try {
 					game.address = await this.acc.deploy(backend);
-					this.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
+					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
 					console.log("contract address");
 					console.log(game.address);
-					this.setpopup("Deploying at " + game.address);
+					self.setpopup("Deploying at " + game.address);
 					console.log("awaiting contract info");
-					this.displaytext = JSON.stringify(await game.address.getInfo(), null, 2);
+					self.displaytext = JSON.stringify(await game.address.getInfo(), null, 2);
 					console.log(this.displaytext);
-					this.opengames.push(game);
+					self.opengames.push(game);
 					var game_res = await backend.Alice(stdlib, game.address, {
 						...Player('Alice', game.address), //this does not work, how to test without being on net
 						wager: game.wager,
@@ -1155,7 +1155,7 @@ const app = new Vue({
 						console.log(response.data);
 						self.opengames.push(response.data);
 						console.log(self.opengames);
-						this.setpopup("Game \"" + response.data.title + "\" deployed!");
+						self.setpopup("Game \"" + response.data.title + "\" deployed!");
 					});
 				}
 			},
