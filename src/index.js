@@ -592,9 +592,9 @@ const gameSearchResults = {
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
-			<searchResult v-for="game in test_games" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-on:click.native="onclick(game);">
+			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-on:click.native="onclick(game);">
 			</searchResult>
-			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
+			<confirmAcceptGame v-if="this.confirm" v-bind:game="this.game" v-bind:blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
 	`,
 	methods: {
@@ -602,6 +602,8 @@ const gameSearchResults = {
 			console.log("clicked " + game.title);
 			this.game = game;
 			this.confirm = true;
+			console.log(this);
+			console.log(this.confirm);
 		},
 		confirm: function() {
 			//send to chain or to page?
