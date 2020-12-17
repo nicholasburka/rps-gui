@@ -645,12 +645,18 @@ const gameplay = {
 			<h3 class="column" id="wager">{{currentgame.wager}} {{currentgame.currency}}</h3>
 		</div>
 		<div id="game" class="row" style="position: relative; height: 60vh;">
-			<img id="rock" src="assets/rock.png" alt="rock" style="position:absolute; max-height: 25vh; width: auto; top: 15%; left: 10%" onclick="play('rock');" v-on:click="$emit('onmoveselect', currentgame, 'rock')">
-			<p class="count-used" style="position:absolute; top: 20%; left: 15%">{{rockHist}}</p>
-			<img id="paper" src="assets/paper.jpg" alt="paper" style="position:absolute; max-height: 25vh; width: auto; top: 29%; left: 70%" onclick="play('paper');" v-on:click="$emit('onmoveselect', currentgame, 'paper')">
-			<p class="count-used" style="position:absolute; top: 27%; left: 75%">{{paperHist}}</p>
-			<img id="scissors" src="assets/scissors2.png" alt="scissors" style="position:absolute; max-height: 25vh; width: auto; top: 65%; left: 25%;" onclick="play('scissors');" v-on:click="$emit('onmoveselect', currentgame, 'scissors')">
-			<p class="count-used" style="position:absolute; top: 70%; left: 45%">{{scissorsHist}}</p>
+			<div id="rock-cont">
+				<img id="rock" class="rps-piece" src="assets/rock.png" alt="rock" onclick="play('rock');" v-on:click="$emit('onmoveselect', currentgame, 'rock')">
+				<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockHist}}</p>
+			</div>
+			<div id="paper-cont">
+				<img id="paper" class="rps-piece" src="assets/paper.jpg" alt="paper" onclick="play('paper');" v-on:click="$emit('onmoveselect', currentgame, 'paper')">
+				<p class="count-used" style="position: relative; text-align: center; display: block;">{{paperHist}}</p>
+			</div>
+			<div id="scissors-cont">
+				<img id="scissors" class="rps-piece" src="assets/scissors2.png" alt="scissors" onclick="play('scissors');" v-on:click="$emit('onmoveselect', currentgame, 'scissors')">
+				<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsHist}}</p>
+			</div>
 		</div>
 		<div id="history" class="">
 			<div class="row">
