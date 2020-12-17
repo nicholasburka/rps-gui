@@ -595,6 +595,7 @@ const gameSearchResults = {
 		'searchResult': searchResult
 	},
 	template: `
+		{{ foundgames }}
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
 			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()} v-on:click.native="onclick(game);">
 			</searchResult>
@@ -1197,6 +1198,7 @@ const app = new Vue({
 				this.setpopup('searching...');
 				var search_param_str = Object.keys(gameparams).map(key => key + "=" + gameparams[key]).join("&");
 				console.log(search_param_str);
+				var self = this;
 				axios({
 						method: "GET",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-searchGamesFunction-ZR0MD8OA2QNR?".concat(search_param_str)
