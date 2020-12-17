@@ -235,24 +235,24 @@ const createGame = {
 		<div id="create-game" class="column">
 				<form id="game-settings" class="column" v-on:submit.prevent>
 					<!--<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>-->
-					<h3 class="row form-caption">Wager {{walletaddr}}</h3>
+					<h3 class="row form-caption">Wager</h3>
 					<div class="row">
 						<p class="column" style="flex-basis:10%"></p>
-						<input v-model="this.wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.001" min="0" default="0">
+						<input v-model="wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.001" min="0" default="0">
 						<p class="column" style="flex-basis: 5%">ETH</p>
 						<p class="column" style="flex-basis: 5%"></p>
 					</div>
-					<p v-if="price" class="row" class="form-detail-text">1 ETH to {{ price }} USD * {{ this. wager }}, est. invested {{ price * this.wager }}</p>
+					<p v-if="price" class="row" class="form-detail-text">1 ETH to {{ price }} USD * {{ wager }}, est. invested {{ price * wager }}</p>
 					<h3 class="row form-caption">Delay</h3>
 					<div class="row" style="justify-content: center">
 						<p class="column" style="flex-basis: 10%"></p>
-						<input v-model="this.delay" class="form-input column" style="flex-grow: 3;" type="number" name="delay" step="1" min="1" default="100" placeholder="default">
+						<input v-model="delay" class="form-input column" style="flex-grow: 3;" type="number" name="delay" step="1" min="1" default="100" placeholder="default">
 						<p class="column" style="flex-basis:5%">blocks until timeout</p>
 						<p class="column" style="flex-basis: 5%"></p>
 					</div>
 					<p class="row" class="form-detail-text">(Est. time per block ~15s, see https://etherscan.io/chart/blocktime for current blocktime)</p>
 					<h3 class="row form-caption">Title</h3>
-					<input v-model="this.title" class="form-input" style="flex-basis:50%" type="text" name="title" placeholder="">
+					<input v-model="title" class="form-input" style="flex-basis:50%" type="text" name="title" placeholder="">
 					<h3 class="row form-caption">Who</h3>
 					<div class="row" id="priv-pub">
 						<p style="flex-basis: 30%"></p>
@@ -266,8 +266,8 @@ const createGame = {
 					</div>
 					<div v-if="private_game" class="column">
 						<p class="row" style="flex-basis: 60%; font-size: 10px;">Optional: specify opponents to invite - you can also share the invite link after submitting.</p>
-						<input v-model="this.addrentry" class="row form-input" type="text" name="who-addr-entry" placeholder="enter a wallet address">
-						<select v-model="this.addrprev" class="row form-input" type="text" name="who" placeholder="select from previous opponents">
+						<input v-model="addrentry" class="row form-input" type="text" name="who-addr-entry" placeholder="enter a wallet address">
+						<select v-model="addrprev" class="row form-input" type="text" name="who" placeholder="select from previous opponents">
 							<option selected="selected">select from previous opponents</option>
 							<option v-for="player in prevopponents" v-bind:value="player.walletAddr" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 						</select>
@@ -277,7 +277,7 @@ const createGame = {
 					</div>
 					<div v-else>
 					</div>
-					<button id="go" class="row" v-on:click="onSubmit(this.wager, this.delay, this.title, this.addrentry, this.addrprev, this.walletaddress, private_game, $emit)">Go!</button>
+					<button id="go" class="row" v-on:click="onSubmit(wager, delay, title, addrentry, addrprev, walletaddress, private_game, $emit)">Go!</button>
 				</form>
 				<confirmaGame v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmaGame>
 		</div>
@@ -413,7 +413,7 @@ const searchGame = {
 				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
 				<option selected="selected">select from previous opponents</option>
 			</select>
-			<button id="go" class="row" v-on:click="onSubmit(this.wager, this.sign, this.min, this.max, this.title, this.walletaddr, this.addrentry, this.addrprev);">Go!</button>
+			<button id="go" class="row" v-on:click="onSubmit(wager, sign, min, max, title, walletaddr, addrentry, addrprev);">Go!</button>
 		</form>
 	</div>
 	`,
