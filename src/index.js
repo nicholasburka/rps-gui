@@ -502,6 +502,7 @@ const searchResult = {
 const gameSearchResults = {
 	props: ["foundgames"],
 	data: function() {
+		console.log(this.foundgames);
 		return {
 			confirm: false,
 			game: undefined,
