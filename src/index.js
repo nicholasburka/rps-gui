@@ -476,7 +476,7 @@ const confirmAcceptGame = {
 			<p class="row"> {{ game.wager }} ETH </p>
 			<p class="row"> {{ game.delay }} block timeout (Est. time with ~15s per block: {{ game.delay * 15 }}s) </p>
 			<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
-			<p class="row"> {{ game.p1 }}</p>
+			<p class="row"> Opponent: {{ game.p1 }}</p>
 			<div id="buttons" class="row">
 			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('confirm')">Yes!</button>
 			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('deny')">Back</button>
@@ -592,13 +592,14 @@ const gameSearchResults = {
 		};
 	},
 	components: {
-		'searchResult': searchResult
+		'searchResult': searchResult,
+		'confirmAcceptGame': confirmAcceptGame
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
 			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 			</searchResult>
-			<confirmAcceptGame v-if="this.confirm" v-bind:game="this.game" v-bind:blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
+			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
 	`,
 	methods: {
