@@ -592,7 +592,7 @@ const gameSearchResults = {
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
-			<searchResult v-for="game in test_games" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-on:click="onclick(game);">
+			<searchResult v-for="game in test_games" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-on:click.native="onclick(game);">
 			</searchResult>
 			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirm()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
