@@ -154,7 +154,7 @@ const home = {
 			//need to check units
 			//this will actually be a call to Reach or a blockchain API
 			//return (this.delay + this.timeCreated) - (new Date()).getTime();
-			var enddate = new Date(game.time_created);
+			var enddate = new Date(game.starttime);
 			enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
 			return timeToGo(enddate.toISOString());
 		}
@@ -550,7 +550,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Fri, 11 Dec 2020 16:48:36 GMT",
+    "starttime": "Fri, 11 Dec 2020 16:48:36 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Fri, 11 Dec 2020 16:48:36 GMT",
@@ -559,7 +559,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Fri, 11 Dec 2020 16:48:48 GMT",
+    "starttime": "Fri, 11 Dec 2020 16:48:48 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Fri, 11 Dec 2020 16:48:48 GMT",
@@ -568,7 +568,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Fri, 11 Dec 2020 23:36:03 GMT",
+    "starttime": "Fri, 11 Dec 2020 23:36:03 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Fri, 11 Dec 2020 23:36:03 GMT",
@@ -577,7 +577,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Fri, 11 Dec 2020 23:36:18 GMT",
+    "starttime": "Fri, 11 Dec 2020 23:36:18 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Fri, 11 Dec 2020 23:36:18 GMT",
@@ -586,7 +586,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Thu, 10 Dec 2020 20:21:29 GMT",
+    "starttime": "Thu, 10 Dec 2020 20:21:29 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Thu, 10 Dec 2020 20:21:29 GMT",
@@ -595,7 +595,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Thu, 10 Dec 2020 20:57:03 GMT",
+    "starttime": "Thu, 10 Dec 2020 20:57:03 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Thu, 10 Dec 2020 20:57:03 GMT",
@@ -604,7 +604,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Thu, 10 Dec 2020 21:06:11 GMT",
+    "starttime": "Thu, 10 Dec 2020 21:06:11 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Thu, 10 Dec 2020 21:06:11 GMT",
@@ -613,7 +613,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Thu, 10 Dec 2020 21:22:18 GMT",
+    "starttime": "Thu, 10 Dec 2020 21:22:18 GMT",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Thu, 10 Dec 2020 21:22:18 GMT",
@@ -622,7 +622,7 @@ const gameSearchResults = {
   {
     "p1": 12345931,
     "currency": "ETH",
-    "time_created": "Tue Dec 01 202012:52:12 GMT-0500 (Eastern Standard Time)",
+    "starttime": "Tue Dec 01 202012:52:12 GMT-0500 (Eastern Standard Time)",
     "wager": 0.001,
     "delay": 100,
     "ContractAddress": "12345931Tue Dec 01 202012:52:12 GMT-0500 (Eastern Standard Time)",
@@ -800,8 +800,8 @@ function timeLeft(game) {
 		//need to check units
 		//this will actually be a call to Reach or a blockchain API
 		//return (this.delay + this.timeCreated) - (new Date()).getTime();
-		var enddate = new Date(game.time_created);
-		enddate = enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
+		var enddate = new Date(game.starttime);
+		enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
 		return timeToGo(enddate.toISOString());
 	};
 function Game(obj) {
@@ -817,7 +817,7 @@ function Game(obj) {
 	this.p1move = obj.p1move;
 	this.p2move = obj.p2move;
 	this.completed = false;
-	this.time_created = obj.time_created;
+	this.starttime = obj.starttime;
 	this.timeLeft = function() {
 		var blocktime_est = 100;
 		function isoToObj(s) {
@@ -854,8 +854,8 @@ function Game(obj) {
 		//need to check units
 		//this will actually be a call to Reach or a blockchain API
 		//return (this.delay + this.timeCreated) - (new Date()).getTime();
-		var enddate = new Date(this.time_created);
-		enddate = enddate.setSeconds(enddate.getSeconds() + blocktime*this.delay); //assuming that blocktime is in seconds
+		var enddate = new Date(this.starttime);
+		enddate.setSeconds(enddate.getSeconds() + blocktime*this.delay); //assuming that blocktime is in seconds
 		return timeToGo(enddate.toISOString());
 	};
 	this.status = function() {
@@ -1234,7 +1234,7 @@ const app = new Vue({
 							wager: the_game.wager,
 							currency: "ETH",
 							delay: the_game.delay,
-							time_created: d,
+							starttime: d,
 							p1: the_game.p1
 						}
 					}).then(function(response) {
