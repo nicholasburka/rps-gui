@@ -160,7 +160,9 @@ const home = {
 			//return (this.delay + this.timeCreated) - (new Date()).getTime();
 			var enddate = new Date(game.starttime);
 			enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
-			return timeToGo(enddate.toISOString());
+			var tleft = timeToGo(enddate.toISOString());
+			console.log(tleft);
+			return tleft;
 		}
 	}
 }
