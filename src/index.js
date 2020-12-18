@@ -153,7 +153,7 @@ const home = {
 			    var secs  = Math.round(diff%6e4 / 1e3);
 
 			    // Return formatted string
-			    return sign + z(hours) + ':' + z(mins) + ':' + z(secs);   
+			    return z(hours) + ' hrs, ' + z(mins) + ' mins, ' + z(secs) + ' s';   
 			}
 			//need to check units
 			//this will actually be a call to Reach or a blockchain API
