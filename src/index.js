@@ -140,7 +140,7 @@ const home = {
 			    }
 
 			    // Convert string to date object
-			    var d = isoToObj();
+			    var d = isoToObj(s);
 			    var diff = d - new Date();
 
 			    // Allow for previous times
