@@ -119,6 +119,10 @@ const home = {
 			$router.push('gameplay', gameid);
 		},
 		timeLeft: function(game) {
+			console.log("timeleft");
+			console.log("game.starttime");
+			console.log(game.starttime);
+
 			var blocktime_est = 100;
 			function isoToObj(s) {
 			    var b = s.split(/[-TZ:]/i);
