@@ -78,7 +78,7 @@ const landing = {
 };
 //need to add extending open games if there's more than displayable open games
 const home = {
-	props: ['walletaddr', 'balance', 'opengames', 'invites', 'currency', 'money-committed'],
+	props: ['walletaddr', 'balance', 'opengames', 'awaiting_games', 'accepted_games', 'invites', 'currency', 'money-committed'],
 	template: `
 		<div id="home" class="column page-container">
 			<transition appear appear-active-class="slideInRight">
@@ -123,7 +123,7 @@ const home = {
 			console.log("game.starttime");
 			console.log(game.starttime);
 
-			var blocktime_est = 100;
+			var blocktime_est = 10000;
 			function isoToObj(s) {
 			    var b = s.split(/[-TZ:]/i);
 
@@ -153,7 +153,7 @@ const home = {
 			    var secs  = Math.round(diff%6e4 / 1e3);
 
 			    // Return formatted string
-			    return z(hours) + ' hrs, ' + z(mins) + ' mins, ' + z(secs) + ' s';   
+			    return sign + z(hours) + ' hrs, ' + z(mins) + ' mins, ' + z(secs) + ' s';   
 			}
 			//need to check units
 			//this will actually be a call to Reach or a blockchain API
@@ -279,6 +279,7 @@ const createGame = {
 	},
 	template: `
 		<div id="create-game" class="column">
+				<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 				<form id="game-settings" class="column" v-on:submit.prevent>
 					<!--<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>-->
 					<h3 class="row form-caption">Wager</h3>
@@ -435,6 +436,7 @@ const searchGame = {
 	},
 	template: `
 		<div id="search-game" class="page-container">
+		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 		<form id="game-settings" class="column" v-on:submit.prevent>
 			<h3 class="row form-caption">Wager</h3>
 				<div class="row" style="flex-basis: 40%; width: 80%; align-self: center;">
@@ -643,6 +645,7 @@ const gameSearchResults = {
 	},
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
+			<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 			</searchResult>
 			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirmgame()" v-on:deny="deny()"></confirmAcceptGame>
@@ -686,6 +689,7 @@ const gameplay = {
 	props: ["currentgame", "rockHist", "paperHist", "scissorsHist"],
 	template: `
 	<div id="gameplay" class="">
+		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 		<div class="row" id="game-header">
 			<h3 class="column">{{ currentgame.status }}</h3>
 			<h3 class="column" id="wager">{{currentgame.wager}} {{currentgame.currency}}</h3>
@@ -1270,6 +1274,7 @@ const app = new Vue({
 					console.log(game);
 					console.log("game contract address");
 					console.log(game.contractAddress);
+					var gameOnChain = false;
 					/*var ctcbob = await this.acc.attach(backend, ctc);
 					var result = await backend.Bob(stdlib, ctcbob,
 						{...Player('Bob', ctcbob),
@@ -1277,7 +1282,14 @@ const app = new Vue({
 							return true;
 						}}
 						);*/
-				} catch (error) {
+					// axios call to edit the status of the game to accepted
+
+					gameOnChain = true;
+					if (gameOnChain) {
+						//update game status
+						//accepted, p1 submitted, p2 submitted
+					}
+ 				} catch (error) {
 					this.setpopup("Could not connect to contract.");
 					console.log("Could not connect to contract.");
 					console.log(error);
