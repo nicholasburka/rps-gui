@@ -155,7 +155,7 @@ const home = {
 			//this will actually be a call to Reach or a blockchain API
 			//return (this.delay + this.timeCreated) - (new Date()).getTime();
 			var enddate = new Date(game.time_created);
-			enddate = enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
+			enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
 			return timeToGo(enddate.toISOString());
 		}
 	}
@@ -1223,7 +1223,7 @@ const app = new Vue({
 				//this should be set by result of Reach backend deploy
 
 				//send game to backend
-				//
+				//once blockchain is implemented, contract address should be actual contract address
 				if (gameOnChain) {
 					axios({
 						method: "POST",
