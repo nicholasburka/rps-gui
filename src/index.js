@@ -184,11 +184,18 @@ const gameresult = {
 const displaytext = {
 	props: ['text'],
 	template: `
-		<p id="display" class="page-container column">
-		{{displaytext}}
+		<p id="display" class="page-container column" v-on:click="onclick()">
+		{{text}}
 		</p>
 		<button id="go" class="column" v-on:click="$emit('dismiss')">Dismiss</button>
-	`
+	`,
+	methods: {
+		onclick: function() {
+			console.log("dismiss");
+			console.log(this.$emit);
+			this.$emit('dismiss');
+		}
+	}
 };
 const confirmaGame = {
 	props: ['game', 'action', 'blocktime'],
@@ -1057,8 +1064,8 @@ const app = new Vue({
 				popup: null,
 				popuptime: 3000,
 				popups: [],
-				displaytext: null,
-				TEST: true
+				displaytext: "",
+				TEST: false
 			}
 		},
 		created: function() {
@@ -1093,11 +1100,6 @@ const app = new Vue({
 				});
 			};
 
-			try {
-				this.getGames();
-			} catch (err) {
-				console.log(err);
-			}
 			//exampleActions();
 			//console.log(this.$router.name);
 			//console.log(this.$router.currentRoute.path);
@@ -1146,6 +1148,12 @@ const app = new Vue({
 				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 				console.log(this.balance);
 
+				try {
+					this.getGames();
+				} catch (err) {
+					console.log(err);
+				}
+
 				//get price of crypto
 				/*axios({
 					method: 'get',
@@ -1180,6 +1188,7 @@ const app = new Vue({
 				this.popup = null;
 			},
 			dismiss: function() {
+				console.log("dismiss in vue parent");
 				this.displaytext = null;
 			},
 			gameStatus: function(game) {
@@ -1229,7 +1238,7 @@ const app = new Vue({
 				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
 				d = d.toISOString(); //time format, does this convert back functionally
 				//var t = d.toDateString() + d.toTimeString();
-				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, dateCreated: d, p1: game.p1, status: "open"});
+				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, starttime: d, p1: game.p1, status: "open"});
 				this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
 				var self = this;
@@ -1237,7 +1246,8 @@ const app = new Vue({
 
 				var gameOnChain = true;
 				try {
-					game.contract = await this.acc.deploy(backend);
+
+					game.contract = await this.acc.deploy(backend).catch((err) => {console.log(err)});
 					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
 					console.log("contract");
 					console.log(game.contract);
@@ -1258,7 +1268,7 @@ const app = new Vue({
 					//axios -> send game to DB
 					gameOnChain = true;
 				} catch (error) {
-					this.displaytext = "Deploy failed" ;
+					//this.displaytext = "Deploy failed" ;
 					this.setpopup("Deploy failed.");
 					console.log("Deploy failed");
 					console.log(error);
@@ -1384,6 +1394,7 @@ const app = new Vue({
 				this.setpopup(popupmsg);
 			},
 			runTests: function() {
+				this.displaytext = "please click this example text";
 				//how to do await within synchronous function as a Promise
 
 				//test Player function, does not seem to be working
