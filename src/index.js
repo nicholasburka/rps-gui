@@ -960,6 +960,73 @@ exampleGames.push(new Game({title: "Play me!", wager: ".001", currency: "ETH", d
 /*exampleGames.push(new Game("A friendly game...", ".05", "ETH", 21, moonLanding, examplePlayers[0], examplePlayers[2]));
 exampleGames.push(new Game("Noobs only", ".01", "ETH", 21, moonLanding, examplePlayers[0]));*/
 
+//syntactic sugar for a funct that returns an object
+class Player {
+	//...stdlib.hasRandom,
+	//this.game = game;
+	//this.ctc = ctc,
+	constructor(vue, ctc, game) {
+		this.wager = game.wager;
+		this.deadline = game.delay;
+		this.vue = vue;
+		this.contract = ctc;
+		this.game = game;
+	}
+	random() {
+		return stdlib.hasRandom.random();
+	}
+	async getHand() {
+		//var hand = await askHand_(ctc);
+		var hand = await new Promise(resolveHand => {
+			this.game.playable = true;
+			this.game.status = "playable";
+			this.game.onMove = resolveHand;
+		});
+		console.log("received hand");
+		console.log(hand);
+		this.game.status = "waitingForResults"; //move submitted
+		return hand;
+		//update game status to 
+	}
+	seeOutcome (winner) {
+		console.log("see outcome");
+		console.log(winner);
+		console.log("this in see outcome");
+		console.log(this);
+		//this.games[ctc].outcome = outcome;
+		//this.games[ctc].oncomplete("complete", outcome);
+		//send result to Lambda via Axios
+
+		console.log("outcome!");
+		console.log(outcome);
+		this.game.status = "completed";
+		var isp1 = (this.vue.games[ctc].p1 === this.vue.walletAddr);
+		if (winner === 0) {
+		//draw
+			//var outcome_text = "Draw!";
+			this.vue.displaytext = "Draw!<br/>";
+		} else if ((outcome === 0 && isp1) || (outcome === 2 && (!isp1))) {
+		//you win
+			this.vue.displaytext = "You won!";
+		} else {
+		//you lose
+			this.vue.displaytext = "You lost";
+		}
+	}
+	informTimeout() {
+		//this.ongamecomplete(ctc, "timeout")
+		//send result to Lambda
+		this.game.status = "completed";
+		this.vue.displaytext = "Game timeout";
+	}
+};
+class Deployer extends Player {
+	constructor(props) {
+		super(props);
+	}
+}
+
+
 console.log("APP");
 Vue.use(VueRouter);
 console.log(Vue.use(VueRouter));
@@ -982,7 +1049,7 @@ const app = new Vue({
 				walletCurrency: "ETH",
 				prevopponents: examplePlayers, //this would be a function
 				opengames: [],//exampleGames,
-				opengamesasgameobjs: [],
+				opengamesasgameobjs: [], //unused
 				foundgames: [],
 				invites: null,
 				currentgame: null,
@@ -1049,7 +1116,8 @@ const app = new Vue({
 					console.log('found wallet: ' + prov);
 					this.wallet = prov;
 					console.log(this.wallet);
-					return (prov);
+					//return (prov);
+					this.reqEthAccount();
 				} else {
 					this.walletUnavailable = true;
 					this.walletLoading = false;
@@ -1153,41 +1221,6 @@ const app = new Vue({
 
 				});
 			},
-			//syntactic sugar for a funct that returns an object
-			Player: (Who, ctc) => ({
-				...stdlib.hasRandom,
-				getHand: async() => {
-					var hand = await askHand_(ctc);
-					console.log("received hand");
-					console.log(hand);
-					return hand;
-				},
-				seeOutcome: (outcome) => {
-					this.games[ctc].outcome = outcome;
-					//this.games[ctc].oncomplete("complete", outcome);
-					//send result to Lambda via Axios
-
-					console.log("outcome!");
-					console.log(outcome);
-					var isp1 = (this.games[ctc].p1 === this.walletAddr);
-					if (outcome === 1) {
-					//draw
-						//var outcome_text = "Draw!";
-						this.displaytext = "Draw!<br/>";
-					} else if ((outcome === 0 && isp1) || (outcome === 2 && (!isp1))) {
-					//you win
-						this.displaytext = "You won!";
-					} else {
-					//you lose
-						this.displaytext = "You lost";
-					}
-				},
-				informTimeout: () => {
-					//this.ongamecomplete(ctc, "timeout")
-					//send result to Lambda
-					this.displaytext = "Game timeout";
-				}
-			}),
 			ongamecreate: async function(game) {
 				var self = this;
 				router.push('home');
@@ -1204,20 +1237,24 @@ const app = new Vue({
 
 				var gameOnChain = true;
 				try {
-					game.address = await this.acc.deploy(backend);
+					game.contract = await this.acc.deploy(backend);
 					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
-					console.log("contract address");
-					console.log(game.address);
-					self.setpopup("Deploying at " + game.address);
+					console.log("contract");
+					console.log(game.contract);
+					self.setpopup("Deploying at " + game.contract);
 					console.log("awaiting contract info");
-					self.displaytext = JSON.stringify(await game.address.getInfo(), null, 2);
+					self.displaytext = JSON.stringify(await game.contract.getInfo(), null, 2);
 					console.log(this.displaytext);
+					game.status = "Awaiting Opponent";
+					game.playable = false;
 					self.opengames.push(game);
-					var game_res = await backend.Alice(stdlib, game.address, {
+					backend.Alice(game.contract, Player(this, game.contract, game))
+					/*var game_res = await backend.Alice(stdlib, game.address, {
 						...Player('Alice', game.address), //this does not work, how to test without being on net
 						wager: game.wager,
 						delay: game.delay
-					});
+					});*/
+					//var ctc = await backend.Alice(stdlib, )
 					//axios -> send game to DB
 					gameOnChain = true;
 				} catch (error) {
@@ -1257,6 +1294,7 @@ const app = new Vue({
 					});
 				}
 			},
+
 			ongameselect: function(game) {
 				//console.log("on game select");
 				//console.log(game);
@@ -1318,10 +1356,16 @@ const app = new Vue({
 					});
 			},
 			onmoveselect: function(game, move) {
+				console.log("move selected");
 				console.log(game);
 				console.log(move);
 
-				games[game.ctcAddr].onMove(move);
+				//how to find the game 
+				if (game.playable) {
+					game.onMove(move); //this should resolve the promise getHand and return to the backend
+				}
+
+				//games[game.ctcAddr].onMove(move);
 				//submit the move to the game
 				router.push('home');
 				this.setpopup("Move submitted!");
@@ -1353,6 +1397,8 @@ const app = new Vue({
 		}
 	});
 
+console.log("app");
+console.log(app);
 //app.$mount('#app');
 /*
 live game on ropsten chain
