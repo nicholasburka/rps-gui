@@ -271,7 +271,7 @@ const createGame = {
 		//console.log("wallet addr");
 		//console.log(walletAddr);
 		return {
-			'wager': .001,
+			'wager': .0005,
 			'delay': 100,
 			'title': rand_title,
 			'addrentry': null,
@@ -292,7 +292,7 @@ const createGame = {
 					<h3 class="row form-caption">Wager</h3>
 					<div class="row">
 						<p class="column" style="flex-basis:10%"></p>
-						<input v-model="wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.001" min="0" default="0">
+						<input v-model="wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.0001" min="0" default="0">
 						<p class="column" style="flex-basis: 5%">ETH</p>
 						<p class="column" style="flex-basis: 5%"></p>
 					</div>
