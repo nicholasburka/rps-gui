@@ -1247,7 +1247,7 @@ const app = new Vue({
 				var gameOnChain = true;
 				try {
 
-					game.contract = await this.acc.deploy(backend).catch((err) => {console.log(err)});
+					game.contract = await this.acc.deploy(backend);
 					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
 					console.log("contract");
 					console.log(game.contract);
@@ -1258,7 +1258,7 @@ const app = new Vue({
 					game.status = "Awaiting Opponent";
 					game.playable = false;
 					self.opengames.push(game);
-					backend.Alice(game.contract, Player(this, game.contract, game))
+					backend.Alice(game.contract, Player(this, game.contract, game));
 					/*var game_res = await backend.Alice(stdlib, game.address, {
 						...Player('Alice', game.address), //this does not work, how to test without being on net
 						wager: game.wager,
