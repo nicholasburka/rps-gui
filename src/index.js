@@ -1154,7 +1154,7 @@ const app = new Vue({
 					.catch((err) => {
 						console.log("ERR getting balance, " + err);
 					})*/
-				var atomicBalance = await stdlib.balanceOf(acc);
+				var atomicBalance = await stdlib.balanceOf(this.acc);
 				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 			},
 			reqAccount: async function() {
