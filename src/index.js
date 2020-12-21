@@ -1170,7 +1170,7 @@ const app = new Vue({
 				this.walletAddr = await acc.networkAccount.getAddress();
 				console.log(this.walletAddr);
 				console.log("get balance");
-				await updateBalance();
+				await this.updateBalance();
 				console.log(this.balance);
 
 				//this will eventually be a place where currency is determined and set
