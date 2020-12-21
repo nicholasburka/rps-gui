@@ -83,6 +83,7 @@ const home = {
 		<div id="home" class="column page-container">
 			<transition appear appear-active-class="slideInRight">
 			<div id="home-th">
+				<img id="faucet" src="assets/faucet.png" v-on:click="tryFaucet()">
 				<div id="open-games-header" class="row"><div class="column" style="max-width: 33vw;"><div class="row"><h3>Wallet addr: </h3><h3 style="font-size: 1vw;">{{walletaddr}}</h3></div><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 				<ul id="open-games">
 					<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wager}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
@@ -114,6 +115,9 @@ const home = {
 		  return "hsl(" + 360 * Math.random() + ',' +
 		             (25 + 70 * Math.random()) + '%,' + 
 		             (65 + 10 * Math.random()) + '%)'
+		},
+		tryFaucet: function() {
+			this.$emit('tryFaucet');
 		},
 		getGame: function(gameid) {
 			$router.push('gameplay', gameid);
@@ -1179,6 +1183,15 @@ const app = new Vue({
 						console.log("ERR getting balance, " + err);
 					})
 			},
+			tryFaucet: async function() {
+				try {
+					const faucet = await stdlib.getFaucet();
+					await stdlib.transfer(faucet, this.acc, stdlib.parseCurrency(5));
+				}
+				catch (e) {
+					console.log(e);
+				}
+			},
 			setpopup: function(msg) {
 				
 				this.popup = msg;
@@ -1255,7 +1268,7 @@ const app = new Vue({
 				var gameOnChain = true;
 				try {
 					game.contract = await this.acc.deploy(backend);
-					
+
 					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
 					console.log("contract");
 					console.log(game.contract);
