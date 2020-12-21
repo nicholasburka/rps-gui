@@ -1138,11 +1138,6 @@ const app = new Vue({
 					return false;
 				}
 			},
-			getBalance: async function() {
-				var atomicBalance = await stdlib.balanceOf(this.acc);
-				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
-				return this.balance;
-			},
 			updateBalance: async function() {
 				/*ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
 					.then((res) => {
@@ -1156,6 +1151,7 @@ const app = new Vue({
 					})*/
 				var atomicBalance = await stdlib.balanceOf(this.acc);
 				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
+				return this.balance;
 			},
 			reqAccount: async function() {
 				//right now this requires the user to click "Enable Ethereum" to run
@@ -1285,19 +1281,22 @@ const app = new Vue({
 				try {
 					//deploy game and update game address and status
 					game.contract = await this.acc.deploy(backend);
-					game.ContractAddress = game.contract.address;
-					game.status = "Awaiting Opponent";
-					game.playable = false;
-					//update balance
-					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
-					
+				
 					//logging
 					console.log("contract");
 					console.log(game.contract);
 					self.setpopup("Deploying at " + game.contract);
 					console.log("awaiting contract info");
-					self.displaytext = JSON.stringify(await game.contract.getInfo(), null, 2);
+					game.contractinfo = await game.contract.getInfo();
+					self.displaytext = JSON.stringify(game.contractinfo, null, 2);
 					console.log(this.displaytext);
+
+					game.ContractAddress = game.contractinfo.address;
+					game.status = "Awaiting Opponent";
+					game.playable = false;
+					//update balance
+					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
+					
 		
 
 					//self.opengames.push(game);
