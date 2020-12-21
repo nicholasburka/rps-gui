@@ -417,13 +417,13 @@
 		<!-- Bind all necessary props for components in router from vue data here --->
 		<router-view class="view" :prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismiss="dismiss" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet"></router-view>
 		<div v-if="($router.currentRoute.path === '/')">
-			<h3 class="bottomBanner row" v-if="walletLoading && (walletAddr === null)">Detecting ETH service...</h3>
+			<h3 class="bottomBanner row" v-if="walletLoading && (walletAddr === null)">Detecting crypto service...</h3>
 			<div v-else-if="walletFound && displayWalletText" id="wallet" class="bottomBanner">
 				<div style="flex-basis: 30%" class="row"></div>
-				<h3 style="display: flex" class="row">{{ walletText }}</h3><button class=" row enableEthereumButton" style="top: 25%" v-on:click="reqEthAccount" v-if="this.walletAddr===null">Enable Ethereum</button>
+				<h3 style="display: flex" class="row">{{ walletText }}</h3><button class="row" style="top: 25%" v-on:click="reqAccount" v-if="this.walletAddr===null">Enable crypto</button>
 				<div style="flex-basis: 30%" class="row"></div>
 			</div>
-			<h3 v-else-if="walletUnavailable" class="bottomBanner row">No ETH service found, please install the&nbsp;<a href="https://metamask.io/">MetaMask browser extension.</a></h3>
+			<h3 v-else-if="walletUnavailable" class="bottomBanner row">No crypto service found, please install the &nbsp;<a href="https://metamask.io/">MetaMask</a>&nbsp; or &nbsp;<a href="https://www.purestake.com/technology/algosigner/">AlgoSigner (chrome)</a> browser extensions.</h3>
 		</div>
 		<transition name="slideup">
 		<div v-if="popups.length" v-bind:popups="popups">

@@ -90,7 +90,7 @@ const home = {
 				</ul>
 				<ul id="invites">
 					<li class="row activeitem" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
-						Invited by {{ invite.p1 }} for {{ invite.wager }} ETH : {{ invite.delay }} blocks left
+						Invited by {{ invite.p1 }} for {{ invite.wager }} {{currency}} : {{ invite.delay }} blocks left
 						<div class="buttons">
 							<button onclick="confirmGame()" class="column">Accept</button>
 							<button onclick="deny()" class="column">Reject</button>
@@ -208,15 +208,15 @@ const displaytext = {
 	}
 };
 const confirmaGame = {
-	props: ['game', 'action', 'blocktime'],
+	props: ['game', 'action', 'blocktime', 'currency'],
 	template: `
 		<div id="confirm-game" class="row confirmPopup">
 			<h1 class="row"> Create game?</h1>
-			<p class="row">(Your ETH will be committed unless there's a timeout)</p>
+			<p class="row">(Your {{currency}} will be committed unless there's a timeout)</p>
 			<p class="row"> {{ game.title }}</p>
-			<p class="row"> {{ game.wager }} ETH </p>
+			<p class="row"> {{ game.wager }} {{currency}} </p>
 			<p class="row"> {{ game.delay }} block timeout (Est. time with ~15s per block: {{ game.delay * 15 }}s) </p>
-			<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
+			<p class="row" v-if="currency==='ETH'"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
 			<p class="row"> Permissions: {{ game.permissions }} </p>
 			<div id="buttons" class="row">
 			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('confirm')">Yes!</button>
@@ -289,6 +289,7 @@ const createGame = {
 			'err_msg': null,
 			'confirm': false,
 			'walletaddress': this.walletaddr,
+			'currency': this.currency,
 			//'private': false,
 			//<!---<confirmGame v-if="confirm" class="confirmPopup row" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>-->
 			'game': {}
@@ -303,10 +304,10 @@ const createGame = {
 					<div class="row">
 						<p class="column" style="flex-basis:10%"></p>
 						<input v-model="wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.0001" min="0" default="0">
-						<p class="column" style="flex-basis: 5%">ETH</p>
+						<p class="column" style="flex-basis: 5%">{{currency}}</p>
 						<p class="column" style="flex-basis: 5%"></p>
 					</div>
-					<p v-if="price" class="row" class="form-detail-text">1 ETH to {{ price }} USD * {{ wager }}, est. invested {{ price * wager }}</p>
+					<p v-if="price" class="row" class="form-detail-text">1 {{currency}} to {{ price }} USD * {{ wager }}, est. invested {{ price * wager }}</p>
 					<h3 class="row form-caption">Delay</h3>
 					<div class="row" style="justify-content: center">
 						<p class="column" style="flex-basis: 10%"></p>
@@ -343,7 +344,7 @@ const createGame = {
 					</div>
 					<button id="go" class="row" v-on:click="onSubmit(wager, delay, title, addrentry, addrprev, walletaddress, private_game, $emit)">Go!</button>
 				</form>
-				<confirmaGame v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmaGame>
+				<confirmaGame v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" :currency="this.currency" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmaGame>
 		</div>
 `,
 	methods: {
@@ -397,6 +398,7 @@ const createGame = {
 				this.game = {
 					title: this.title,
 					wager: this.wager,
+					currency: this.currency,
 					delay: this.delay,
 					p1: this.walletaddr,
 					p2: p2,
@@ -437,7 +439,7 @@ const createGame = {
 		}
 }};
 const searchGame = {
-	props: ['walletaddr', 'prevopponents', 'balance'],
+	props: ['walletaddr', 'prevopponents', 'balance', 'currency'],
 	data: function() {
 
 		return {
@@ -460,13 +462,13 @@ const searchGame = {
 				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
 				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
 				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
-				<input class="column form-input" style="max-width: 25%;"  v-model="wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
+				<input class="column form-input" style="max-width: 25%;"  v-model="wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency">
 			</div>
 			<br/>
 			<div class="row" style="flex-basis: 40%; width: 80%; margin-top:2%; align-self: center;">
 			<div class="column" style="max-width: 30%;"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between</label></div>
-				<label>min&nbsp;</label><input v-model="min" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH"><label>&nbsp;and&nbsp;</label>
-				<label>max&nbsp;</label><input v-model="max" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="ETH">
+				<label>min&nbsp;</label><input v-model="min" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency"><label>&nbsp;and&nbsp;</label>
+				<label>max&nbsp;</label><input v-model="max" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency">
 			</div>
 			<!---<h3 class="row form-caption">Delay</h3>
 			<input class="row form-input" v-model="timeleft" type="number" name="delay" step="5" min="0" default="0" placeholder="default">--->
@@ -532,15 +534,15 @@ const searchGame = {
 	}
 };
 const confirmAcceptGame = {
-	props: ['game', 'action', 'blocktime'],
+	props: ['game', 'action', 'blocktime', 'currency'],
 	template: `
 		<div id="confirm-game" class="row confirmPopup">
 			<h1 class="row">Accept game?</h1>
-			<p class="row">(Your ETH will be committed unless there's a timeout)</p>
+			<p class="row">(Your {{currency}} will be committed unless there's a timeout)</p>
 			<p class="row"> {{ game.title }}</p>
-			<p class="row"> {{ game.wager }} ETH </p>
-			<p class="row"> {{ game.delay }} block timeout (Est. time with ~15s per block: {{ game.delay * 15 }}s) </p>
-			<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
+			<p class="row"> {{ game.wager }} {{currency}} </p>
+			<p class="row"> {{ game.delay }} block timeout</p>
+			<p v-if="currency==='ETH'" class="row"> (Est. time with ~15s per block: {{ game.delay * 15 }}s) (see https://etherscan.io/chart/blocktime for current blocktime) </p>
 			<p class="row"> Opponent: {{ game.p1 }}</p>
 			<div id="buttons" class="row">
 			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('confirm')">Yes!</button>
@@ -665,7 +667,7 @@ const gameSearchResults = {
 			<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 			</searchResult>
-			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" v-on:confirm="confirmgame()" v-on:deny="deny()"></confirmAcceptGame>
+			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" :currency="this.currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
 	`,
 	methods: {
@@ -1129,7 +1131,7 @@ const app = new Vue({
 					this.wallet = prov;
 					console.log(this.wallet);
 					//return (prov);
-					this.reqEthAccount();
+					this.reqAccount();
 				} else {
 					this.walletUnavailable = true;
 					this.walletLoading = false;
@@ -1141,7 +1143,7 @@ const app = new Vue({
 				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 				return this.balance;
 			},
-			reqEthAccount: async function() {
+			reqAccount: async function() {
 				//right now this requires the user to click "Enable Ethereum" to run
 				
 				console.log(stdlib.getDefaultAccount);
@@ -1154,9 +1156,11 @@ const app = new Vue({
 				this.walletAddr = await acc.networkAccount.getAddress();
 				console.log(this.walletAddr);
 				console.log("get balance");
-				var atomicBalance = await stdlib.balanceOf(acc);
-				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
+				await updateBalance();
 				console.log(this.balance);
+
+				//this will eventually be a place where currency is determined and set
+				this.walletCurrency = "ETH";
 
 				try {
 					this.getGames();
@@ -1174,8 +1178,8 @@ const app = new Vue({
 					.then(response => {console.log(response); this.price = response.data['1']['quote']['usd'];})
 					.catch(error => {console.log(error)});*/
 			},
-			updateBalance: function() {
-				ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
+			updateBalance: async function() {
+				/*ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
 					.then((res) => {
 						this.balance = res[0];
 						console.log("raw resp");
@@ -1184,7 +1188,9 @@ const app = new Vue({
 					})
 					.catch((err) => {
 						console.log("ERR getting balance, " + err);
-					})
+					})*/
+				var atomicBalance = await stdlib.balanceOf(acc);
+				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 			},
 			tryfaucet: async function() {
 				try {
@@ -1272,6 +1278,8 @@ const app = new Vue({
 				var balanceBefore = this.balance;
 				var self = this;
 				console.log("deploying");
+
+				game.wager = stdlib.parseCurrency(game.wager); //convert ETH to WEI, js num => BigNumber
 
 				var gameOnChain = true;
 				try {
