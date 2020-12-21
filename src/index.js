@@ -1246,8 +1246,12 @@ const app = new Vue({
 
 				var gameOnChain = true;
 				try {
-
-					game.contract = await this.acc.deploy(backend);
+					try {
+						game.contract = await this.acc.deploy(backend);
+					}
+					catch (error) {
+						console.log(error);
+					}
 					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
 					console.log("contract");
 					console.log(game.contract);
