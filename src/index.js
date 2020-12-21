@@ -192,10 +192,12 @@ const gameresult = {
 const displaytext = {
 	props: ['text'],
 	template: `
-		<p id="display" class="page-container column" v-on:click="onclick()">
+		<div class="page-container column">
+		<p class="row">
 		{{text}}
 		</p>
-		<button id="go" class="column" v-on:click="$emit('dismiss')">Dismiss</button>
+		<button id="go" class="row" v-on:click="$emit('dismiss')">Dismiss</button>
+		</div>
 	`,
 	methods: {
 		onclick: function() {
@@ -1073,7 +1075,7 @@ const app = new Vue({
 				popuptime: 3000,
 				popups: [],
 				displaytext: "",
-				TEST: false
+				TEST: true
 			}
 		},
 		created: function() {
