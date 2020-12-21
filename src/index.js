@@ -1143,6 +1143,20 @@ const app = new Vue({
 				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 				return this.balance;
 			},
+			updateBalance: async function() {
+				/*ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
+					.then((res) => {
+						this.balance = res[0];
+						console.log("raw resp");
+						console.log(res);
+						console.log("balance: " + res[0]);
+					})
+					.catch((err) => {
+						console.log("ERR getting balance, " + err);
+					})*/
+				var atomicBalance = await stdlib.balanceOf(acc);
+				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
+			},
 			reqAccount: async function() {
 				//right now this requires the user to click "Enable Ethereum" to run
 				
@@ -1177,20 +1191,6 @@ const app = new Vue({
 					})
 					.then(response => {console.log(response); this.price = response.data['1']['quote']['usd'];})
 					.catch(error => {console.log(error)});*/
-			},
-			updateBalance: async function() {
-				/*ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
-					.then((res) => {
-						this.balance = res[0];
-						console.log("raw resp");
-						console.log(res);
-						console.log("balance: " + res[0]);
-					})
-					.catch((err) => {
-						console.log("ERR getting balance, " + err);
-					})*/
-				var atomicBalance = await stdlib.balanceOf(acc);
-				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
 			},
 			tryfaucet: async function() {
 				try {
