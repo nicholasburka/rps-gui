@@ -30,15 +30,7 @@ const clientConfig = {
         //'ethers$': path.resolve(__dirname, 'node_modules/@reach-sh/stdlib/node_modules/ethers/dist/ethers.min.js')
       }
   	},
-	module: {
-	  rules: [
-      {
-        test: /\.mjs$/,
-        include: /node_modules/,
-        type: "javascript/auto"
-      }
-	  ]
-	},
+	devtool: 'inline-source-map',
   plugins: [new htmlWebpackPlugin(),
   	new webpack.DefinePlugin({
       'process.env': {

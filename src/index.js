@@ -96,7 +96,7 @@ const home = {
 						</div>
 					</li>
 				</ul>
-				<h2 id="game-history" v-on:click="$router.push('history')">game history</h2>
+				<h2 id="game-history" v-on:click="getHistory()">game history</h2>
 			</div>
 			</transition>
 			<hr style="width: 80%; text-align: center;">
@@ -117,6 +117,9 @@ const home = {
 		},
 		getGame: function(gameid) {
 			$router.push('gameplay', gameid);
+		},
+		getHistory: function() {
+			this.$emit('gameHistory');
 		},
 		timeLeft: function(game) {
 			console.log("timeleft");
@@ -1221,6 +1224,11 @@ const app = new Vue({
 					console.log(err);
 				}
 			},
+			gameHistory: function() {
+				//show all games that have status "completed"
+				//show results (need to make vue component)
+				//route to game history vue component
+			},
 			askHand_: async(ctc) => {
 				return new Promise((resolve) => {
 
@@ -1246,12 +1254,8 @@ const app = new Vue({
 
 				var gameOnChain = true;
 				try {
-					try {
-						game.contract = await this.acc.deploy(backend);
-					}
-					catch (error) {
-						console.log(error);
-					}
+					game.contract = await this.acc.deploy(backend);
+					
 					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
 					console.log("contract");
 					console.log(game.contract);
