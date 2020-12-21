@@ -83,7 +83,7 @@ const home = {
 		<div id="home" class="column page-container">
 			<transition appear appear-active-class="slideInRight">
 			<div id="home-th">
-				<div id="open-games-header" class="row"><div class="column"><h3 class="row">Wallet addr: {{walletaddr}}</h3><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
+				<div id="open-games-header" class="row"><div class="column" style="max-width: 33vw;"><div class="row"><h3>Wallet addr: </h3><h3 style="font-size: 1vw;">{{walletaddr}}</h3></div><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 				<ul id="open-games">
 					<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wager}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
 				</ul>
@@ -1315,6 +1315,7 @@ const app = new Vue({
 				router.push({path: 'play', query: {game: game.gameid}});
 			},
 			ongameaccept: async function(game) {
+				//needs to check if game is a game (from search) or contract (from join by contract)
 				console.log("on game accept");
 				router.push('home');
 				this.setpopup("Connecting to contract provided...");
