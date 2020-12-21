@@ -117,6 +117,7 @@ const home = {
 		             (65 + 10 * Math.random()) + '%)'
 		},
 		tryFaucet: function() {
+			console.log("clicked faucet");
 			this.$emit('tryFaucet');
 		},
 		getGame: function(gameid) {
@@ -1186,7 +1187,10 @@ const app = new Vue({
 			tryFaucet: async function() {
 				try {
 					const faucet = await stdlib.getFaucet();
+					console.log("faucet");
+					console.log(faucet);
 					await stdlib.transfer(faucet, this.acc, stdlib.parseCurrency(5));
+					console.log("transferred?");
 				}
 				catch (e) {
 					console.log(e);
