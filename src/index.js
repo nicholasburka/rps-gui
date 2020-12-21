@@ -1266,7 +1266,8 @@ const app = new Vue({
 				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
 				d = d.toISOString(); //time format, does this convert back functionally
 				//var t = d.toDateString() + d.toTimeString();
-				var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, starttime: d, p1: game.p1, status: "open"});
+				//var the_game = new Game({title: game.title, wager: game.wager, currency: this.walletCurrency, delay: game.delay, starttime: d, p1: game.p1, status: "open"});
+				game.starttime = d;
 				this.setpopup("Deploying...");
 				var balanceBefore = this.balance;
 				var self = this;
@@ -1274,19 +1275,25 @@ const app = new Vue({
 
 				var gameOnChain = true;
 				try {
+					//deploy game and update game address and status
 					game.contract = await this.acc.deploy(backend);
-
+					game.ContractAddress = game.contract.address;
+					game.status = "Awaiting Opponent";
+					game.playable = false;
+					//update balance
 					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
+					
+					//logging
 					console.log("contract");
 					console.log(game.contract);
 					self.setpopup("Deploying at " + game.contract);
 					console.log("awaiting contract info");
 					self.displaytext = JSON.stringify(await game.contract.getInfo(), null, 2);
 					console.log(this.displaytext);
-					game.status = "Awaiting Opponent";
-					game.playable = false;
-					self.opengames.push(game);
-					backend.Alice(game.contract, Player(this, game.contract, game));
+		
+
+					//self.opengames.push(game);
+					backend.Alice(game.contract, new Player(this, game.contract, game));
 					/*var game_res = await backend.Alice(stdlib, game.address, {
 						...Player('Alice', game.address), //this does not work, how to test without being on net
 						wager: game.wager,
@@ -1304,8 +1311,9 @@ const app = new Vue({
 				}
 
 				console.log("game");
-				console.log(the_game);
-				console.log(the_game.p1);
+				//console.log(the_game);
+				//console.log(the_game.p1);
+				console.log(game);
 				//this should be set by result of Reach backend deploy
 
 				//send game to backend
@@ -1314,21 +1322,13 @@ const app = new Vue({
 					axios({
 						method: "POST",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-newGameFunction-3AXA73S81IZH",
-						data: {
-							ContractAddress: (String(the_game.p1)+d), /*need to change this field title, semantically misaligned*/
-							title: the_game.title,
-							wager: the_game.wager,
-							currency: "ETH",
-							delay: the_game.delay,
-							starttime: d,
-							p1: the_game.p1
-						}
+						data: game
 					}).then(function(response) {
 						console.log(response);
 						console.log(response.data);
-						self.opengames.push(response.data);
+						self.opengames.push(game);
 						console.log(self.opengames);
-						self.setpopup("Game \"" + response.data.title + "\" deployed!");
+						self.setpopup("Game \"" + game.title + "\" deployed!");
 					});
 				}
 			},
