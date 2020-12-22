@@ -86,7 +86,7 @@ const home = {
 				<img id="faucet" src="assets/faucet.png" v-on:click="tryfaucet()">
 				<div id="open-games-header" class="row"><div class="column" style="max-width: 33vw;"><div class="row"><h3>Wallet addr: </h3><h3 style="font-size: 1vw;">{{walletaddr}}</h3></div><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 				<ul id="open-games">
-					<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wager}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
+					<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
 				</ul>
 				<ul id="invites">
 					<li class="row activeitem" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
@@ -540,7 +540,7 @@ const confirmAcceptGame = {
 			<h1 class="row">Accept game?</h1>
 			<p class="row">(Your {{currency}} will be committed unless there's a timeout)</p>
 			<p class="row"> {{ game.title }}</p>
-			<p class="row"> {{ game.wager }} {{currency}} </p>
+			<p class="row"> {{ game.wagerreadable }} {{currency}} </p>
 			<p class="row"> {{ game.delay }} block timeout</p>
 			<p v-if="currency==='ETH'" class="row"> (Est. time with ~15s per block: {{ game.delay * 15 }}s) (see https://etherscan.io/chart/blocktime for current blocktime) </p>
 			<p class="row"> Opponent: {{ game.p1 }}</p>
@@ -665,7 +665,7 @@ const gameSearchResults = {
 	template: `
 		<div id="game-search-results" class="column" style="margin-top:2vh;">
 			<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wager" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
+			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 			</searchResult>
 			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" :currency="this.currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></confirmAcceptGame>
 		</div>
@@ -712,7 +712,7 @@ const gameplay = {
 		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 		<div class="row" id="game-header">
 			<h3 class="column">{{ currentgame.status }}</h3>
-			<h3 class="column" id="wager">{{currentgame.wager}} {{currentgame.currency}}</h3>
+			<h3 class="column" id="wager">{{currentgame.wagerreadable}} {{currentgame.currency}}</h3>
 		</div>
 		<div id="game" class="row" style="position: relative; height: 60vh;">
 			<div id="rock-cont">
@@ -1238,6 +1238,13 @@ const app = new Vue({
 																});
 						console.log("open games from DB");
 						console.log(self.opengames);
+
+						self.opengames = self.opengames.map((game) => {
+							if (!game.wagerreadable) {
+								game.wagerreadable = formatCurrency(game.wager, 4);
+							}
+							return game;
+						});
 					}).catch((error) => {
 						console.log(error);
 					});
@@ -1275,8 +1282,8 @@ const app = new Vue({
 				var self = this;
 				console.log("deploying");
 
+				game.wagerreadable = game.wager;
 				game.wager = stdlib.parseCurrency(game.wager); //convert ETH to WEI, js num => BigNumber
-
 				var gameOnChain = true;
 				try {
 					//deploy game and update game address and status
@@ -1382,6 +1389,7 @@ const app = new Vue({
 			},
 			ongamesearch: function(gameparams) {
 				console.log(gameparams);
+				gameparams.wager = stdlib.parseCurrency(gameparams.wager);
 				//router.replace('home');
 				this.setpopup('searching...');
 				var search_param_str = Object.keys(gameparams).map(key => key + "=" + gameparams[key]).join("&");
