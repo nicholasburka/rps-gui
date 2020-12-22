@@ -1243,7 +1243,7 @@ const app = new Vue({
 							if (!game.wagerreadable) {
 								console.log("no readable wager");
 								console.log(game.wager);
-								console.log(stdlib.standardUnit(game.wager));
+								console.log(stdlib.standardUnit);
 								console.log(stdlib.formatCurrency(game.wager,1));
 								console.log(stdlib.formatCurrency(game.wager,2));
 								console.log(stdlib.formatCurrency(game.wager,3));
