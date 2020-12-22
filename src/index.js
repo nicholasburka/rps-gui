@@ -1241,16 +1241,12 @@ const app = new Vue({
 
 						self.opengames = self.opengames.map((game) => {
 							if (!game.wagerreadable) {
-								console.log("no readable wager");
-								console.log(game.wager.hex);
-								console.log(stdlib.hexToBigNumber(game.wager.hex));
-								console.log(stdlib.formatCurrency(stdlib.hexToBigNumber(game.wager.hex), 4));
+								//console.log("no readable wager");
+								//console.log(game.wager.hex);
+								//console.log(stdlib.hexToBigNumber(game.wager.hex));
+								//console.log(stdlib.formatCurrency(stdlib.hexToBigNumber(game.wager.hex), 4));
 								//console.log(stdlib.standardUnit);
-								console.log(stdlib.formatCurrency(game.wager,1));
-								console.log(stdlib.formatCurrency(game.wager,2));
-								console.log(stdlib.formatCurrency(game.wager,3));
-								console.log(stdlib.formatCurrency(game.wager,4));
-								game.wagerreadable = stdlib.formatCurrency(game.wager, 4);
+								game.wagerreadable = stdlib.formatCurrency(stdlib.hexToBigNumber(game.wager.hex), 4);
 							}
 							return game;
 						});
@@ -1342,6 +1338,7 @@ const app = new Vue({
 				//send game to backend
 				//once blockchain is implemented, contract address should be actual contract address
 				if (gameOnChain) {
+					game.wager = game.wagerreadable;
 					axios({
 						method: "POST",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-newGameFunction-3AXA73S81IZH",
