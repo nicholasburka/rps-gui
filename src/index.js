@@ -1241,7 +1241,14 @@ const app = new Vue({
 
 						self.opengames = self.opengames.map((game) => {
 							if (!game.wagerreadable) {
-								game.wagerreadable = formatCurrency(game.wager, 4);
+								console.log("no readable wager");
+								console.log(game.wager);
+								console.log(stdlib.standardUnit(game.wager));
+								console.log(stdlib.formatCurrency(game.wager,1));
+								console.log(stdlib.formatCurrency(game.wager,2));
+								console.log(stdlib.formatCurrency(game.wager,3));
+								console.log(stdlib.formatCurrency(game.wager,4));
+								game.wagerreadable = stdlib.formatCurrency(game.wager, 4);
 							}
 							return game;
 						});
