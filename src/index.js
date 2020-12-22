@@ -86,7 +86,7 @@ const home = {
 				<img id="faucet" src="assets/faucet.png" v-on:click="tryfaucet()">
 				<div id="open-games-header" class="row"><div class="column" style="max-width: 33vw;"><div class="row"><h3>Wallet addr: </h3><h3 style="font-size: 1vw;">{{walletaddr}}</h3></div><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 				<ul id="open-games">
-					<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
+					<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}"><img src="assets/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)"> {{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
 				</ul>
 				<ul id="invites">
 					<li class="row activeitem" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
@@ -125,6 +125,9 @@ const home = {
 		},
 		getHistory: function() {
 			this.$emit('gamehistory');
+		},
+		contractInfo: function(game) {
+			this.$emit('displaycontractinfo', game);
 		},
 		timeLeft: function(game) {
 			console.log("timeleft");
@@ -1199,6 +1202,9 @@ const app = new Vue({
 				catch (e) {
 					console.log(e);
 				}
+			},
+			displaycontractinfo: function(game) {
+				this.displaytext = JSON.stringify(game.contractinfo, null, 2);
 			},
 			setpopup: function(msg) {
 				
