@@ -1244,6 +1244,7 @@ const app = new Vue({
 								console.log("no readable wager");
 								console.log(game.wager.hex);
 								console.log(stdlib.hexToBigNumber(game.wager.hex));
+								console.log(stdlib.formatCurrency(stdlib.hexToBigNumber(game.wager.hex), 4));
 								//console.log(stdlib.standardUnit);
 								console.log(stdlib.formatCurrency(game.wager,1));
 								console.log(stdlib.formatCurrency(game.wager,2));
