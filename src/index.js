@@ -87,8 +87,8 @@ const home = {
 				<div id="open-games-header" class="row"><div class="column" style="max-width: 33vw;"><div class="row"><h3>Wallet addr: </h3><h3 style="font-size: 1vw;">{{walletaddr}}</h3></div><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
 				<ul id="open-games">
 					<div class="row activeitem" v-for="game in opengames" v-bind:game="game" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}">
-						<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
 						<img src="assets/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)">
+						<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
 					</div>
 					<!--<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}"><img src="assets/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)"> {{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>-->
 				</ul>
@@ -131,6 +131,7 @@ const home = {
 			this.$emit('gamehistory');
 		},
 		contractInfo: function(game) {
+			console.log("clicked contractinfo clipboard, emitting");
 			this.$emit('displaycontractinfo', game);
 		},
 		timeLeft: function(game) {
@@ -1208,6 +1209,7 @@ const app = new Vue({
 				}
 			},
 			displaycontractinfo: function(game) {
+				console.log("received a displaycontractinfo event");
 				this.displaytext = JSON.stringify(game.contractinfo, null, 2);
 			},
 			setpopup: function(msg) {
