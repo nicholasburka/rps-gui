@@ -1210,7 +1210,10 @@ const app = new Vue({
 			},
 			displaycontractinfo: function(game) {
 				console.log("received a displaycontractinfo event");
+				console.log(this.displaytext);
+				console.log(JSON.stringify(game.contractinfo, null, 2));
 				this.displaytext = JSON.stringify(game.contractinfo, null, 2);
+				console.log(this.displaytext);
 			},
 			setpopup: function(msg) {
 				
@@ -1304,7 +1307,7 @@ const app = new Vue({
 				var gameOnChain = true;
 				try {
 					//deploy game and update game address and status
-					game.contract = await this.acc.deploy(backend);
+					game.contract = this.acc.deploy(backend);
 				
 					//logging
 					console.log("contract");
