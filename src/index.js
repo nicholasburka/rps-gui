@@ -1210,6 +1210,8 @@ const app = new Vue({
 			},
 			displaycontractinfo: function(game) {
 				console.log("received a displaycontractinfo event");
+				console.log(game);
+				console.log(this);
 				console.log(this.displaytext);
 				console.log(JSON.stringify(game.contractinfo, null, 2));
 				this.displaytext = JSON.stringify(game.contractinfo, null, 2);
@@ -1315,7 +1317,8 @@ const app = new Vue({
 					self.setpopup("Deploying at " + game.contract);
 					console.log("awaiting contract info");
 					game.contractinfo = await game.contract.getInfo();
-					self.displaytext = JSON.stringify(game.contractinfo, null, 2);
+					game.contractinfostr = JSON.stringify(game.contractinfo, null, 2);
+					self.displaytext = game.contractinfostr;
 					console.log(this.displaytext);
 
 					game.ContractAddress = game.contractinfo.address;
@@ -1388,19 +1391,32 @@ const app = new Vue({
 					console.log("game contract address");
 					console.log(game.contractAddress);
 					var gameOnChain = false;
-					/*var ctcbob = await this.acc.attach(backend, ctc);
+					var ctcbob = this.acc.attach(backend, game.contractinfostr);
 					var result = await backend.Bob(stdlib, ctcbob,
-						{...Player('Bob', ctcbob),
-						acceptWager: (amt) => {
-							return true;
-						}}
-						);*/
+						new Player(this, ctcbob, game)
+						);
 					// axios call to edit the status of the game to accepted
 
 					gameOnChain = true;
 					if (gameOnChain) {
 						//update game status
 						//accepted, p1 submitted, p2 submitted
+						//playable = true
+						//set p2 in db
+						axios({
+							method: "POST",
+							url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-3AXA73S81IZH",
+							data: {
+								"walletAddress": this.walletaddr,
+								"ContractAddress": game.ContractAddress
+							}
+						}).then(function(response) {
+							console.log(response);
+							console.log(response.data);
+							self.opengames.push(game);
+							console.log(self.opengames);
+							self.setpopup("Game \"" + game.title + "\" accepted!");
+						});
 					}
  				} catch (error) {
 					this.setpopup("Could not connect to contract.");
