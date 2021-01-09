@@ -1395,7 +1395,7 @@ const app = new Vue({
 					console.log("ctcbob, stdlib");
 					console.log(ctcbob);
 					console.log(stdlib);
-					var result = await backend.Bob(stdlib, ctcbob,
+					var result = await backend.Bob(ctcbob,
 						new Player(this, ctcbob, game)
 						);
 					// axios call to edit the status of the game to accepted
