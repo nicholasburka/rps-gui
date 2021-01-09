@@ -1382,14 +1382,14 @@ const app = new Vue({
 			},
 			ongameaccept: async function(game) {
 				//needs to check if game is a game (from search) or contract (from join by contract)
-				console.log("on game accept");
+				console.log("on game accept updated jan8");
 				router.push('home');
 				this.setpopup("Connecting to contract provided...");
 				try {
 					console.log("game chosen");
 					console.log(game);
 					console.log("game contract address");
-					console.log(game.contractAddress);
+					console.log(game.ContractAddress);
 					var gameOnChain = false;
 					var ctcbob = this.acc.attach(backend, game.contractinfostr);
 					var result = await backend.Bob(stdlib, ctcbob,
@@ -1398,30 +1398,33 @@ const app = new Vue({
 					// axios call to edit the status of the game to accepted
 
 					gameOnChain = true;
-					if (gameOnChain) {
-						//update game status
-						//accepted, p1 submitted, p2 submitted
-						//playable = true
-						//set p2 in db
-						axios({
-							method: "POST",
-							url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-3AXA73S81IZH",
-							data: {
-								"walletAddress": this.walletaddr,
-								"ContractAddress": game.ContractAddress
-							}
-						}).then(function(response) {
-							console.log(response);
-							console.log(response.data);
-							self.opengames.push(game);
-							console.log(self.opengames);
-							self.setpopup("Game \"" + game.title + "\" accepted!");
-						});
-					}
+				
  				} catch (error) {
 					this.setpopup("Could not connect to contract.");
 					console.log("Could not connect to contract.");
 					console.log(error);
+					gameOnChain = false;
+				}
+
+				if (gameOnChain) {
+					//update game status
+					//accepted, p1 submitted, p2 submitted
+					//playable = true
+					//set p2 in db
+					axios({
+						method: "POST",
+						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-3AXA73S81IZH",
+						data: {
+							"walletAddress": this.walletaddr,
+							"ContractAddress": game.ContractAddress
+						}
+					}).then(function(response) {
+						console.log(response);
+						console.log(response.data);
+						self.opengames.push(game);
+						console.log(self.opengames);
+						self.setpopup("Game \"" + game.title + "\" accepted!");
+					});
 				}
 			},
 			ongamesearch: function(gameparams) {
