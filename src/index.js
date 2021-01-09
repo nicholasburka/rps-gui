@@ -88,7 +88,7 @@ const home = {
 				<ul id="open-games">
 					<div class="row activeitem" v-for="game in opengames" v-bind:game="game" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}">
 						<img src="assets/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)">
-						<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>
+						<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.status}} : {{ timeLeft(game) }} left</li>
 					</div>
 					<!--<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}"><img src="assets/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)"> {{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>-->
 				</ul>
