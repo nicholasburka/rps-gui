@@ -57,17 +57,17 @@ const landing = {
 	template: `
 		<div id="landing" class="active-page column" v-on:click="function() {if (walletaddr || offlinedev) {$router.push('home')}}">
 			<transition appear appear-active-class="rock" leave-active-class="slideOutLeft">
-				<img src="assets/rock.png" alt="a rock" style="position: absolute; z-index: 5; max-height: 30vh; width: auto; left: 5vw;">
+				<img src="assets/rock.png" alt="a rock" style="position: absolute; z-index: 5; max-width: 30vw; max-height: 15vh; object-fit: contain; width: auto; left: 10vw;top: 10vh;">
 			</transition>
-			<h1 class="row" style="background-color: #b79eff">Rock</h1>
+			<h1 class="row" style="background-color: #b79eff;">rock</h1>
 			<transition appear appear-active-class="paper" leave-active-class="slideOutRight">
-				<img src="assets/paper.jpg" alt="paper" style="position: absolute; z-index: 5; max-height: 30vh; width: auto; left: 70vw; top: 35vh;">
+				<img src="assets/paper.jpg" alt="paper" style="position: absolute; z-index: 5; max-height: auto; max-width: 30vw; left: 60vw; top: 40vh;">
 			</transition>
-			<h1 class="row" style="background-color: #af751d">Paper</h1>
+			<h1 class="row" style="background-color: #af751d;">paper</h1>
 			<transition appear appear-active-class="scissors" leave-active-class="slideOutLeft">
 				<img src="assets/scissors2.png" alt="scissors" style="position: absolute; z-index: 5; max-height: 30vh; max-width: 30vw; width: auto; left: 20vw; top: 68vh;">
 			</transition>
-			<h1 class="row" style="background-color: #67e483">Scissors!</h1>
+			<h1 class="row" style="background-color: #67e483;">scissors</h1>
 		</div>
 	`,
 	methods: {
@@ -1320,6 +1320,12 @@ const app = new Vue({
 					game.contractinfostr = JSON.stringify(game.contractinfo, null, 2);
 					self.displaytext = game.contractinfostr;
 					console.log(this.displaytext);
+					try {
+					    await navigator.clipboard.writeText(game.contractinfostr);
+					    self.setpopup("copied contract info to clipboard");
+					} catch (error) {
+					    console.error("copy failed", error);
+					}
 
 					game.ContractAddress = game.contractinfo.address;
 					game.status = "Awaiting Opponent";
@@ -1330,7 +1336,7 @@ const app = new Vue({
 		
 
 					//self.opengames.push(game);
-					backend.Alice(game.contract, new Player(this, game.contract, game));
+					await backend.Alice(game.contract, new Player(this, game.contract, game));
 					/*var game_res = await backend.Alice(stdlib, game.address, {
 						...Player('Alice', game.address), //this does not work, how to test without being on net
 						wager: game.wager,

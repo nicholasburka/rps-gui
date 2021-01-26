@@ -210,7 +210,7 @@
 			position: absolute;
 			z-index: 5;
 			opacity: 80%;
-			top: 90vh;
+			top: 93vh;
 			height: 5vh;
 			width: 80vw;
 			left: 10vw;
@@ -227,20 +227,22 @@
 		.rock {
 			animation-name: rockOver;
 			animation-duration: 1.5s;
+			animation-fill-mode: forwards;
+			top: 10vh;
 			z-index: -1;
 		}
 		@keyframes rockOver {
 			0% {
-				transform: translateY(-320px);
+				transform: translateY(-30vh);
 			}
 			50% {
-				transform: translateY(20px);
+				transform: translateY(0vh);
 			}
 			100% {
-				transform: translateY(20px);
+				transform: translateY(0vh);
 			}
 			100% {
-				transform: translateX(0) translateY(0);
+				transform: translateX(0) translateY(0vh);
 			}
 		}
 		.paper {
