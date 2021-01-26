@@ -1322,7 +1322,8 @@ const app = new Vue({
 					console.log(this.displaytext);
 					try {
 					    await navigator.clipboard.writeText(game.contractinfostr);
-					    self.setpopup("copied contract info to clipboard");
+					    self.displaytext = self.displaytext + "&#13;&#10;copied to clipboard";
+					    //self.setpopup("copied contract info to clipboard");
 					} catch (error) {
 					    console.error("copy failed", error);
 					}
