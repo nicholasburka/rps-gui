@@ -1317,6 +1317,7 @@ const app = new Vue({
 					self.setpopup("Deploying at " + game.contract);
 					console.log("awaiting contract info");
 					game.contractinfo = await game.contract.getInfo();
+					console.log(game.contractinfo);
 					game.contractinfostr = JSON.stringify(game.contractinfo, null, 2);
 					self.displaytext = game.contractinfostr;
 					console.log(this.displaytext);
