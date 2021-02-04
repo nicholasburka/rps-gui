@@ -1391,7 +1391,7 @@ const app = new Vue({
 			getgame: async function(contract_address) {
 				axios({
 					method: "GET",
-					url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(contract_address),
+					url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(String(contract_address)),
 				})
 				.then(res => {
 					console.log("got game");
@@ -1407,6 +1407,7 @@ const app = new Vue({
 			ongameaccept: async function(gamecontractinfo) {
 				console.log("on game accept - feb 4");
 				console.log("given");
+				var gamecontractinfo = JSON.parse(gamecontractinfo);
 				console.log(gamecontractinfo);
 				console.log(gamecontractinfo.address);
 				var game = await this.getgame(gamecontractinfo.address);
