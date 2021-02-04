@@ -1405,10 +1405,14 @@ const app = new Vue({
 				});
 			},
 			ongameaccept: async function(gamecontractinfo) {
+				console.log("on game accept - feb 4");
+				console.log("given");
+				console.log(gamecontractinfo);
+				console.log(gamecontractinfo.address);
 				var game = await this.getgame(gamecontractinfo.address);
 
 				//needs to check if game is a game (from search) or contract (from join by contract)
-				console.log("on game accept updated feb 4");
+				
 				router.push('home');
 				this.setpopup("Connecting to contract provided...");
 				try {
