@@ -1388,10 +1388,10 @@ const app = new Vue({
 				//TO DO, right HERE
 				router.push({path: 'play', query: {game: game.gameid}});
 			},
-			getgame: async function(gameaddress) {
+			getgame: async function(contract_address) {
 				axios({
 					method: "GET",
-					url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(contractinfostr.address),
+					url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(contract_address),
 				})
 				.then(res => {
 					console.log("got game");
