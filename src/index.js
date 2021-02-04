@@ -1388,23 +1388,23 @@ const app = new Vue({
 				//TO DO, right HERE
 				router.push({path: 'play', query: {game: game.gameid}});
 			},
-			ongameaccept: async function(game) {
+			ongameaccept: async function(gamecontractinfo) {
 				//needs to check if game is a game (from search) or contract (from join by contract)
 				console.log("on game accept updated jan8");
 				router.push('home');
 				this.setpopup("Connecting to contract provided...");
 				try {
 					console.log("game chosen");
-					console.log(game);
-					console.log("game contract address");
-					console.log(game.ContractAddress);
+					console.log(gamecontractinfo);
+					//console.log("game contract address");
+					//console.log(game.ContractAddress);
 					var gameOnChain = false;
-					var ctcbob = this.acc.attach(backend, game.contractinfostr);
+					var ctcbob = this.acc.attach(backend, gamecontractinfo);
 					console.log("ctcbob, stdlib");
 					console.log(ctcbob);
 					console.log(stdlib);
 					var result = await backend.Bob(ctcbob,
-						new Player(this, ctcbob, game)
+						new Player(this, ctcbob, gamecontractinfo)
 						);
 					// axios call to edit the status of the game to accepted
 
@@ -1427,7 +1427,7 @@ const app = new Vue({
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-3AXA73S81IZH",
 						data: {
 							"walletAddress": this.walletaddr,
-							"ContractAddress": game.ContractAddress
+							"ContractAddress": gamecontractinfo.address
 						}
 					}).then(function(response) {
 						console.log(response);
