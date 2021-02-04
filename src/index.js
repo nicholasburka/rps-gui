@@ -1405,7 +1405,7 @@ const app = new Vue({
 				});
 			},
 			ongameaccept: async function(gamecontractinfo) {
-				var game = await this.getgame(contractinfostr.address);
+				var game = await this.getgame(gamecontractinfo.address);
 
 				//needs to check if game is a game (from search) or contract (from join by contract)
 				console.log("on game accept updated feb 4");
