@@ -1388,14 +1388,32 @@ const app = new Vue({
 				//TO DO, right HERE
 				router.push({path: 'play', query: {game: game.gameid}});
 			},
+			getgame: async function(gameaddress) {
+				axios({
+					method: "GET",
+					url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(contractinfostr.address),
+				})
+				.then(res => {
+					console.log("got game");
+					console.log(res.data);
+					return res.data;
+				})
+				.catch(err => {
+					console.log("couldn't get game");
+					console.log(err);
+					throw Error(err);
+				});
+			},
 			ongameaccept: async function(gamecontractinfo) {
+				var game = await getgame(contractinfostr.address);
+
 				//needs to check if game is a game (from search) or contract (from join by contract)
-				console.log("on game accept updated jan8");
+				console.log("on game accept updated feb 4");
 				router.push('home');
 				this.setpopup("Connecting to contract provided...");
 				try {
 					console.log("game chosen");
-					console.log(gamecontractinfo);
+					console.log(game);
 					//console.log("game contract address");
 					//console.log(game.ContractAddress);
 					var gameOnChain = false;
@@ -1404,7 +1422,7 @@ const app = new Vue({
 					console.log(ctcbob);
 					console.log(stdlib);
 					var result = await backend.Bob(ctcbob,
-						new Player(this, ctcbob, gamecontractinfo)
+						new Player(this, ctcbob, game)
 						);
 					// axios call to edit the status of the game to accepted
 
@@ -1432,6 +1450,7 @@ const app = new Vue({
 					}).then(function(response) {
 						console.log(response);
 						console.log(response.data);
+						//TODO probably want this to change local game given status update
 						self.opengames.push(game);
 						console.log(self.opengames);
 						self.setpopup("Game \"" + game.title + "\" accepted!");
