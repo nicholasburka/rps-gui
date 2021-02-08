@@ -1388,7 +1388,20 @@ const app = new Vue({
 				//TO DO, right HERE
 				router.push({path: 'play', query: {game: game.gameid}});
 			},
-			getgame: async function(contract_address) {
+			/*getgame: async function(contract_address) {
+				try {
+					const response = await axios({
+						method: "GET",
+						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(String(contract_address)),
+					});
+
+					return response.data[0];
+				}
+				catch(err) {
+					console.log("could not get game");
+					throw new Error(err);
+				}
+
 				axios({
 					method: "GET",
 					url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(String(contract_address)),
@@ -1403,20 +1416,29 @@ const app = new Vue({
 					console.log(err);
 					throw Error(err);
 				});
-			},
+			},*/
 			ongameaccept: async function(gamecontractinfo) {
 				console.log("on game accept - feb 4");
 				console.log("given");
 				var gamecontractinfo = JSON.parse(gamecontractinfo);
 				console.log(gamecontractinfo);
 				console.log(gamecontractinfo.address);
-				var game = await this.getgame(gamecontractinfo.address);
 
-				//needs to check if game is a game (from search) or contract (from join by contract)
 				
-				router.push('home');
-				this.setpopup("Connecting to contract provided...");
 				try {
+					var res = await axios({
+							method: "GET",
+							url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(String(gamecontractinfo.address)),
+						});//this.getgame(gamecontractinfo.address);
+
+					var game = res.data[0];
+					console.log("got game");
+					console.log(game);
+					//needs to check if game is a game (from search) or contract (from join by contract)
+					
+					router.push('home');
+					this.setpopup("Connecting to contract provided...");
+
 					console.log("game chosen");
 					console.log(game);
 					//console.log("game contract address");
