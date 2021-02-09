@@ -1127,6 +1127,11 @@ const app = new Vue({
 		computed: {
 		},
 		methods: {
+			log: function(message) {
+				if (this.TEST) {
+					console.log(message);
+				}
+			},
 			getEthProvider: async function() {
 				this.walletLoading = true;
 				const prov = await detectProvider();
@@ -1346,37 +1351,30 @@ const app = new Vue({
 					});*/
 					//var ctc = await backend.Alice(stdlib, )
 					//axios -> send game to DB
-					gameOnChain = true;
-				} catch (error) {
-					//this.displaytext = "Deploy failed" ;
-					this.setpopup("Deploy failed.");
-					console.log("Deploy failed");
-					console.log(error);
-					gameOnChain = false;
-				}
-
-				console.log("game");
-				//console.log(the_game);
-				//console.log(the_game.p1);
-				console.log(game);
-				//this should be set by result of Reach backend deploy
-
-				//send game to backend
-				//once blockchain is implemented, contract address should be actual contract address
-				if (gameOnChain) {
 					game.wager = game.wagerreadable;
 					axios({
 						method: "POST",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-newGameFunction-3AXA73S81IZH",
 						data: game
 					}).then(function(response) {
+						console.log("game added to db");
 						console.log(response);
 						console.log(response.data);
 						self.opengames.push(game);
 						console.log(self.opengames);
 						self.setpopup("Game \"" + game.title + "\" deployed!");
+					}).catch(function(err) {
+						console.log("could not add game to db");
+						console.log(err);
 					});
+				} catch (error) {
+					//this.displaytext = "Deploy failed" ;
+					this.setpopup("Deploy failed.");
+					console.log("Deploy failed");
+					console.log(error);
+					
 				}
+
 			},
 
 			ongameselect: function(game) {
@@ -1451,10 +1449,28 @@ const app = new Vue({
 					var result = await backend.Bob(ctcbob,
 						new Player(this, ctcbob, game)
 						);
+					console.log("created backend");
+					console.log(result);
 					// axios call to edit the status of the game to accepted
 
 					gameOnChain = true;
-				
+
+					var update_game = await axios({
+						method: "POST",
+						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-3AXA73S81IZH",
+						data: {
+							"walletAddress": this.walletaddr,
+							"ContractAddress": gamecontractinfo.address
+						}
+					});
+					console.log("updated game in db");
+					console.log(update_game);
+
+					self.opengames.push(game);
+					console.log(self.opengames);
+					self.setpopup("Game \"" + game.title + "\" accepted!");
+
+
  				} catch (error) {
 					this.setpopup("Could not connect to contract.");
 					console.log("Could not connect to contract.");
