@@ -989,10 +989,13 @@ exampleGames.push(new Game("Noobs only", ".01", "ETH", 21, moonLanding, exampleP
 
 //syntactic sugar for a funct that returns an object
 class Player {
+
 	//...stdlib.hasRandom,
 	//this.game = game;
 	//this.ctc = ctc,
 	constructor(vue, ctc, game) {
+		this.logging = true;
+		console.log("creating a player");
 		this.wager = game.wager;
 		this.deadline = game.delay;
 		this.vue = vue;
@@ -1002,7 +1005,9 @@ class Player {
 	random() {
 		return stdlib.hasRandom.random();
 	}
+	log(msg) {if(this.logging){console.log(msg);}}
 	async getHand() {
+		this.log("calling getHand");
 		//var hand = await askHand_(ctc);
 		var hand = await new Promise(resolveHand => {
 			this.game.playable = true;
@@ -1016,10 +1021,11 @@ class Player {
 		//update game status to 
 	}
 	seeOutcome (winner) {
-		console.log("see outcome");
-		console.log(winner);
-		console.log("this in see outcome");
-		console.log(this);
+		this.log("see outcome");
+		this.log("see outcome");
+		this.log(winner);
+		this.log("this in see outcome");
+		this.log(this);
 		//this.games[ctc].outcome = outcome;
 		//this.games[ctc].oncomplete("complete", outcome);
 		//send result to Lambda via Axios
@@ -1041,6 +1047,7 @@ class Player {
 		}
 	}
 	informTimeout() {
+		this.log("player: informtimeout");
 		//this.ongamecomplete(ctc, "timeout")
 		//send result to Lambda
 		this.game.status = "completed";
