@@ -1326,13 +1326,13 @@ const app = new Vue({
 					game.contractinfostr = JSON.stringify(game.contractinfo, null, 2);
 					self.displaytext = game.contractinfostr;
 					console.log(this.displaytext);
-					try {
+					/*try {
 					    await navigator.clipboard.writeText(game.contractinfostr);
 					    self.displaytext = self.displaytext + "&#13;&#10;copied to clipboard";
 					    //self.setpopup("copied contract info to clipboard");
 					} catch (error) {
 					    console.error("copy failed", error);
-					}
+					}*/
 
 					game.ContractAddress = game.contractinfo.address;
 					game.status = "Awaiting Opponent";
@@ -1343,14 +1343,9 @@ const app = new Vue({
 		
 
 					//self.opengames.push(game);
+					console.log("creating backend");
 					await backend.Alice(game.contract, new Player(this, game.contract, game));
-					/*var game_res = await backend.Alice(stdlib, game.address, {
-						...Player('Alice', game.address), //this does not work, how to test without being on net
-						wager: game.wager,
-						delay: game.delay
-					});*/
-					//var ctc = await backend.Alice(stdlib, )
-					//axios -> send game to DB
+
 					console.log("backend Alice created");
 					game.wager = game.wagerreadable;
 					console.log("POSTing game");
@@ -1370,7 +1365,6 @@ const app = new Vue({
 						console.log(err);
 					});
 				} catch (error) {
-					//this.displaytext = "Deploy failed" ;
 					this.setpopup("Deploy failed.");
 					console.log("Deploy failed");
 					console.log(error);
