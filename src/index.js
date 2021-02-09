@@ -135,9 +135,9 @@ const home = {
 			this.$emit('displaycontractinfo', game);
 		},
 		timeLeft: function(game) {
-			console.log("timeleft");
-			console.log("game.starttime");
-			console.log(game.starttime);
+			//console.log("timeleft");
+			//console.log("game.starttime");
+			//console.log(game.starttime);
 
 			var blocktime_est = 10000;
 			function isoToObj(s) {
@@ -177,7 +177,7 @@ const home = {
 			var enddate = new Date(game.starttime);
 			enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
 			var tleft = timeToGo(enddate.toISOString());
-			console.log(tleft);
+			//console.log(tleft);
 			return tleft;
 		}
 	}
