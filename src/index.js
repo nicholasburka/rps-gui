@@ -1351,7 +1351,9 @@ const app = new Vue({
 					});*/
 					//var ctc = await backend.Alice(stdlib, )
 					//axios -> send game to DB
+					console.log("backend Alice created");
 					game.wager = game.wagerreadable;
+					console.log("POSTing game");
 					axios({
 						method: "POST",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-newGameFunction-3AXA73S81IZH",
