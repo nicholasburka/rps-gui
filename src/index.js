@@ -1350,27 +1350,24 @@ const app = new Vue({
 		
 
 					//self.opengames.push(game);
-					console.log("creating backend");
-					await backend.Alice(game.contract, new Player(this, game.contract, game));
+					console.log("not creating backend");
+					//await backend.Alice(game.contract, new Player(this, game.contract, game));
 
-					console.log("backend Alice created");
+					console.log("backend Alice not created");
 					game.wager = game.wagerreadable;
 					console.log("POSTing game");
-					axios({
+					var response = await axios({
 						method: "POST",
 						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-newGameFunction-3AXA73S81IZH",
-						data: game
-					}).then(function(response) {
-						console.log("game added to db");
-						console.log(response);
-						console.log(response.data);
-						self.opengames.push(game);
-						console.log(self.opengames);
-						self.setpopup("Game \"" + game.title + "\" deployed!");
-					}).catch(function(err) {
-						console.log("could not add game to db");
-						console.log(err);
-					});
+						data: game});
+					
+					console.log("game added to db");
+					console.log(response);
+					console.log(response.data);
+					self.opengames.push(game);
+					console.log(self.opengames);
+					self.setpopup("Game \"" + game.title + "\" deployed!");
+					
 				} catch (error) {
 					this.setpopup("Deploy failed.");
 					console.log("Deploy failed");
