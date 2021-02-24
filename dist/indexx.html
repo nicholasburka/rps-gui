@@ -2,6 +2,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<title>block rock paper scissors</title>
 	<style>
+		html {
+			overflow: hidden;
+		}
 		body {
 			text-align: center;
 			margin: 0;
@@ -9,6 +12,8 @@
 			/*color: #282c51;*/
 		}
 		#app {
+			width: 100vw;
+			height: 100vh;
 			max-height: 100vh;
 			overflow: hidden;
 		}
@@ -34,77 +39,13 @@
 		  flex-basis: 100%;
 		  flex: 1;
 		}
-		#landing {
-			height: 100vh;
-			transition-duration: .5s;
-		}
-		#home-th {
-			height: 50vh;
-			max-height: 50vh;
-			display: flex;
-			flex-direction: column;
-			flex-shrink: 0;
-		}
-		#home-bh {
-			height: 46vh;
-			max-height: 46vh;
-			display: flex;
-			flex-direction: column;
-			flex-shrink: 0;
-		}
-		#open-games {
-			display: flex;
-			flex-direction: column;
-			flex-basis: 60%;
-			align-items: center;
-			padding: 0;
-			min-height: 30vh;
-			max-height: 35vh;
-			overflow-y: scroll;
-			margin: 0;
-			margin-top: 6vh;
-			flex-shrink: 0;
-		}
-		#open-games-header {
-			height: 4vh;
-			max-height: 4vh;
-		}
-		#open-games div {
-			height: 5vh;
-			display: flex;
-			width: 100%;
-			align-items: center;
-			justify-content: center;
-			font-size: 150%;
-			margin-bottom: .5%;
-			/*flex-shrink:0;*/
-		}
-		#game-history {
-			height: 4vh;
-			margin: 0;
-		}
-		#create-game {
-			display: flex;
-			flex-basis: 100%;
-		}
-		#search-game {
-			display: flex;
-			flex-basis: 100%;
-		}
-		#game-history {
-			display: flex;
-			flex-direction: row;
-			flex-basis: 50%;
-			align-items: center;
-			justify-content: center;
-		}
-		.display-val-box {
+		/*.display-val-box {
 			display: flex;
 			justify-content: center;
 			border: solid;
 			width: 80%;
 			max-width: 600px;
-		}
+		}*/
 		#popup {
 			position: absolute;
 			display: flex;
@@ -150,9 +91,9 @@
 			background-color: gray;
 			opacity: 80%;
 		}
-		.form-caption {
+		.flex-center {
 			display: flex;
-			justify-content: center ;
+			justify-content: center;
 			text-align: center;
 			align-self: center;
 			/*padding-top: 1%;*/
@@ -162,7 +103,7 @@
 			font-size: 10px;
 			margin: 0;
 		}
-		#go {
+		#form-submit {
 			display: flex;
 			width: 40%;
 			max-height: 150px;
@@ -178,34 +119,6 @@
 			font-size: 18px;
 			align-self: center;
 		}
-		#game-search-results {
-			flex-wrap: wrap;
-		}
-		.game-search-result {
-			min-height: 23vh;
-			display: flex;
-			flex-direction: column;
-			justify-content: space-around;
-		}
-		#gameplay {
-			width: 100vw;
-			height: 100vh
-		}
-		#game {
-			display: flex;
-			height: 60vh;
-		}
-		#history {
-			display: flex;
-			height: 20vh;
-			width: 100%;
-			flex-wrap: wrap;
-		}
-		#history img {
-			/*border: solid;
-			height: 100%;*/
-			align-self: center;
-		}
 		.bottomBanner {
 			position: absolute;
 			z-index: 5;
@@ -217,70 +130,6 @@
 			border: black;
 			background: darkgrey;
 			display: flex;
-		}
-		#paper {
-
-		}
-		#scissors {
-
-		}
-		.rock {
-			animation-name: rockOver;
-			animation-duration: 1.5s;
-			animation-fill-mode: forwards;
-			top: 10vh;
-			z-index: -1;
-		}
-		@keyframes rockOver {
-			0% {
-				transform: translateY(-30vh);
-			}
-			50% {
-				transform: translateY(0vh);
-			}
-			100% {
-				transform: translateY(0vh);
-			}
-			100% {
-				transform: translateX(0) translateY(0vh);
-			}
-		}
-		.paper {
-			animation-name: paper;
-			animation-duration: 1.2s;
-			animation-timing-function: ease-out;
-		}
-		@keyframes paper {
-			0% {
-				transform: translateX(500px) rotateY(10deg);
-			}
-			100% {
-				transform: translateX(0) rotateY(0deg);
-			}
-		}
-		.scissors {
-			animation-name: scissors;
-			animation-duration: 1.5s;
-		}
-		@keyframes scissors {
-			0% {
-				transform: translateX(-70px) rotateX(10deg) rotateY(10deg);
-			}
-			20% {
-				transform: translateX(-50px) rotateX(-10deg) rotateY(-10deg);
-			}
-			40% {
-				transform: translateX(-30px) rotateX(10deg) rotateY(10deg);
-			}
-			60% {
-				transform: translateX(-15px) rotateX(-10deg) rotateY(-10deg);
-			}
-			80% {
-				transform: translateX(5px) rotateX(10deg) rotateY(10deg);
-			}
-			100% {
-				transform: translateX(0px) rotateX(0deg) rotateY(0deg);
-			}
 		}
 		.slideOut-left {
 			animation-name: slideOutLeft;
@@ -385,16 +234,6 @@
 			left:66.6vw;
 			width: 33vw;
 		}
-		.rps-piece {
-			position:relative;
-			display: block;
-			max-height: 25vh;
-			max-width: 30vw;
-			object-fit: contain;
-			margin-left: auto;
-			margin-right: auto;
-		}
-
 		#back-arrow {
 			position: absolute;
 			z-index: 5;
@@ -402,23 +241,6 @@
 			width: auto;
 			top: 2vh;
 			left: 2vh;
-		}
-		#faucet {
-			position: absolute;
-			z-index: 5;
-			height: 5vh;
-			width: auto;
-			top: 2vh;
-			left: 2vh;
-		}
-		.gameclipboard {
-			position: relative;
-			left: 0%;
-			align-self: flex-start;
-			height: 100%;
-			width: auto;
-			max-height: 100%;
-			z-index: 5;
 		}
 		li {
 			list-style-type: none;
@@ -429,7 +251,7 @@
 <body>
 	<div id="app" style="display: flex; height: 100vh;">
 		<!-- Bind all necessary props for components in router from vue data here --->
-		<router-view class="view" :prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismiss="dismiss" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo"></router-view>
+		<router-view class="view" :walletFound="walletFound":prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismiss="dismiss" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo"></router-view>
 		<div v-if="($router.currentRoute.path === '/')">
 			<h3 class="bottomBanner row" v-if="walletLoading && (walletAddr === null)">Detecting crypto service...</h3>
 			<div v-else-if="walletFound && displayWalletText" id="wallet" class="bottomBanner">

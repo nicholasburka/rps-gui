@@ -3,6 +3,7 @@ var webpack = require('webpack');
 var htmlWebpackPlugin = require('html-webpack-plugin');
 var nodeExternals = require('webpack-node-externals')
 //var nodeExternals = require('web')
+const { VueLoaderPlugin } = require("vue-loader");
 
 const clientConfig = {
 	target: 'web',
@@ -31,12 +32,29 @@ const clientConfig = {
       }
   	},
 	devtool: 'inline-source-map',
+	module: {
+		rules: [
+			{
+				test: /\.vue$/,
+				use: "vue-loader"
+			},
+			{
+		        test: /\.css$/,
+		        use: [
+		          'vue-style-loader',
+		          'style-loader',
+		          'css-loader'
+		        ]
+			}		
+		]
+	},
   plugins: [new htmlWebpackPlugin(),
   	new webpack.DefinePlugin({
       'process.env': {
         'REACH_CONNECTOR_MODE': "'ETH-test-browser-window'"
       }
-    })
+    }),
+    new VueLoaderPlugin()
   ]
   //watch: true
 };

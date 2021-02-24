@@ -3,13 +3,23 @@ import VueRouter from "vue-router";
 import detectProvider from "@metamask/detect-provider";
 import * as axios from "axios";
 import * as stdlib from "@reach-sh/stdlib/ETH.mjs";
+import * as loader from "@reach-sh/stdlib/loader.mjs";
 import * as backend from "../build/index.main.mjs"
 
-/*( async () => {
-	console.log("creating acc");
-	const accAlice = await stdlib.newTestAccount(stdlib.parseCurrency(1000));
-	console.log(accAlice);
-})();*/
+import Landing from "views/Landing.vue";
+import Home from "views/Home.vue";
+import CreateGame from "views/CreateGame.vue";
+import SearchGames from "views/SearchGames.vue";
+import SearchResults from "views/SearchResults.vue";
+import AcceptGame from "views/AcceptGame.vue";
+import JoinGameByContract from "views/JoinGameByContract.vue";
+import PlayGame from "views/PlayGame.vue";
+import BasePopup from "views/BasePopup.vue";
+import GameOutcomePopup from "views/GameOutcomePopup.vue";
+
+console.log("landing");
+console.log(Landing);
+
 console.log("vue");
 console.log(Vue);
 console.log("vue-router");
@@ -52,30 +62,6 @@ function play(choice) {
 
 /* Templates for the pages */
 
-const landing = {
-	props: ['walletaddr'],
-	template: `
-		<div id="landing" class="active-page column" v-on:click="function() {if (walletaddr || offlinedev) {$router.push('home')}}">
-			<transition appear appear-active-class="rock" leave-active-class="slideOutLeft">
-				<img src="assets/rock.png" alt="a rock" style="position: absolute; z-index: 5; max-width: 30vw; max-height: 15vh; object-fit: contain; width: auto; left: 10vw;top: 10vh;">
-			</transition>
-			<h1 class="row" style="background-color: #b79eff;">rock</h1>
-			<transition appear appear-active-class="paper" leave-active-class="slideOutRight">
-				<img src="assets/paper.jpg" alt="paper" style="position: absolute; z-index: 5; max-height: auto; max-width: 30vw; left: 60vw; top: 40vh;">
-			</transition>
-			<h1 class="row" style="background-color: #af751d;">paper</h1>
-			<transition appear appear-active-class="scissors" leave-active-class="slideOutLeft">
-				<img src="assets/scissors2.png" alt="scissors" style="position: absolute; z-index: 5; max-height: 30vh; max-width: 30vw; width: auto; left: 20vw; top: 68vh;">
-			</transition>
-			<h1 class="row" style="background-color: #67e483;">scissors</h1>
-		</div>
-	`,
-	methods: {
-		offlinedev: function() {
-			return document.URL.substr(0,4) === "file";
-		}
-	}
-};
 //need to add extending open games if there's more than displayable open games
 const home = {
 	props: ['walletaddr', 'balance', 'opengames', 'awaiting_games', 'accepted_games', 'invites', 'currency', 'money-committed'],
@@ -474,7 +460,7 @@ const searchGame = {
 			</div>
 			<br/>
 			<div class="row" style="flex-basis: 40%; width: 80%; margin-top:2%; align-self: center;">
-			<div class="column" style="max-width: 30%;"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between</label></div>
+			<div class="column" style="max-width: 30%;"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between (inclusive)</label></div>
 				<label>min&nbsp;</label><input v-model="min" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency"><label>&nbsp;and&nbsp;</label>
 				<label>max&nbsp;</label><input v-model="max" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency">
 			</div>
@@ -772,13 +758,13 @@ const popupC = {
 }
 
 const routes = [
-	{path: '/', component: landing},
-	{path: '/home', component: home},
-	{path: '/create', component: createGame},
-	{path: '/search', component: searchGame},
-	{path: '/search-results', component: gameSearchResults},
-	{path: '/play', component: gameplay},
-	{path: '/join', component: joinGame}
+	{path: '/', component: Landing},
+	{path: '/home', component: Home},
+	{path: '/create', component: CreateGame},
+	{path: '/search', component: SearchGames},
+	{path: '/search-results', component: SearchResults},
+	{path: '/play', component: PlayGame},
+	{path: '/join', component: JoinGameByContract}
 ];
 
 console.log("ROUTER");
@@ -1068,16 +1054,16 @@ const app = new Vue({
 		router: router,
 		el: "#app",
 		components: {
-			'landing': landing,
 			'popupC': popupC,
 			'displaytextarea': displaytext
 		},
 		data: function() {
-			return { walletLoading: true, walletFound: null, walletUnavailable: null, 
+			return { 
+				walletLoading: true, 
+				walletFound: null, 
+				walletUnavailable: null, 
 				acc: null,
 				wallet: null,
-				walletText: "Wallet service found: ",
-				displayWalletText: true,
 				walletAddr: null,
 				balance: null,
 				walletCurrency: "ETH",
@@ -1092,7 +1078,8 @@ const app = new Vue({
 				popuptime: 3000,
 				popups: [],
 				displaytext: "",
-				TEST: false
+				TEST: false,
+				DEV_LOG: true
 			}
 		},
 		created: function() {
@@ -1135,9 +1122,16 @@ const app = new Vue({
 		},
 		methods: {
 			log: function(message) {
-				if (this.TEST) {
+				if (this.DEV_LOG) {
 					console.log(message);
 				}
+			},
+			loadReachLib: async function(currency) {
+				this.log("getting reach stdlib for currency " + currency);
+				this.stdlib = await loader.loadStdlib(currency);
+				this.log("loaded stdlib");
+				this.log(this.stdlib);
+				this.currency = currency;
 			},
 			getEthProvider: async function() {
 				this.walletLoading = true;
@@ -1147,9 +1141,9 @@ const app = new Vue({
 				if (prov) {
 					this.walletFound = true;
 					this.walletLoading = false;
-					console.log('found wallet: ' + prov);
+					this.log('found wallet: ' + prov);
 					this.wallet = prov;
-					console.log(this.wallet);
+					this.log(this.wallet);
 					//return (prov);
 					this.reqAccount();
 				} else {
@@ -1353,7 +1347,7 @@ const app = new Vue({
 					console.log("not creating backend");
 					//await backend.Alice(game.contract, new Player(this, game.contract, game));
 
-					console.log("backend Alice not created");
+					console.log("backend Alice not npmcreated");
 					game.wager = game.wagerreadable;
 					console.log("POSTing game");
 					var response = await axios({
