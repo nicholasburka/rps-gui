@@ -27,6 +27,9 @@
 	margin-left: auto;
 	margin-right: auto;
 }
+#game-header {
+	max-height: 10vh;
+}
 </style>
 
 <template>
