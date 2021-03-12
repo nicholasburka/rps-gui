@@ -40,7 +40,7 @@
 			<h3 class="column" id="wager">{{currentgame.wagerreadable}} {{currentgame.currency}}</h3>
 		</div>
 		<div class="row" style="height: 80vh;">
-			<div id="game" class="row" style="position: relative; height: 60vh;">
+			<div id="game" class="row" style="position: relative; height: 50vh;">
 				<div id="rock-cont" class="column">
 					<img id="rock" class="rps-piece" src="img/rock.png" alt="rock" v-on:click="addHand('Rock')">
 					<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockCount}}</p>
@@ -55,10 +55,11 @@
 				</div>
 			</div>
 			<div id="chosen" class="row" style="height: 20vh; background-color: purple">
-				<img v-for="hand in hands" v-bind:id="hand" class="rps-piece" v-bind:src="'img/' + hand + '.png'" v-bind:alt="hand" v-on:click="rmoveHand(hand)">
+				<img v-for="hand in hands" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand" v-on:click="removeHand(hand)">
 			</div>
-			<div id="submit" class="row">
-				<button v-on:click="submithands()"></button>
+			<div id="submit" class="row" style="height: 10vh">
+				<h3 v-if="err">{{err}}</h3>
+				<button v-on:click="submithands()">Shoo!</button>
 			</div>
 		</div>
 		<!--<PlayHands v-on:submithands="submithands" :rockCount="rockCount" :paperCount="paperCount" :scissorsCount="scissorsCount"></PlayHands>-->
@@ -88,7 +89,8 @@
 		data: function() {
 			return {
 				chosen_hands: [],
-				hands: []
+				hands: [],
+				err: ""
 			}
 		}, 
 		methods: {
@@ -96,14 +98,18 @@
 				chosen_hands.push(hand);
 			},
 			remove_hand: function() {
-				this.chosen_hands.pop();
+				if (this.hands.length > 0) {
+					this.chosen_hands.pop();
+				}
 			},
 			submithands: function(hands) {
 				//this.currentgame.resolveHands(hands);
 				this.$emit('submithands', this.currentgame, hands);
 			},
 			addHand: function(hand) {
-				this.hands.push(hand);
+				if (this.hands.length < 5) {
+					this.hands.push(hand);
+				}
 			},
 			/*removeHand: function() {
 				this.hands.pop();
@@ -115,7 +121,11 @@
 				}
 			},
 			submithands: function() {
-				this.$emit('submithands', this.hands);
+				if (this.hands.length === 5) {
+					this.$emit('submithands', this.currentgame, this.hands);
+				} else {
+					this.err = "Need 5 hands!";
+				}
 			}
 		}
 	}
