@@ -6,7 +6,7 @@
 
 <template>
 	<div id="create-game" class="column">
-			<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
+			<img id="back-arrow" src="img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 			<form id="game-settings" class="column" v-on:submit.prevent>
 				<!--<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>-->
 				<h3 class="row flex-center">Wager</h3>
@@ -161,7 +161,7 @@
 					console.log('not completed');
 				}
 			},
-			/*confirmm: function() {
+			confirmm: function() {
 				console.log("conf");
 				console.log(this.game);
 				this.$emit('ongamecreate', this.game);
@@ -171,7 +171,7 @@
 				this.addrentry = null;
 				this.addrprev = null;
 				this.err_msg = null;
-			},*/
+			},
 			denyy: function() {
 				console.log("received");
 				this.confirm = false;

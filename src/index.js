@@ -1,8 +1,16 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Vuex from "Vuex";
 import detectProvider from "@metamask/detect-provider";
 import * as axios from "axios";
 import * as stdlib from "@reach-sh/stdlib/ETH.mjs";
+import * as ethstdlib from "@reach-sh/stdlib/ETH.mjs";
+import * as algostdlib from "@reach-sh/stdlib/ALGO.mjs";
+const reach = {
+	"ETH": ethstdlib,
+	"ALGO": algostdlib
+};
+reach["ALGO"].setSignStrategy('AlgoSigner');
 import * as loader from "@reach-sh/stdlib/loader.mjs";
 import * as backend from "../build/index.main.mjs"
 
@@ -25,6 +33,7 @@ console.log(Vue);
 console.log("vue-router");
 console.log(VueRouter);
 console.log(new VueRouter());
+Vue.use(Vuex);
 
 console.log(stdlib);
 console.log(stdlib.connectAccount);
@@ -828,85 +837,6 @@ function timeLeft(game) {
 		enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
 		return timeToGo(enddate.toISOString());
 	};
-function Game(obj) {
-	this.title = obj.title;
-	this.wager = obj.wager;
-	this.delay = obj.delay; 
-	this.currency = obj.currency;
-	this.timeCreated = obj.timeCreated; //would really get this from blockchain
-	this.gameid = obj.gameid; //would get this from blockchain?
-	this.contractAddress = obj.contractAddress;
-	this.p1 = obj.p1;
-	this.p2 = obj.p2;
-	this.p1move = obj.p1move;
-	this.p2move = obj.p2move;
-	this.completed = false;
-	this.starttime = obj.starttime;
-	this.timeLeft = function() {
-		var blocktime_est = 100;
-		function isoToObj(s) {
-		    var b = s.split(/[-TZ:]/i);
-
-		    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5]));
-
-		}
-
-
-		function timeToGo(s) {
-
-		    // Utility to add leading zero
-		    function z(n) {
-		      return (n < 10? '0' : '') + n;
-		    }
-
-		    // Convert string to date object
-		    var d = isoToObj();
-		    var diff = d - new Date();
-
-		    // Allow for previous times
-		    var sign = diff < 0? '-' : '';
-		    diff = Math.abs(diff);
-
-		    // Get time components
-		    var hours = diff/3.6e6 | 0;
-		    var mins  = diff%3.6e6 / 6e4 | 0;
-		    var secs  = Math.round(diff%6e4 / 1e3);
-
-		    // Return formatted string
-		    return sign + z(hours) + ':' + z(mins) + ':' + z(secs);   
-		}
-		//need to check units
-		//this will actually be a call to Reach or a blockchain API
-		//return (this.delay + this.timeCreated) - (new Date()).getTime();
-		var enddate = new Date(this.starttime);
-		enddate.setSeconds(enddate.getSeconds() + blocktime*this.delay); //assuming that blocktime is in seconds
-		return timeToGo(enddate.toISOString());
-	};
-	this.status = function() {
-		if (!this.p2) {
-			return "created";
-		} else if (this.p2 && !(this.p1move && this.p2move)) {
-			return "accepted";
-		} else if (!this.completed) {
-			return "submitted";
-		} else {
-			return "completed";
-		}
-	};
-	this.outcome = function() {
-		if (!(this.p1move && this.p2move)) {
-			return undefined;
-		} else if (this.p1move === this.p2move) {
-			return "tie";
-		} else if ( ((this.p1move === "rock") && (this.p2move === "paper")) 
-					|| ((this.p1move === "paper") && (this.p2move === "scissors")) 
-					|| ((this.p1move === "scissors") && (this.p2move === "rock")) ) {
-			return this.p2;
-		} else {
-			return this.p1;
-		}
-	};
-};
 
 // Source: http://stackoverflow.com/questions/497790
 var dates = {
@@ -963,7 +893,7 @@ var dates = {
 
 var examplePlayers = [];
 examplePlayers.push(new aPlayer("0588xf01", "jherod"));
-examplePlayers.push(new aPlayer("1125fxf01", "sunduz"));
+examplePlayers.push(new aPlayer("1125fxf01", "alli"));
 examplePlayers.push(new aPlayer("015aa39v", "mo"));
 
 var exampleGames = [];
@@ -1046,6 +976,174 @@ class Deployer extends Player {
 	}
 }
 
+function Game(obj) {
+	this.title = obj.title;
+	this.wager = obj.wager;
+	this.delay = obj.delay; 
+	this.currency = obj.currency;
+	this.timeCreated = obj.timeCreated; //would really get this from blockchain
+	this.gameid = obj.gameid; //would get this from blockchain?
+	this.contractAddress = obj.contractAddress;
+	this.p1 = obj.p1;
+	this.p2 = obj.p2;
+	this.p1move = obj.p1move;
+	this.p2move = obj.p2move;
+	this.completed = false;
+	this.starttime = obj.starttime;
+	this.timeLeft = function() {
+		var blocktime_est = 100;
+		function isoToObj(s) {
+		    var b = s.split(/[-TZ:]/i);
+
+		    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5]));
+
+		}
+
+
+		function timeToGo(s) {
+
+		    // Utility to add leading zero
+		    function z(n) {
+		      return (n < 10? '0' : '') + n;
+		    }
+
+		    // Convert string to date object
+		    var d = isoToObj();
+		    var diff = d - new Date();
+
+		    // Allow for previous times
+		    var sign = diff < 0? '-' : '';
+		    diff = Math.abs(diff);
+
+		    // Get time components
+		    var hours = diff/3.6e6 | 0;
+		    var mins  = diff%3.6e6 / 6e4 | 0;
+		    var secs  = Math.round(diff%6e4 / 1e3);
+
+		    // Return formatted string
+		    return sign + z(hours) + ':' + z(mins) + ':' + z(secs);   
+		}
+		//need to check units
+		//this will actually be a call to Reach or a blockchain API
+		//return (this.delay + this.timeCreated) - (new Date()).getTime();
+		var enddate = new Date(this.starttime);
+		enddate.setSeconds(enddate.getSeconds() + blocktime*this.delay); //assuming that blocktime is in seconds
+		return timeToGo(enddate.toISOString());
+	};
+	this.status = function() {
+		if (!this.p2) {
+			return "created";
+		} else if (this.p2 && !(this.p1move && this.p2move)) {
+			return "accepted";
+		} else if (!this.completed) {
+			return "submitted";
+		} else {
+			return "completed";
+		}
+	};
+	this.outcome = function() {
+		if (!(this.p1move && this.p2move)) {
+			return undefined;
+		} else if (this.p1move === this.p2move) {
+			return "tie";
+		} else if ( ((this.p1move === "rock") && (this.p2move === "paper")) 
+					|| ((this.p1move === "paper") && (this.p2move === "scissors")) 
+					|| ((this.p1move === "scissors") && (this.p2move === "rock")) ) {
+			return this.p2;
+		} else {
+			return this.p1;
+		}
+	};
+};
+//Games class that has both game metadata and backend functions and interact
+/*class Game {
+	constructor(stdlib, gameparams) {
+
+	}
+}*/
+
+//Games store that reads out 
+//open games
+//filter games with status of 
+//games history
+//get games history from db
+//filter games
+function GameMetadata(form_params) {
+	this.title = ma.title;
+	this.wager = metadata.wager
+}
+/*function aGame(form_params) {
+	...form_params
+
+}*/
+
+/*const store = new Vuex.Store({
+	state: {
+		reach,
+		wallet: {
+			'currency': 'ALGO',
+			'acc': undefined,
+			'address': undefined,
+			'balance': undefined
+		},
+		//dictionary with contract address,
+		activeGames: {}
+		//wallets: {
+		//	"ETH": {
+		//		'acc': undefined,
+		//		'address': undefined,
+		//		'balance': undefined
+		//	},
+		//	"ALGO": {
+		//
+		//	}
+		//},
+		//ethwallet
+	},
+	mutations: {
+		setWallet: function(state, {currency, acc, address, balance}) {
+			state.wallet.currency = currency;
+			state.wallet.acc = acc;
+			state.wallet.address = address;
+			state.wallet.balance = balance;
+			return state.wallet;
+		},
+		setActiveGames: function(state, games) {
+			state.activeGames = games;
+			return state.activeGames;
+		}
+	}, 
+	actions: {
+		refreshWallet: async function(context, currency) {
+			try {
+				const currency = currency;
+				if (currency === "ALGO") {
+					const acc = await reach[currency].newAccountFromAlgoSigner();
+				} else if (currency === "ETH") {
+					const acc = await reach[currency].getDefaultAccount();
+				}
+				const acc = await reach[currency].getDefaultAccount();
+				const address = await acc.networkAccount.getAddress();
+				const balance = await reach[currency].balanceOf(state.wallet.acc);
+				return context.commit('setWallet', {currency, acc, address, balance});
+			} catch (err) {
+				console.log("error refreshing wallet");
+				console.log(err);
+			}
+		},
+		refreshGames: async function(context) {
+			//get games call
+			//metadata
+
+			return context.commit('setGames', activeGames);
+		}
+	},
+	getters: {
+		acc: (state, currency) => {
+			return state.acc[currency];
+		}
+	}
+});*/
 
 console.log("APP");
 Vue.use(VueRouter);
@@ -1053,6 +1151,7 @@ console.log(Vue.use(VueRouter));
 const app = new Vue({
 		router: router,
 		el: "#app",
+		//store,
 		components: {
 			'popupC': popupC,
 			'displaytextarea': displaytext
@@ -1090,31 +1189,6 @@ const app = new Vue({
 
 			console.log("created Vue app");
 			console.log(this);
-			this.getEthProvider();
-			var self = this;
-			var exampleActions = function() {
-				var p1 = {walletaddr: this.walletaddr};
-				var p2 = {walletaddr: "124024124"};
-				var game = new Game({
-					title: "Big Game",
-					wager: .01,
-					delay: 10,
-					currency: "ETH",
-					timeCreated: getTime(),
-					p1: p1,
-					p2: p2,
-					p1move: 'rock'
-				});
-				console.log(this.walletaddr);
-				console.log(this.popuptime);
-				self.opengames.push(game);
-
-				setTimeout(() => {
-
-				});
-			};
-
-			//exampleActions();
 			//console.log(this.$router.name);
 			//console.log(this.$router.currentRoute.path);
 		},
@@ -1133,41 +1207,49 @@ const app = new Vue({
 				this.log(this.stdlib);
 				this.currency = currency;
 			},
-			getEthProvider: async function() {
-				this.walletLoading = true;
-				const prov = await detectProvider();
-				//console.log(prov);
-
-				if (prov) {
-					this.walletFound = true;
-					this.walletLoading = false;
-					this.log('found wallet: ' + prov);
-					this.wallet = prov;
-					this.log(this.wallet);
-					//return (prov);
-					this.reqAccount();
-				} else {
-					this.walletUnavailable = true;
-					this.walletLoading = false;
-					return false;
+			getAtomicCurrency: async function(val) {
+				assert(this.currency === "ETH" || this.currency === "ALGO");
+				if (this.currency === 'ETH') {
+					const valAtomic = await reach[this.currency].formatCurrency(val, -4);
+				} else if (this.currency === 'ALGO') {
+					const valAtomic = await reach[this.currency].formatCurrency(val, -6);
 				}
+				return valAtomic;
+			},
+			getReadableCurrency: async function() {
+				assert(this.currency === "ETH" || this.currency === "ALGO");
+				if (this.currency === 'ETH') {
+					const valReadable = await reach[this.currency].formatCurrency(val, 4);
+				} else if (this.currency === 'ALGO') {
+					const valReadable = await reach[this.currency].formatCurrency(val, 6);
+				}
+				return valReadable;
 			},
 			updateBalance: async function() {
-				/*ethereum.request({method: 'eth_getBalance', params: [this.walletAddr, 'latest']})
-					.then((res) => {
-						this.balance = res[0];
-						console.log("raw resp");
-						console.log(res);
-						console.log("balance: " + res[0]);
-					})
-					.catch((err) => {
-						console.log("ERR getting balance, " + err);
-					})*/
-				var atomicBalance = await stdlib.balanceOf(this.acc);
-				this.balance = await stdlib.formatCurrency(atomicBalance, 4);
+				var atomicBalance = await reach[this.currency].balanceOf(this.acc);
+				this.balance = await this.getReadableCurrency(atomicBalance);
 				return this.balance;
 			},
-			reqAccount: async function() {
+			refreshWallet: async function(currency) {
+				this.log("refresh wallet");
+				console.log("refresh wallet");
+				try {
+					this.currency = currency;
+					/*if (currency === "ALGO") {
+						const acc = await reach[currency].newAccountFromAlgoSigner();
+					} else if (currency === "ETH") {
+						const acc = await reach[currency].getDefaultAccount();
+					}*/
+					const acc = await reach[currency].getDefaultAccount();
+					this.walletAddr = await this.acc.networkAccount.getAddress();
+					await this.updateBalance();
+					this.getGames();
+				} catch (err) {
+					this.log("could not refresh wallet");
+					this.log(err);
+				}
+			},
+			/*reqAccount: async function() {
 				//right now this requires the user to click "Enable Ethereum" to run
 				
 				console.log(stdlib.getDefaultAccount);
@@ -1191,23 +1273,23 @@ const app = new Vue({
 				} catch (err) {
 					console.log(err);
 				}
-
-				//get price of crypto
-				/*axios({
-					method: 'get',
-					withCredentials: true,
-					url: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest/items?slug=ethereum',
-					headers: {'X-CMC_PRO_API_KEY': '22193dce-f532-4c64-98ea-bd408903ae8f'}
-					})
-					.then(response => {console.log(response); this.price = response.data['1']['quote']['usd'];})
-					.catch(error => {console.log(error)});*/
 			},
+			getCurrencyPrice: async function() {
+				axios({
+						method: 'get',
+						withCredentials: true,
+						url: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest/items?slug=ethereum',
+						headers: {'X-CMC_PRO_API_KEY': '22193dce-f532-4c64-98ea-bd408903ae8f'}
+						})
+						.then(response => {console.log(response); this.price = response.data['1']['quote']['usd'];})
+						.catch(error => {console.log(error)});
+			},*/
 			tryfaucet: async function() {
 				try {
 					console.log("faucet");
-					const faucet = await stdlib.getFaucet();
+					const faucet = await reach[this.currency].getFaucet();
 					console.log(faucet);
-					await stdlib.transfer(faucet, this.acc, stdlib.parseCurrency(5));
+					await reach[this.currency].transfer(faucet, this.acc, stdlib.parseCurrency(5));
 					console.log("transferred?");
 				}
 				catch (e) {
@@ -1215,31 +1297,27 @@ const app = new Vue({
 				}
 			},
 			displaycontractinfo: function(game) {
-				console.log("received a displaycontractinfo event");
-				console.log(game);
-				console.log(this);
-				console.log(this.displaytext);
-				console.log(JSON.stringify(game.contractinfo, null, 2));
+				this.log("received a displaycontractinfo event");
+				this.log(game);
+				this.log(this);
+				this.log(this.displaytext);
+				this.log(JSON.stringify(game.contractinfo, null, 2));
 				this.displaytext = JSON.stringify(game.contractinfo, null, 2);
-				console.log(this.displaytext);
+				this.log(this.displaytext);
 			},
 			setpopup: function(msg) {
-				
 				this.popup = msg;
 				setTimeout(() => {
 					this.popup = null;
-					console.log("settimeout finished");
+					this.log("settimeout finished");
 				}, this.popuptime);
 			},
 			removePopup: function() {
 				this.popup = null;
 			},
-			dismiss: function() {
+			dismissDisplayText: function() {
 				console.log("dismiss in vue parent");
 				this.displaytext = null;
-			},
-			gameStatus: function(game) {
-				//if (!(game.p2) && game.
 			},
 			getGames: function() {
 				//need to edit to ensure correct form of request
@@ -1249,18 +1327,19 @@ const app = new Vue({
 						method: "GET",
 						url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress=".concat(String(this.walletAddr)))
 					}).then(function(response) {
-						console.log(response);
-						console.log(response.data);
-						console.log("_SELF_");
-						console.log(self);
+						this.log(response);
+						this.log(response.data);
+						this.log("_SELF_");
+						this.log(self);
+						//TODO this should be in dbquery not in frontend
 						self.opengames = response.data.filter((game) => {
-							console.log(game);
-							console.log(game.status);
-							console.log((game.status !== "complete"));
+							this.log(game);
+							this.log(game.status);
+							this.log((game.status !== "complete"));
 							return (game.status !== "complete");
 																});
-						console.log("open games from DB");
-						console.log(self.opengames);
+						this.log("open games from DB");
+						this.log(self.opengames);
 
 						self.opengames = self.opengames.map((game) => {
 							if (!game.wagerreadable) {
@@ -1269,7 +1348,7 @@ const app = new Vue({
 								//console.log(stdlib.hexToBigNumber(game.wager.hex));
 								//console.log(stdlib.formatCurrency(stdlib.hexToBigNumber(game.wager.hex), 4));
 								//console.log(stdlib.standardUnit);
-								game.wagerreadable = stdlib.formatCurrency(stdlib.hexToBigNumber(game.wager.hex), 4);
+								game.wagerreadable = reach[this.currency].formatCurrency(reach[this.currency].hexToBigNumber(game.wager.hex), 4);
 							}
 							return game;
 						});
@@ -1281,7 +1360,7 @@ const app = new Vue({
 				}
 			},
 			gamehistory: function() {
-				console.log("game history");
+				this.log("game history");
 				//show all games that have status "completed"
 				//show results (need to make vue component)
 				//route to game history vue component
@@ -1294,6 +1373,9 @@ const app = new Vue({
 					});
 
 				});
+			},
+			isP1: function(game) {
+				return (game.p1 === this.walletAddr);
 			},
 			ongamecreate: async function(game) {
 				var self = this;
@@ -1339,13 +1421,37 @@ const app = new Vue({
 					game.status = "Awaiting Opponent";
 					game.playable = false;
 					//update balance
-					self.balance = stdlib.balanceOf(this.acc);//this.acc.getBalance();
+					self.balance = await this.updateBalance();//this.acc.getBalance();
 					
 		
 
 					//self.opengames.push(game);
 					console.log("not creating backend");
 					//await backend.Alice(game.contract, new Player(this, game.contract, game));
+					const atomicWager = this.getAtomicCurrency(game.wager);
+					const interact = {
+						...reach[this.currency].hasRandom,
+						wager: atomicWager,
+						deadline: game.deadline,
+						informTimeout: function(who) {
+							
+						},
+						informDraw: function() {
+
+						},
+						seeOutcome: function() {
+
+						},
+						getHands: async function() {
+							game.status
+							//update game status
+							//notification
+							//resolve on moves submit
+						}
+					};
+					backend.Deployer(game.contract, {
+
+					})
 
 					console.log("backend Alice not npmcreated");
 					game.wager = game.wagerreadable;

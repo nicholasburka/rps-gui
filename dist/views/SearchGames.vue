@@ -1,6 +1,6 @@
 <template>
-	<div id="search-game" class="page-container">
-		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
+	<div id="search-game" class="page-container column">
+		<img id="back-arrow" src="img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 		<form id="game-settings" class="column" v-on:submit.prevent>
 			<h3 class="row flex-center">Wager</h3>
 				<div class="row" style="flex-basis: 40%; width: 80%; align-self: center;">

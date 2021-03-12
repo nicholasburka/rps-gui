@@ -20,6 +20,7 @@
 	animation-name: rockOver;
 	animation-duration: .5s;
 	animation-fill-mode: forwards;
+	animation-timing-function: ease-out;
 	z-index: -1;
 }
 @keyframes rockOver {
@@ -48,7 +49,7 @@
 .paper-entrance {
 	animation-name: paper-entrance;
 	animation-duration: .5s;
-	animation-delay: .5s;
+	/*animation-delay: .5s;*/
 	animation-timing-function: ease-out;
 }
 @keyframes paper-entrance {
@@ -71,8 +72,17 @@
 .scissors-entrance {
 	animation-name: scissors-entrance;
 	animation-duration: .5s;
+	animation-timing-function: ease-out;
 }
-@keyframes scissors-entrance {
+@keyframes scissor-entrance {
+	0% {
+		transform: translateX(-100px);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
+@keyframes scissors-entrance-old {
 	0% {
 		transform: translateX(-70px) rotateX(10deg) rotateY(10deg);
 	}
@@ -97,15 +107,15 @@
 <template>
 	<div id="landing" class="active-page column" v-on:click="function() {if (walletaddr || offlinedev) {$router.push('home')}}">
 		<transition appear appear-active-class="rock-entrance" leave-active-class="slideOutLeft">
-			<img id="rock" src="assets/rock.png" alt="a rock">
+			<img id="rock" src="img/rock.png" alt="a rock">
 		</transition>
 		<h1 class="row" style="background-color: #b79eff;">rock</h1>
 		<transition appear appear-active-class="paper-entrance" leave-active-class="slideOutRight">
-			<img id="paper" src="assets/paper.jpg" alt="paper">
+			<img id="paper" src="img/paper.jpg" alt="paper">
 		</transition>
 		<h1 class="row" style="background-color: #af751d;">paper</h1>
 		<transition appear appear-active-class="scissors-entrance" leave-active-class="slideOutLeft">
-			<img id="scissors" src="assets/scissors2.png" alt="scissors">
+			<img id="scissors" src="img/scissors2.png" alt="scissors">
 		</transition>
 		<h1 class="row" style="background-color: #67e483;">scissors</h1>
 	</div>
@@ -121,11 +131,19 @@
 </template>
 
 <script>
-	module.exports = {
+	import walletConfigPanel from './WalletConfigPanel.vue';
+
+	export default {
+		components: {
+			walletConfigPanel
+		},
 		//props: [walletLoading, walletAddr, walletFound, displayWalletText],
 		methods: {
 			offlinedev: function() {
 				return document.URL.substr(0,4) === "file";
+			},
+			exitLanding: function() {
+				$router.push('');
 			}
 		},
 		computed: {

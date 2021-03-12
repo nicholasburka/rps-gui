@@ -12,7 +12,7 @@
 
 <template>
 	<div id="game-search-results" class="column" style="margin-top:2vh;">
-		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
+		<img id="back-arrow" src="img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 		<SearchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 		</SearchResult>
 		<AcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" :currency="this.currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></AcceptGame>

@@ -251,7 +251,7 @@
 <body>
 	<div id="app" style="display: flex; height: 100vh;">
 		<!-- Bind all necessary props for components in router from vue data here --->
-		<router-view class="view" :walletFound="walletFound":prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismiss="dismiss" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo"></router-view>
+		<router-view class="view" :walletFound="walletFound":prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismissdisplaytext="dismissDisplayText" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo" v-on:refreshWallet="refreshWallet"></router-view>
 		<div v-if="($router.currentRoute.path === '/')">
 			<h3 class="bottomBanner row" v-if="walletLoading && (walletAddr === null)">Detecting crypto service...</h3>
 			<div v-else-if="walletFound && displayWalletText" id="wallet" class="bottomBanner">
