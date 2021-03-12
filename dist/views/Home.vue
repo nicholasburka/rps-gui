@@ -85,15 +85,20 @@
 		<transition appear appear-active-class="slideInRight">
 			<div id="home-th" v-bind:class="{ updateAnimation: gameUpdate }">
 				<div id="open-games-header" class="row">
-					<div class="column" style="width: 33vw;">
-						<img id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
+					<div class="column" style="width: 33vw; max-height: 20vh;">
 						<div class="row">
-							<h3 style="font-size: .6vw;">{{walletaddr}}</h3>
+							<img class="column" id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
+							<div class="column">
+								<h3 style="font-size: .6vw;">{{walletaddr}}</h3>
+								<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
+							</div>
 						</div>
-						<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
+						<div class="row">
+							<h3>Committed: ...</h3>
+						</div>
 					</div>
 					<h3 class="column" style="width: 33vw;">Open Games</h3>
-					<h3 class="column" style="width: 33vw;">Committed: ...<!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
+					<h3 class="column" style="width: 33vw;"><!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
 				</div>
 					<div class="column" id="active-games">
 						<ul id="playable">
