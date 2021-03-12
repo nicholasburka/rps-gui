@@ -229,7 +229,9 @@ ul {
 					this.gameUpdate = false;
 				}, 1000);
 
+				console.log(gamesold);
 				console.log(gamesnew);
+				console.log(opengames);
 				this.playableGames = this.gamesnew.filter((x) => {return x.playable});
 				console.log(this.playableGames);
 				console.log(this.playable_games);
