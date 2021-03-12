@@ -1240,7 +1240,7 @@ const app = new Vue({
 					} else if (currency === "ETH") {
 						const acc = await reach[currency].getDefaultAccount();
 					}*/
-					const acc = await reach[currency].getDefaultAccount();
+					this.acc = await reach[currency].getDefaultAccount();
 					this.walletAddr = await this.acc.networkAccount.getAddress();
 					await this.updateBalance();
 					this.getGames();
