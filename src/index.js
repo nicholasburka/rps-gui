@@ -1521,7 +1521,7 @@ const app = new Vue({
 						}
 					};
 
-					console.log("backend Alice not npmcreated");
+					//console.log("backend Alice not npmcreated");
 					game.wager = game.wagerreadable;
 					console.log("POSTing game");
 					var response = await axios({

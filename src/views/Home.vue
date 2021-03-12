@@ -88,32 +88,36 @@
 						<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 					</div>
 					<h3 class="column">Open Games</h3>
-					<h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3>
+					<h3 class="column"> Committed: <!--{{ money-committed }} {{ currency }}--></h3>
 				</div>
-				<ul id="open-games">
-					<div id="active-games">
+					<div class="column" id="active-games">
 						<div id="playable-games">
-							<div class="row activeitem playable" v-bind:class="{}" v-for="game in playable_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
-								<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
-							</div>
+							<ul id="playable">
+								<div class="row activeitem playable" v-bind:class="{}" v-for="game in playable_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
+									<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
+									<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
+								</div>
+							</ul>
 						</div>
 						<div id="invites">
 						</div>
 					</div>
-					<div id="accepted-games">
-						<div class="row accepted" v-bind:class="{}" v-for="game in accepted_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
-							<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-							<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
-						</div>
+					<!--<div class="row" id="accepted-games">
+						<ul id="accepted">
+							<div class="column accepted" v-bind:class="{}" v-for="game in accepted_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
+								<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
+								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
+							</div>
+						</ul>
 					</div>
-					<div id="waiting-games">
-						<div class="row waiting" v-bind:class="{}" v-for="game in awaiting_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
-							<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-							<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
-						</div>
-					</div>
-				</ul>
+					<div class="row" id="waiting-games">
+						<ul id="waiting"> 
+							<div class="column waiting" v-bind:class="{}" v-for="game in awaiting_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
+								<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
+								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
+							</div>
+						</ul>
+					</div>-->
 				<ul id="invites">
 					<li class="row" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
 						Invited by {{ invite.p1 }} for {{ invite.wager }} {{currency}} : {{ invite.delay }} blocks left
