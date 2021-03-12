@@ -1334,10 +1334,10 @@ const app = new Vue({
 						method: "GET",
 						url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress=".concat(String(this.walletAddr)))
 					}).then(function(response) {
-						this.log(response);
-						this.log(response.data);
-						this.log("_SELF_");
-						this.log(self);
+						self.log(response);
+						self.log(response.data);
+						self.log("_SELF_");
+						self.log(self);
 						//TODO this should be in dbquery not in frontend
 						self.opengames = response.data.filter((game) => {
 							this.log(game);
@@ -1345,8 +1345,8 @@ const app = new Vue({
 							this.log((game.status !== "complete"));
 							return (game.status !== "complete");
 																});
-						this.log("open games from DB");
-						this.log(self.opengames);
+						self.log("open games from DB");
+						self.log(self.opengames);
 
 						self.opengames = self.opengames.map((game) => {
 							if (!game.wagerreadable) {

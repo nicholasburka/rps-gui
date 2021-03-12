@@ -36,7 +36,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack && cp src/index.html dist/index.html && cp -r src/views/ dist/views/",
     "buildwatch": "webpack --watch && cp -r src/index.html dist/indexx.html",
-    "buildverbose": "webpack --display-modules && cp src/index.html dist/indexx.html"
+    "buildverbose": "webpack --display-modules && cp src/index.html dist/indexx.html",
+    "buildupload": "npm run build; git add .; git commit -m \".\"; git push -u origin AWSAPIs;"
   },
   "author": "",
   "license": "ISC"
