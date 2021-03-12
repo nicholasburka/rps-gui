@@ -232,7 +232,7 @@ ul {
 				console.log(gamesold);
 				console.log(gamesnew);
 				console.log(this.opengames);
-				this.playableGames = this.gamesnew.filter((x) => {return x.playable});
+				this.playableGames = this.opengames.filter((x) => {return x.playable});
 				console.log(this.playableGames);
 				console.log(this.playable_games);
 			}
