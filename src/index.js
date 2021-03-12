@@ -1483,11 +1483,11 @@ const app = new Vue({
 						informOpponent: function(opp) {
 							game.p2 = opp;
 							game.status = "Awaiting outcome";
-							this.displaytext = opp + " joined game!\n" + gameinfostr(game);
+							this.displaytext = opp + " joined game!\n" + self.gameinfostr(game);
 						},
 						informDraw: function() {
 							game.status = "Draw";
-							this.displaytext = "Draw! New round \n" + gameinfostr(game);
+							this.displaytext = "Draw! New round \n" + self.gameinfostr(game);
 						},
 						seeOutcome: function(outcome) {
 							var outcome_notif = "";
@@ -1497,15 +1497,15 @@ const app = new Vue({
 								game.winner = game.p1;
 							}
 							if (outcome === 0 && isP1(game)) {
-								outcome_notif = "You lost...\n" + gameinfostr(game);
+								outcome_notif = "You lost...\n" + self.gameinfostr(game);
 							} else {
-								outcome_notif = "You won! \n" + gameinfostr(game);
+								outcome_notif = "You won! \n" + self.gameinfostr(game);
 							}
 							self.displayNotification(outcome_notif);
 						},
 						getHands: async function() {
 							game.playable = true;
-							this.displaytext = "Ready to play! \n" + gameinfostr(game); 
+							this.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
 							//update game status
 							//notification
 							//resolve on moves submit

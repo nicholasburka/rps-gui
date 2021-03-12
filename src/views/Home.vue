@@ -83,9 +83,9 @@
 					<div class="column" style="max-width: 33vw; flex: 0">
 						<img id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
 						<div class="row">
-							<h3 style="font-size: 1vw;">{{walletaddr}}</h3>
+							<h3 style="font-size: .6vw;">{{walletaddr}}</h3>
 						</div>
-						<h3 class="row">{{balance}} {{currency}}</h3>
+						<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 					</div>
 					<h3 class="column">Open Games</h3>
 					<h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3>
