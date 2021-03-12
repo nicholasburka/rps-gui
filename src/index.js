@@ -1340,9 +1340,9 @@ const app = new Vue({
 						self.log(self);
 						//TODO this should be in dbquery not in frontend
 						self.opengames = response.data.filter((game) => {
-							this.log(game);
-							this.log(game.status);
-							this.log((game.status !== "complete"));
+							self.log(game);
+							self.log(game.status);
+							self.log((game.status !== "complete"));
 							return (game.status !== "complete");
 																});
 						self.log("open games from DB");
