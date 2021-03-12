@@ -1781,7 +1781,7 @@ const app = new Vue({
 				console.log(hands_nums);
 				game.resolveHands(hands_nums);
 				//game.prevHands = game.prevHands.concat(hands_str);
-				displayNotification("submitted hands " + hands_str);
+				this.displayNotification("submitted hands " + hands_str);
 			},
 			ongamesearch: function(gameparams) {
 				console.log(gameparams);
