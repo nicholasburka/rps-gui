@@ -1758,6 +1758,7 @@ const app = new Vue({
 				}
 			},
 			submithands: function(args) {
+				console.log(args);
 				var game = args.game;
 				var hands = args.hands;
 				console.log("submitted hands");

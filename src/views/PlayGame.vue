@@ -129,7 +129,7 @@
 			},
 			submithands: function() {
 				if (this.hands.length === 5) {
-					this.$emit('submithands', this.currentgame, this.hands);
+					this.$emit('submithands', {game: this.currentgame, hands: this.hands});
 				} else {
 					this.err = "Need 5 hands!";
 				}
