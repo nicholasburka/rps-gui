@@ -89,7 +89,7 @@
 						<div class="row">
 							<img class="column" id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
 							<div class="column">
-								<h3 style="font-size: .6vw;">{{walletaddr}}</h3>
+								<h3 style="font-size: .6vw;">{{wallet_text}}</h3>
 								<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 							</div>
 						</div>
