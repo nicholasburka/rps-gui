@@ -101,7 +101,7 @@
 					<div class="column" id="active-games">
 						<ul id="playable">
 							<div id="playable-games">
-								<div class="row activeitem playable" v-bind:class="{}" v-for="game in playable_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
+								<div class="row activeitem playable" v-for="game in playable_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
 									<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 									<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }}</li>
 								</div>
