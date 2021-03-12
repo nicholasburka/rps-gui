@@ -6,7 +6,7 @@
 	top: 20vh;
 	width: 70vw;
 	left: 15vw;
-	background-color: hsla(180, 100%, 100%, 0.5);
+	background-color: hsla(120, 80%, 80%, 0.7);
 }
 #x {
 	top: 5%;

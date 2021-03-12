@@ -72,6 +72,11 @@
 	object-fit: contain;
 	z-index: 10;
 }
+
+.playable {
+	background-color: lightgreen;
+	margin-top: .1vh;
+}
 </style>
 
 <template>
@@ -80,25 +85,38 @@
 		<transition appear appear-active-class="slideInRight">
 			<div id="home-th" v-bind:class="{ updateAnimation: gameUpdate }">
 				<div id="open-games-header" class="row">
-					<div class="column" style="max-width: 33vw; flex: 0">
+					<div class="column" style="width: 33vw;">
 						<img id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
 						<div class="row">
 							<h3 style="font-size: .6vw;">{{walletaddr}}</h3>
 						</div>
 						<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 					</div>
-					<h3 class="column">Open Games</h3>
-					<h3 class="column"> Committed: <!--{{ money-committed }} {{ currency }}--></h3>
+					<h3 class="column" style="width: 33vw;">Open Games</h3>
+					<h3 class="column" style="width: 33vw;">Committed: {{ committed }}<!--{{ money-committed }} {{ currency }}--></h3>
 				</div>
 					<div class="column" id="active-games">
-						<div id="playable-games">
-							<ul id="playable">
+						<ul id="playable">
+							<div id="playable-games">
 								<div class="row activeitem playable" v-bind:class="{}" v-for="game in playable_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
 									<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 									<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
 								</div>
-							</ul>
-						</div>
+							
+							</div>
+						</ul>
+						<ul id="accepted">
+							<div class="accepted" v-bind:class="{}" v-for="game in accepted_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
+								<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
+								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
+							</div>
+						</ul>
+						<ul id="waiting"> 
+							<div class="waiting" v-bind:class="{}" v-for="game in awaiting_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
+								<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
+								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
+							</div>
+						</ul>
 						<div id="invites">
 						</div>
 					</div>
@@ -127,7 +145,7 @@
 						</div>
 					</li>
 				</ul>
-				<h2 id="game-history" v-on:click="getHistory()">game history</h2>
+				<!--<h2 id="game-history" v-on:click="getHistory()">game history</h2>-->
 			</div>
 		</transition>
 		<hr style="width: 80%; text-align: center;">
@@ -172,6 +190,13 @@
 			},
 			playable_games: function() {
 				return this.opengames.filter(x => (x.playable === true));
+			},
+			committed: function() {
+				if (this.opengames.length > 0) {
+					return this.opengames.reduce((acc,game) => acc + game.wager);
+				} else {
+					return "..."
+				}
 			}
 		},
 		watch : {
