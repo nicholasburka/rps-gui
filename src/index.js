@@ -1525,7 +1525,7 @@ const app = new Vue({
 							self.currentgame = game;
 							console.log(self);
 							console.log(self.currenctgame);
-							router.push({path: 'play', query: {game: game.gameid}});
+							router.push('play');
 							//update game status
 							//notification
 							//resolve on moves submit
