@@ -122,7 +122,7 @@
 				this.hands.pop();
 			},*/
 			removeHand: function(hand) {
-				const index = array.indexOf(hand);
+				const index = this.hands.indexOf(hand);
 				if (index > -1) {
 				  this.hands.splice(index, 1);
 				}
