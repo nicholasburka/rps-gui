@@ -1483,7 +1483,7 @@ const app = new Vue({
 						informOpponent: function(opp) {
 							game.p2 = opp;
 							game.status = "Awaiting outcome";
-							this.displaytext = opp " joined game!\n" + gameinfostr(game);
+							this.displaytext = opp + " joined game!\n" + gameinfostr(game);
 						},
 						informDraw: function() {
 							game.status = "Draw";

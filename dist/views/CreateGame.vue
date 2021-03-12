@@ -17,10 +17,10 @@
 					<p class="column" style="flex-basis: 5%"></p>
 				</div>
 				<p v-if="price" class="row form-detail-text">1 {{currency}} to {{ price }} USD * {{ wager }}, est. invested {{ price * wager }}</p>
-				<h3 class="row flex-center">Delay</h3>
+				<h3 class="row flex-center">deadline</h3>
 				<div class="row" style="justify-content: center">
 					<p class="column" style="flex-basis: 10%"></p>
-					<input v-model="delay" class="form-input column" style="flex-grow: 3;" type="number" name="delay" step="1" min="1" default="100" placeholder="default">
+					<input v-model="deadline" class="form-input column" style="flex-grow: 3;" type="number" name="deadline" step="1" min="1" default="100" placeholder="default">
 					<p class="column" style="flex-basis:5%">blocks until timeout</p>
 					<p class="column" style="flex-basis: 5%"></p>
 				</div>
@@ -51,7 +51,7 @@
 				</div>
 				<div v-else>
 				</div>
-				<button id="form-submit" class="row" v-on:click="onSubmit(wager, delay, title, addrentry, addrprev, walletaddress, private_game, $emit)">Go!</button>
+				<button id="form-submit" class="row" v-on:click="onSubmit(wager, deadline, title, addrentry, addrprev, walletaddress, private_game, $emit)">Go!</button>
 			</form>
 			<CreateGameConfirm v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" :currency="this.currency" v-on:confirm="confirmm()" v-on:deny="denyy()"></CreateGameConfirm>
 	</div>
@@ -73,7 +73,7 @@
 			//console.log(walletAddr);
 			return {
 				'wager': .0005,
-				'delay': 100,
+				'deadline': 100,
 				'title': rand_title,
 				'addrentry': null,
 				'addrprev': null,
@@ -87,7 +87,7 @@
 			}
 		},
 		methods: {
-			game: function(title, wager, delay, p1addr, p2addrentry, p2select) {
+			game: function(title, wager, deadline, p1addr, p2addrentry, p2select) {
 				var game = {};
 			},
 			err: function(err_msg) {
@@ -96,7 +96,7 @@
 			onClick: function() {
 
 			},
-			onSubmit: function(wager, delay, title, addrentry, addrprev, walletaddr, private_game, emit) {
+			onSubmit: function(wager, deadline, title, addrentry, addrprev, walletaddr, private_game, emit) {
 				console.log("walletaddr");
 				console.log(walletaddr);
 				console.log(this.walletaddr);
@@ -105,8 +105,8 @@
 				if (!wager) {
 					incomplete_fields.push("Wager");
 				}
-				if (!delay) {
-					incomplete_fields.push("Delay");
+				if (!deadline) {
+					incomplete_fields.push("deadline");
 				} 
 				if (!title) {
 					incomplete_fields.push("Title");
@@ -118,7 +118,7 @@
 					this.err_msg = "Please enter a value for " + incomplete_fields;
 				}
 				//this could maybe just be an 
-				else */if(this.wager && this.delay) {
+				else */if(this.wager && this.deadline) {
 					var p2;
 					var permissions;
 					if (addrprev) {
@@ -138,7 +138,7 @@
 						title: this.title,
 						wager: this.wager,
 						currency: this.currency,
-						delay: this.delay,
+						deadline: this.deadline,
 						p1: this.walletaddr,
 						p2: p2,
 						status: "pending",
@@ -155,7 +155,7 @@
 					//alert("HEY!");
 					//alert(this);
 					console.log(this.wager);
-					console.log(this.delay);
+					console.log(this.deadline);
 					console.log(this.addrprev);
 					console.log(this.addrentry);
 					console.log('not completed');
@@ -166,7 +166,7 @@
 				console.log(this.game);
 				this.$emit('ongamecreate', this.game);
 				this.wager = null;
-				this.delay = null;
+				this.deadline = null;
 				this.title = null;
 				this.addrentry = null;
 				this.addrprev = null;
