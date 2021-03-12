@@ -1755,7 +1755,12 @@ const app = new Vue({
 					case "Scissors": 2;
 				}
 			},
-			submithands: function(game, hands) {
+			submithands: function(args) {
+				var game = args.game;
+				var hands = args.hands;
+				console.log("submitted hands");
+				console.log(game);
+				console.log(hands);
 				const hands_str = hands;
 				const hands_nums = hands.map(x => this.handStrToNum(x));
 				game.resolveHands(hands_nums);
