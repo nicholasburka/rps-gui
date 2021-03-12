@@ -1399,6 +1399,11 @@ const app = new Vue({
 				//animate game ending
 				//move game to game history
 				//announce game is over, new balance, put in notification stack
+				var ind = this.opengames.findIndex(x => x.ContractAddress === game.ContractAddress);
+				this.log("finishing game, removing game from opengames, found game at index " + ind);
+				if (ind > -1) {
+				  this.opengames.splice(ind, 1);
+				}
 			},
 			gameinfostr: function(game) {
 				var str = game.wager + " " + game.currency + "\n";
@@ -1471,13 +1476,16 @@ const app = new Vue({
 						wager: game.wager,
 						deadline: game.deadline,
 						informTimeout: function(who) {
+							var text = "";
 							if (who === 0 && isP1(game)) {
-								this.displaytext = "You timed out \n ";
+								text = "You timed out \n ";
 							} else {
-								this.displaytext = "Other player timed out";
+								text = "Other player timed out";
 							}
 							game.status = "Complete";
 							game.playable = false;
+							self.displaytext = text;
+							self.displayNotification(text);
 							self.finishGame(game);
 						},
 						informOpponent: function(opp) {
@@ -1515,7 +1523,6 @@ const app = new Vue({
 							console.log(self.opengames);
 							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
 							self.currentgame = game;
-							self.$router.push() 
 							router.push({path: 'play', query: {game: game.gameid}});
 							//update game status
 							//notification

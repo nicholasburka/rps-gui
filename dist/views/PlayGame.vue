@@ -30,14 +30,14 @@
 </style>
 
 <template>
-	<div id="gameplay" class="">
+	<div id="gameplay" class="column">
 		<img id="back-arrow" src="img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 		<div class="row" id="game-header">
-			<h3 class="column">{{ currentgame.status }}</h3>
+			<h3 v-if="currentgame.title" class="column">{{ currentgame.title }}</h3>
 			<h3 class="column" id="wager">{{currentgame.wagerreadable}} {{currentgame.currency}}</h3>
 		</div>
 		<PlayHands v-on:submithands="submithands" :rockCount="rockCount" :paperCount="paperCount" :scissorsCount="scissorsCount"></PlayHands>
-		<div id="history" class="">
+		<!--<div id="history" class="">
 			<div class="row">
 				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="rock" class="column">
 				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="paper" class="column">
@@ -50,7 +50,7 @@
 				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="rock" class="column">
 				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="scissors" class="column">
 			</div>
-		</div>
+		</div>-->
 	</div>
 </template>
 
