@@ -90,6 +90,9 @@
 			},
 			dismissWalletConfig: function() {
 				this.$emit('dismissWalletConfig');
+			},
+			tryfaucet: function() {
+				this.$emit('tryfaucet');
 			}
 		}
 	}
