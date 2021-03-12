@@ -89,7 +89,7 @@ ul {
 
 <template>
 	<div id="home" class="column page-container">
-		<WalletConfigPanel v-if="walletConfigOn" v-on:dismissWalletConfig="dismissWalletConfig()" v-on:refreshWallet="refreshWallet" v-on:tryFaucet="tryFaucet()"></WalletConfigPanel>
+		<WalletConfigPanel v-if="walletConfigOn" v-on:dismissWalletConfig="dismissWalletConfig()" v-on:refreshWallet="refreshWallet" v-on:tryfaucet="tryfaucet()"></WalletConfigPanel>
 		<transition appear appear-active-class="slideInRight">
 			<div id="home-th" v-bind:class="{ updateAnimation: gameUpdate }">
 				<div id="open-games-header" class="row">
@@ -233,7 +233,7 @@ ul {
 			             (25 + 70 * Math.random()) + '%,' + 
 			             (65 + 10 * Math.random()) + '%)'
 			},
-			tryFaucet: function() {
+			tryfaucet: function() {
 				console.log("clicked faucet");
 				this.$emit('tryfaucet');
 			},
