@@ -39,7 +39,8 @@
 				<div class="row"><h3> {{ this.thebalance }} </h3><h3 class="currency"> {{ this.currency }} </h3><img class="currency-icon" v-bind:src="this.currency + '.png'"></div>
 			</div>
 			<div v-else class="flex-center">
-				<h3> Please connect a cryptocurrency wallet using <a href="https://metamask.io/download.html">MetaMask</a> or <a href="https://www.purestake.com/technology/algosigner/">AlgoSigner</a></h3>
+				<h3 class="row"> Please connect a cryptocurrency wallet using <a href="https://metamask.io/download.html">MetaMask</a> or <a href="https://www.purestake.com/technology/algosigner/">AlgoSigner</a></h3>
+				<h3 v-if="this.walletErr">{{ this.walletErr }}</h3>
 			</div>
 			<div class="row"> 
 				<div id="ETH">
@@ -58,7 +59,7 @@
 
 <script>
 	export default {
-		props: ["walletAddr", "balance", "currency"],
+		props: ["walletAddr", "balance", "currency", "walletErr"],
 		data: {
 			loading: false
 			//thebalance: undefined//(() => {if (this.balance) {return this.balance}  else {return undefined}})()
@@ -80,6 +81,11 @@
 			},
 			algo_text: function() {
 				//if (this.$store.wallet &&  
+			},
+			wallet_error: function() {
+				if (walletErr) {
+					return walletErr;
+				}
 			}
 		},
 		methods: {

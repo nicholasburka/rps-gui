@@ -1165,12 +1165,15 @@ const app = new Vue({
 				wallet: null,
 				walletAddr: null,
 				balance: null,
+				walletErr: null,
+				balanceCommitted: null,
 				walletCurrency: "ETH",
 				prevopponents: examplePlayers, //this would be a function
 				opengames: [],//exampleGames,
 				opengamesasgameobjs: [], //unused
 				foundgames: [],
 				invites: null,
+				notifications: [],
 				currentgame: null,
 				price: null,
 				popup: null,
@@ -1254,6 +1257,7 @@ const app = new Vue({
 				} catch (err) {
 					this.log("could not refresh wallet");
 					this.log(err);
+					this.walletErr = err;
 				}
 			},
 			/*reqAccount: async function() {
@@ -1384,6 +1388,31 @@ const app = new Vue({
 			isP1: function(game) {
 				return (game.p1 === this.walletAddr);
 			},
+			opponent: function(game) {
+				if (isP1(game)) {
+					return game.p2;
+				} else {
+					return game.p1;
+				}
+			},
+			finishGame: function(game) {
+				//animate game ending
+				//move game to game history
+				//announce game is over, new balance, put in notification stack
+			},
+			gameinfostr: function(game) {
+				var str = game.wager + " " + game.currency + "\n";
+				if (game.status === "Awaiting Opponent") {
+					str += game.contractinfostr;
+				} else {
+					str += opponent(game);
+					str += game.status;
+				}
+			},
+			displayNotification: function(notif) {
+				this.displaytext = notif;
+				this.notifications.push(notif);
+			},
 			ongamecreate: async function(game) {
 				var self = this;
 				router.push('home');
@@ -1436,29 +1465,57 @@ const app = new Vue({
 					console.log("not creating backend");
 					//await backend.Alice(game.contract, new Player(this, game.contract, game));
 					const atomicWager = this.getAtomicCurrency(game.wager);
+					//should these game mods modify the arr directly
 					const interact = {
 						...reach[this.currency].hasRandom,
 						wager: atomicWager,
 						deadline: game.deadline,
 						informTimeout: function(who) {
-							
+							if (who === 0 && isP1(game)) {
+								this.displaytext = "You timed out \n ";
+							} else {
+								this.displaytext = "Other player timed out";
+							}
+							game.status = "Complete";
+							game.playable = false;
+							self.finishGame(game);
+						},
+						informOpponent: function(opp) {
+							game.p2 = opp;
+							game.status = "Awaiting outcome";
+							this.displaytext = opp " joined game!\n" + gameinfostr(game);
 						},
 						informDraw: function() {
-
+							game.status = "Draw";
+							this.displaytext = "Draw! New round \n" + gameinfostr(game);
 						},
-						seeOutcome: function() {
-
+						seeOutcome: function(outcome) {
+							var outcome_notif = "";
+							if (outcome === 0) {
+								game.winner = game.p2;
+							} else {
+								game.winner = game.p1;
+							}
+							if (outcome === 0 && isP1(game)) {
+								outcome_notif = "You lost...\n" + gameinfostr(game);
+							} else {
+								outcome_notif = "You won! \n" + gameinfostr(game);
+							}
+							self.displayNotification(outcome_notif);
 						},
 						getHands: async function() {
-							game.status
+							game.playable = true;
+							game.prevHands = myHands(game);
+							this.displaytext = "Ready to play! \n" + gameinfostr(game); 
 							//update game status
 							//notification
 							//resolve on moves submit
+							const hands = await game.submitHands();
+							self.log("received hands");
+							self.log(hands);
+							return hands;
 						}
 					};
-					backend.Deployer(game.contract, {
-
-					})
 
 					console.log("backend Alice not npmcreated");
 					game.wager = game.wagerreadable;
@@ -1473,6 +1530,7 @@ const app = new Vue({
 					console.log(response.data);
 					self.opengames.push(game);
 					console.log(self.opengames);
+					await backend.Deployer(game.contract, interact);
 					self.setpopup("Game \"" + game.title + "\" deployed!");
 					
 				} catch (error) {
