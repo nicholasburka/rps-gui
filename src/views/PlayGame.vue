@@ -39,7 +39,7 @@
 			<h3 v-if="currentgame.title" class="column">{{ currentgame.title }}</h3>
 			<h3 class="column" id="wager">{{currentgame.wagerreadable}} {{currentgame.currency}}</h3>
 		</div>
-		<div class="column">
+		<div class="row" style="height: 80vh;">
 			<div id="game" class="row" style="position: relative; height: 60vh;">
 				<div id="rock-cont" class="column">
 					<img id="rock" class="rps-piece" src="img/rock.png" alt="rock" v-on:click="addHand('Rock')">
