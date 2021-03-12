@@ -1506,6 +1506,8 @@ const app = new Vue({
 						getHands: async function() {
 							console.log("GET HANDS");
 							game.playable = true;
+							console.log(game);
+							console.log(self.opengames);
 							this.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
 							//update game status
 							//notification
