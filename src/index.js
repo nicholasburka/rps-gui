@@ -1216,7 +1216,7 @@ const app = new Vue({
 				}
 				return valAtomic;
 			},
-			getReadableCurrency: async function() {
+			getReadableCurrency: async function(val) {
 				//assert(this.currency === "ETH" || this.currency === "ALGO");
 				if (this.currency === 'ETH') {
 					const valReadable = await reach[this.currency].formatCurrency(val, 4);
