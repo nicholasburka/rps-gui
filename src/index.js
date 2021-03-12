@@ -1508,7 +1508,10 @@ const app = new Vue({
 							game.playable = true;
 							console.log(game);
 							console.log(self.opengames);
-							this.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
+							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
+							self.currentgame = game;
+							self.$router.push() 
+							router.push({path: 'play', query: {game: game.gameid}});
 							//update game status
 							//notification
 							//resolve on moves submit
