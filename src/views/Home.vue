@@ -107,10 +107,11 @@ ul {
 					<h3 class="column" style="width: 33vw;">Comitted: ... <!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
 				</div>
 					<div class="column" id="open-games">
-						<div class="row activeitem playable" v-for="game in opengames" v-if="game.playable" v-bind:game="game" v-bind:key="game.ContractAddress"  style="height: 4vh">
+						<div class="row activeitem playable" v-for="game in this.playableGames" v-bind:game="game" v-bind:key="game.ContractAddress"  style="height: 4vh">
 							<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 							<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }}</li>
 						</div>
+						<h3> waiting on {{ this.opengames.length - this.playableGames.length }} games... </h3>
 						<!--<ul id="playable">
 							<div id="playable-games">
 								<div class="row activeitem playable" v-for="game in playable_games" v-bind:game="game" v-bind:key="game.ContractAddress"  style="height: 4vh">
@@ -228,7 +229,8 @@ ul {
 					this.gameUpdate = false;
 				}, 1000);
 
-				this.playableGames = this.opengames.filter((x) => {return x.playable});
+				console.log(gamesnew);
+				this.playableGames = this.gamesnew.filter((x) => {return x.playable});
 				console.log(this.playableGames);
 				console.log(this.playable_games);
 			}
