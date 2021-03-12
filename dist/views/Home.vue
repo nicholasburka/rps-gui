@@ -88,17 +88,15 @@
 					<div class="column" style="width: 33vw; max-height: 20vh;">
 						<div class="row">
 							<img class="column" id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
-							<div class="column">
-								<h3 style="font-size: .6vw;">{{wallet_text}}</h3>
+							<div v-if="walletaddr" class="column">
+								<h3 style="font-size: .6vw;">{{walletaddr}}</h3>
 								<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 							</div>
-						</div>
-						<div class="row">
-							<h3>Committed: ...</h3>
+							<h3 v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
 						</div>
 					</div>
 					<h3 class="column" style="width: 33vw;">Open Games</h3>
-					<h3 class="column" style="width: 33vw;"><!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
+					<h3 class="column" style="width: 33vw;">Comitted: ... <!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
 				</div>
 					<div class="column" id="active-games">
 						<ul id="playable">
