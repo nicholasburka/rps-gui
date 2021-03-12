@@ -266,7 +266,7 @@
 			<popupC v-for="popup in popups" v-bind:key="popups" message="popup.message">
 		</div>
 		<p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
-		<displaytextarea v-if="displaytext" v-bind:text="displaytext" id="displaytext" v-on:dismiss="dismissdisplaytext"></displaytextarea>
+		<displaytextarea v-if="displaytext" v-bind:text="displaytext" id="displaytext" v-on:dismissdisplaytext="dismissdisplaytext"></displaytextarea>
 		</transition>
 	</div>
 	<script src="client.bundle.js"></script>

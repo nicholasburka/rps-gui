@@ -199,14 +199,14 @@ const displaytext = {
 		<p class="row">
 		{{text}}
 		</p>
-		<button id="go" class="row" v-on:click="$emit('dismiss')">Dismiss</button>
+		<button id="go" class="row" v-on:click="$emit('dismissdisplaytext')">Dismiss</button>
 		</div>
 	`,
 	methods: {
 		onclick: function() {
 			console.log("dismiss");
 			console.log(this.$emit);
-			this.$emit('dismiss');
+			this.$emit('dismissdisplaytext');
 		}
 	}
 };
@@ -1214,9 +1214,9 @@ const app = new Vue({
 				//assert(this.currency === "ETH" || this.currency === "ALGO");
 				var valAtomic = undefined;
 				if (this.currency === 'ETH') {
-					valAtomic = await reach[this.currency].formatCurrency(val, -4);
+					valAtomic = await reach[this.currency].parseCurrency(val);
 				} else if (this.currency === 'ALGO') {
-					valAtomic = await reach[this.currency].formatCurrency(val, -6);
+					valAtomic = await reach[this.currency].parseCurrency(val);
 				}
 				return valAtomic;
 			},
@@ -1326,7 +1326,7 @@ const app = new Vue({
 			removePopup: function() {
 				this.popup = null;
 			},
-			dismissDisplayText: function() {
+			dismissdisplaytext: function() {
 				console.log("dismiss in vue parent");
 				this.displaytext = null;
 			},
