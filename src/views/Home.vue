@@ -225,6 +225,8 @@ ul {
 				setTimeout(() => {
 					this.gameUpdate = false;
 				}, 1000);
+
+				console.log(this.playable_games);
 			}
 		},
 		methods: {
