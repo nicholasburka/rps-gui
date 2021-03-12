@@ -187,6 +187,13 @@
 					return "Please connect a cryptowallet by clicking on the wallet icon."
 				}
 			},
+			currency_text: function() {
+				if (!this.walletaddr) {
+					return "";
+				} else {
+					return this.currency;
+				}
+			},
 			awaiting_games: function() {
 				return this.opengames.filter(x => (x.status === "Awaiting Opponent"));
 			},
