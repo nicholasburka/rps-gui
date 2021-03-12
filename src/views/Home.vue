@@ -204,7 +204,8 @@
 				//console.log("game.starttime");
 				//console.log(game.starttime);
 
-				var blocktime_est = 10000;
+				return game.starttime + " deadline: " + game.deadline + " blocks"
+				/*var blocktime_est = 10000;
 				function isoToObj(s) {
 				    var b = s.split(/[-TZ:]/i);
 
@@ -243,7 +244,7 @@
 				enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
 				var tleft = timeToGo(enddate.toISOString());
 				//console.log(tleft);
-				return tleft;
+				return tleft;*/
 			},
 			walletConfig: function() {
 				console.log("walletConfig On");

@@ -1464,7 +1464,7 @@ const app = new Vue({
 					//self.opengames.push(game);
 					console.log("not creating backend");
 					//await backend.Alice(game.contract, new Player(this, game.contract, game));
-					const atomicWager = this.getAtomicCurrency(game.wager);
+					const atomicWager = await this.getAtomicCurrency(game.wager);
 					//should these game mods modify the arr directly
 					const interact = {
 						...reach[this.currency].hasRandom,
@@ -1510,7 +1510,12 @@ const app = new Vue({
 							//update game status
 							//notification
 							//resolve on moves submit
-							const hands = await game.submitHands();
+							function resolveHands() {
+								return new Promise((resolve,reject) => {
+									game.resolveHands = resolve;
+								})
+							};
+							const hands = await resolveHands();
 							self.log("received hands");
 							self.log(hands);
 							return hands;
@@ -1664,6 +1669,19 @@ const app = new Vue({
 						self.setpopup("Game \"" + game.title + "\" accepted!");
 					});
 				}
+			},
+			handStrToNum: function(hand) {
+				switch (hand) {
+					case "Rock": 0;
+					case "Paper": 1;
+					case "Scissors": 2;
+				}
+			},
+			submithands: function(game, hands) {
+				const hands_str = hands;
+				const hands_nums = hands.map(x => this.handStrToNum(x));
+				game.resolveHands(hands_nums);
+				displayNotification("submitted hands " + hands_str);
 			},
 			ongamesearch: function(gameparams) {
 				console.log(gameparams);

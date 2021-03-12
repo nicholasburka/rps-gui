@@ -36,20 +36,7 @@
 			<h3 class="column">{{ currentgame.status }}</h3>
 			<h3 class="column" id="wager">{{currentgame.wagerreadable}} {{currentgame.currency}}</h3>
 		</div>
-		<div id="game" class="row" style="position: relative; height: 60vh;">
-			<div id="rock-cont">
-				<img id="rock" class="rps-piece" src="img/rock.png" alt="rock" onclick="play('rock');" v-on:click="$emit('onmoveselect', currentgame, 'rock')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockHist}}</p>
-			</div>
-			<div id="paper-cont">
-				<img id="paper" class="rps-piece" src="img/paper.jpg" alt="paper" onclick="play('paper');" v-on:click="$emit('onmoveselect', currentgame, 'paper')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{paperHist}}</p>
-			</div>
-			<div id="scissors-cont">
-				<img id="scissors" class="rps-piece" src="img/scissors2.png" alt="scissors" onclick="play('scissors');" v-on:click="$emit('onmoveselect', currentgame, 'scissors')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsHist}}</p>
-			</div>
-		</div>
+		<PlayHands v-on:submithands="submithands" :rockCount="rockCount" :paperCount="paperCount" :scissorsCount="scissorsCount"></PlayHands>
 		<div id="history" class="">
 			<div class="row">
 				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="rock" class="column">
@@ -68,7 +55,27 @@
 </template>
 
 <script>
-	module.exports = {
-		props: ["currentgame", "rockHist", "paperHist", "scissorsHist"]
+	import PlayHands from './PlayHands.vue';
+
+	export default {
+		components: PlayHands,
+		props: ["currentgame", "rockCount", "paperCount", "scissorsCount"],
+		data: function() {
+			return {
+				chosen_hands: []
+			}
+		}, 
+		methods: {
+			choose_hand: function(hand) {
+				chosen_hands.push(hand);
+			},
+			remove_hand: function() {
+				this.chosen_hands.pop();
+			},
+			submithands: function(hands) {
+				//this.currentgame.resolveHands(hands);
+				this.$emit('submithands', this.currentgame, hands);
+			}
+		}
 	}
 </script>
