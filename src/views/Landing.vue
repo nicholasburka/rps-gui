@@ -76,7 +76,7 @@
 }
 @keyframes scissor-entrance {
 	0% {
-		transform: translateX(-100px);
+		transform: translateX(-300px);
 	}
 	100% {
 		transform: translateX(0);
@@ -105,7 +105,7 @@
 </style>
 
 <template>
-	<div id="landing" class="active-page column" v-on:click="function() {if (walletaddr || offlinedev) {$router.push('home')}}">
+	<div id="landing" class="active-page column" v-on:click="function() {$router.push('home')}">
 		<transition appear appear-active-class="rock-entrance" leave-active-class="slideOutLeft">
 			<img id="rock" src="img/rock.png" alt="a rock">
 		</transition>
@@ -136,6 +136,9 @@
 	export default {
 		components: {
 			walletConfigPanel
+		},
+		created: function() {
+			setTimeout(() => {this.$router.push('home')}, 1000);
 		},
 		//props: [walletLoading, walletAddr, walletFound, displayWalletText],
 		methods: {

@@ -1,4 +1,7 @@
 <style scoped>
+#rps-piece {
+	height: ;
+}
 </style>
 
 <template>
