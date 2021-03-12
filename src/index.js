@@ -12,7 +12,7 @@ const reach = {
 };
 reach["ALGO"].setSignStrategy('AlgoSigner');
 import * as loader from "@reach-sh/stdlib/loader.mjs";
-import * as backend from "../build/index.main.mjs"
+import * as backend from "../build/rps.main.mjs"
 
 import Landing from "views/Landing.vue";
 import Home from "views/Home.vue";
