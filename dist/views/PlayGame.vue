@@ -111,6 +111,13 @@
 					this.hands.push(hand);
 				}
 			},
+			imsrc: function(hand) {
+				switch (hand) {
+					case "Rock": "img/rock.png";
+					case "Paper": "img/paper.jpg";
+					case "Scissors": "img/scissors2.png";
+				}
+			},
 			/*removeHand: function() {
 				this.hands.pop();
 			},*/
