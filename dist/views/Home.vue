@@ -216,11 +216,11 @@ ul {
 		},
 		watch : {
 			opengames: function (gamesold, gamesnew) {
-				var sound = new Howl({
+				/*var sound = new Howl({
 					src: './ding.mp3',
 					volume: 0.5
 				});
-				sound.play();
+				sound.play();*/
 				this.gameUpdate = true;
 				setTimeout(() => {
 					this.gameUpdate = false;
