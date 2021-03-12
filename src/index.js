@@ -1242,7 +1242,11 @@ const app = new Vue({
 					}*/
 					this.acc = await reach[currency].getDefaultAccount();
 					console.log(this.acc);
-					this.walletAddr = await this.acc.networkAccount.getAddress();
+					if (currency === "ALGO") {
+						this.walletAddr = await this.acc.networkAccount.addr;
+					} else if (currency === "ETH") {
+						this.walletAddr = await this.acc.networkAccount.getAddress();
+					}
 					await this.updateBalance();
 					this.getGames();
 				} catch (err) {
