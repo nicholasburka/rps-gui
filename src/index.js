@@ -1639,23 +1639,30 @@ const app = new Vue({
 						wager: game.wager,
 						deadline: game.deadline,
 						informTimeout: function(who) {
+							var text = "";
 							if (who === 0 && isP1(game)) {
-								this.displaytext = "You timed out \n ";
+								text = "You timed out \n ";
 							} else {
-								this.displaytext = "Other player timed out";
+								text = "Other player timed out";
 							}
 							game.status = "Complete";
 							game.playable = false;
+							self.displaytext = text;
+							self.displayNotification(text);
 							self.finishGame(game);
 						},
 						informOpponent: function(opp) {
 							game.p2 = opp;
 							game.status = "Awaiting outcome";
-							this.displaytext = opp + " joined game!\n" + self.gameinfostr(game);
+							var outcome_notif = opp + " joined game!\n" + self.gameinfostr(game);
+							self.displaytext = outcome_notif;
+							self.displayNotification(outcome_notif);
 						},
 						informDraw: function() {
 							game.status = "Draw";
-							this.displaytext = "Draw! New round \n" + self.gameinfostr(game);
+							var outcome_notif = "Draw! New round \n" + self.gameinfostr(game);
+							self.displaytext = outcome_notif;
+							self.displayNotification(outcome_notif);
 						},
 						seeOutcome: function(outcome) {
 							var outcome_notif = "";
@@ -1669,6 +1676,7 @@ const app = new Vue({
 							} else {
 								outcome_notif = "You won! \n" + self.gameinfostr(game);
 							}
+							self.displaytext = outcome_notif;
 							self.displayNotification(outcome_notif);
 						},
 						getHands: async function() {
@@ -1676,7 +1684,11 @@ const app = new Vue({
 							game.playable = true;
 							console.log(game);
 							console.log(self.opengames);
-							this.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
+							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
+							self.currentgame = game;
+							console.log(self);
+							console.log(self.currenctgame);
+							router.push('play');
 							//update game status
 							//notification
 							//resolve on moves submit
@@ -1766,6 +1778,7 @@ const app = new Vue({
 				console.log(hands);
 				const hands_str = hands;
 				const hands_nums = hands.map(x => this.handStrToNum(x));
+				console.log(hands_nums);
 				game.resolveHands(hands_nums);
 				//game.prevHands = game.prevHands.concat(hands_str);
 				displayNotification("submitted hands " + hands_str);
