@@ -186,7 +186,8 @@ ul {
 		data: function () {
 			return {
 				gameUpdate: false,
-				walletConfigOn: false 
+				walletConfigOn: false,
+				playableGames: []
 			}
 		},
 		computed: {
@@ -211,7 +212,7 @@ ul {
 				return this.opengames.filter(x => (x.status !== "Awaiting Opponent" && x.playable === false));
 			},
 			playable_games: function() {
-				return this.opengames.filter(x => (x.playable === true));
+				return this.opengames.filter(x => {return x.playable});
 			}
 		},
 		watch : {
@@ -225,6 +226,8 @@ ul {
 				setTimeout(() => {
 					this.gameUpdate = false;
 				}, 1000);
+
+				this.playableGames = this.opengames.filter((x) => {return x.playable});
 
 				console.log(this.playable_games);
 			}
