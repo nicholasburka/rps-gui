@@ -72,7 +72,9 @@
 	object-fit: contain;
 	z-index: 10;
 }
-
+#playable {
+	height: 40vh;
+}
 .playable {
 	background-color: lightgreen;
 	margin-top: .1vh;
