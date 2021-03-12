@@ -1597,6 +1597,8 @@ const app = new Vue({
 
 				
 				try {
+
+
 					var res = await axios({
 							method: "GET",
 							url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(String(gamecontractinfo.address)),
@@ -1612,6 +1614,64 @@ const app = new Vue({
 
 					console.log("game chosen");
 					console.log(game);
+
+					const interact = {
+						...reach[this.currency].hasRandom,
+						wager: game.wager,
+						deadline: game.deadline,
+						informTimeout: function(who) {
+							if (who === 0 && isP1(game)) {
+								this.displaytext = "You timed out \n ";
+							} else {
+								this.displaytext = "Other player timed out";
+							}
+							game.status = "Complete";
+							game.playable = false;
+							self.finishGame(game);
+						},
+						informOpponent: function(opp) {
+							game.p2 = opp;
+							game.status = "Awaiting outcome";
+							this.displaytext = opp + " joined game!\n" + self.gameinfostr(game);
+						},
+						informDraw: function() {
+							game.status = "Draw";
+							this.displaytext = "Draw! New round \n" + self.gameinfostr(game);
+						},
+						seeOutcome: function(outcome) {
+							var outcome_notif = "";
+							if (outcome === 0) {
+								game.winner = game.p2;
+							} else {
+								game.winner = game.p1;
+							}
+							if (outcome === 0 && isP1(game)) {
+								outcome_notif = "You lost...\n" + self.gameinfostr(game);
+							} else {
+								outcome_notif = "You won! \n" + self.gameinfostr(game);
+							}
+							self.displayNotification(outcome_notif);
+						},
+						getHands: async function() {
+							console.log("GET HANDS");
+							game.playable = true;
+							console.log(game);
+							console.log(self.opengames);
+							this.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
+							//update game status
+							//notification
+							//resolve on moves submit
+							function resolveHands() {
+								return new Promise((resolve,reject) => {
+									game.resolveHands = resolve;
+								})
+							};
+							const hands = await resolveHands();
+							self.log("received hands");
+							self.log(hands);
+							return hands;
+						}
+					};
 					//console.log("game contract address");
 					//console.log(game.ContractAddress);
 					var gameOnChain = false;
@@ -1619,9 +1679,7 @@ const app = new Vue({
 					console.log("ctcbob, stdlib");
 					console.log(ctcbob);
 					console.log(stdlib);
-					var result = await backend.Bob(ctcbob,
-						new Player(this, ctcbob, game)
-						);
+					var result = await backend.Attacher(ctcbob, interact);
 					console.log("created backend");
 					console.log(result);
 					// axios call to edit the status of the game to accepted
