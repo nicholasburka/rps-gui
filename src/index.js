@@ -1764,9 +1764,9 @@ const app = new Vue({
 			},
 			handStrToNum: function(hand) {
 				switch (hand) {
-					case "Rock": 0;
-					case "Paper": 1;
-					case "Scissors": 2;
+					case "Rock": return 0;
+					case "Paper": return 1;
+					case "Scissors": return 2;
 				}
 			},
 			submithands: function(args) {
