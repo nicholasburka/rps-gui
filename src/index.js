@@ -1209,19 +1209,21 @@ const app = new Vue({
 			},
 			getAtomicCurrency: async function(val) {
 				//assert(this.currency === "ETH" || this.currency === "ALGO");
+				var valAtomic = undefined;
 				if (this.currency === 'ETH') {
-					const valAtomic = await reach[this.currency].formatCurrency(val, -4);
+					valAtomic = await reach[this.currency].formatCurrency(val, -4);
 				} else if (this.currency === 'ALGO') {
-					const valAtomic = await reach[this.currency].formatCurrency(val, -6);
+					valAtomic = await reach[this.currency].formatCurrency(val, -6);
 				}
 				return valAtomic;
 			},
 			getReadableCurrency: async function(val) {
 				//assert(this.currency === "ETH" || this.currency === "ALGO");
+				var valReadable = undefined;
 				if (this.currency === 'ETH') {
-					const valReadable = await reach[this.currency].formatCurrency(val, 4);
+					valReadable = await reach[this.currency].formatCurrency(val, 4);
 				} else if (this.currency === 'ALGO') {
-					const valReadable = await reach[this.currency].formatCurrency(val, 6);
+					valReadable = await reach[this.currency].formatCurrency(val, 6);
 				}
 				return valReadable;
 			},
