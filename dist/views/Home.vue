@@ -217,6 +217,7 @@ ul {
 		},
 		watch : {
 			opengames: function (gamesold, gamesnew) {
+				console.log("change in opengames");
 				/*var sound = new Howl({
 					src: './ding.mp3',
 					volume: 0.5
@@ -228,7 +229,7 @@ ul {
 				}, 1000);
 
 				this.playableGames = this.opengames.filter((x) => {return x.playable});
-
+				console.log(this.playableGames);
 				console.log(this.playable_games);
 			}
 		},
