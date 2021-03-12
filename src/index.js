@@ -1523,6 +1523,8 @@ const app = new Vue({
 							console.log(self.opengames);
 							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
 							self.currentgame = game;
+							console.log(self);
+							console.log(self.currenctgame);
 							router.push({path: 'play', query: {game: game.gameid}});
 							//update game status
 							//notification
