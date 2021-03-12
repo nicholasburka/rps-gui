@@ -4,15 +4,15 @@
 <template>
 	<div class="column">
 		<div id="game" class="row" style="position: relative; height: 60vh;">
-			<div id="rock-cont">
+			<div id="rock-cont" class="column">
 				<img id="rock" class="rps-piece" src="img/rock.png" alt="rock" v-on:click="addHand('Rock')">
 				<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockCount}}</p>
 			</div>
-			<div id="paper-cont">
+			<div id="paper-cont" class="column">
 				<img id="paper" class="rps-piece" src="img/paper.jpg" alt="paper" v-on:click="addHand('Paper')">
 				<p class="count-used" style="position: relative; text-align: center; display: block;">{{paperCount}}</p>
 			</div>
-			<div id="scissors-cont">
+			<div id="scissors-cont" class="column">
 				<img id="scissors" class="rps-piece" src="img/scissors2.png" alt="scissors" v-on:click="addHand('Scissors')">
 				<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsCount}}</p>
 			</div>
