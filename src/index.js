@@ -1241,6 +1241,7 @@ const app = new Vue({
 						const acc = await reach[currency].getDefaultAccount();
 					}*/
 					this.acc = await reach[currency].getDefaultAccount();
+					console.log(this.acc);
 					this.walletAddr = await this.acc.networkAccount.getAddress();
 					await this.updateBalance();
 					this.getGames();
