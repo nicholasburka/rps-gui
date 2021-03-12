@@ -709,7 +709,7 @@ const joinGame = {
 	`
 }
 const gameplay = {
-	props: ["currentgame", "rockHist", "paperHist", "scissorsHist"],
+	props: ["currentgame", "rockCount", "paperCount", "scissorsCount"],
 	template: `
 	<div id="gameplay" class="">
 		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
@@ -720,15 +720,15 @@ const gameplay = {
 		<div id="game" class="row" style="position: relative; height: 60vh;">
 			<div id="rock-cont">
 				<img id="rock" class="rps-piece" src="assets/rock.png" alt="rock" onclick="play('rock');" v-on:click="$emit('onmoveselect', currentgame, 'rock')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockHist}}</p>
+				<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockCount}}</p>
 			</div>
 			<div id="paper-cont">
 				<img id="paper" class="rps-piece" src="assets/paper.jpg" alt="paper" onclick="play('paper');" v-on:click="$emit('onmoveselect', currentgame, 'paper')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{paperHist}}</p>
+				<p class="count-used" style="position: relative; text-align: center; display: block;">{{paperCount}}</p>
 			</div>
 			<div id="scissors-cont">
 				<img id="scissors" class="rps-piece" src="assets/scissors2.png" alt="scissors" onclick="play('scissors');" v-on:click="$emit('onmoveselect', currentgame, 'scissors')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsHist}}</p>
+				<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsCount}}</p>
 			</div>
 		</div>
 		<div id="history" class="">
@@ -1505,7 +1505,6 @@ const app = new Vue({
 						},
 						getHands: async function() {
 							game.playable = true;
-							game.prevHands = myHands(game);
 							this.displaytext = "Ready to play! \n" + gameinfostr(game); 
 							//update game status
 							//notification
@@ -1681,6 +1680,7 @@ const app = new Vue({
 				const hands_str = hands;
 				const hands_nums = hands.map(x => this.handStrToNum(x));
 				game.resolveHands(hands_nums);
+				game.prevHands = game.prevHands.concat(hands_str);
 				displayNotification("submitted hands " + hands_str);
 			},
 			ongamesearch: function(gameparams) {

@@ -67,10 +67,9 @@
 	z-index: 5;
 }
 #wallet {
-	left: 5vw;
-	top: 5vh;
-	max-height: 15vh;
+	max-height: 8vh;
 	max-width: auto;
+	object-fit: contain;
 	z-index: 10;
 }
 </style>
@@ -81,7 +80,7 @@
 		<transition appear appear-active-class="slideInRight">
 			<div id="home-th" v-bind:class="{ updateAnimation: gameUpdate }">
 				<div id="open-games-header" class="row">
-					<div class="column" style="max-width: 33vw;">
+					<div class="column" style="max-width: 33vw; flex: 0">
 						<img id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
 						<div class="row">
 							<h3 style="font-size: 1vw;">{{walletaddr}}</h3>
@@ -154,6 +153,13 @@
 			}
 		},
 		computed: {
+			wallet_text: function() {
+				if (this.walletaddr) {
+					return this.walletaddr
+				} else {
+					return "Please connect a cryptowallet by clicking on the wallet icon."
+				}
+			},
 			awaiting_games: function() {
 				return this.opengames.filter(x => (x.status === "Awaiting Opponent"));
 			},
