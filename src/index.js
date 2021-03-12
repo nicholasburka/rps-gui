@@ -1300,7 +1300,7 @@ const app = new Vue({
 					console.log("faucet");
 					const faucet = await reach[this.currency].getFaucet();
 					console.log(faucet);
-					await reach[this.currency].transfer(faucet, this.acc, .05);
+					await reach[this.currency].transfer(faucet, this.acc, reach[this.currency].parseCurrency(5));
 					console.log("transferred?");
 				}
 				catch (e) {
