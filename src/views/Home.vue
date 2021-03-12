@@ -80,6 +80,11 @@
 	background-color: lightgreen;
 	margin-top: .1vh;
 }
+ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 </style>
 
 <template>
