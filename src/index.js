@@ -1616,17 +1616,17 @@ const app = new Vue({
 				try {
 
 
-					var res = await axios({
+					/*var res = await axios({
 							method: "GET",
 							url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(String(gamecontractinfo.address)),
 						});//this.getgame(gamecontractinfo.address);
-
 					var game = res.data[0];
 					console.log("got game");
-					console.log(game);
+					console.log(game);*/
 					//needs to check if game is a game (from search) or contract (from join by contract)
 					
 					router.push('home');
+					game = {title: "A nice game"};
 					this.setpopup("Connecting to contract provided...");
 
 					console.log("game chosen");
@@ -1636,8 +1636,6 @@ const app = new Vue({
 
 					const interact = {
 						...reach[this.currency].hasRandom,
-						wager: game.wager,
-						deadline: game.deadline,
 						informTimeout: function(who) {
 							var text = "";
 							if (who === 0 && isP1(game)) {
@@ -1645,11 +1643,11 @@ const app = new Vue({
 							} else {
 								text = "Other player timed out";
 							}
-							game.status = "Complete";
-							game.playable = false;
+							//game.status = "Complete";
+							//game.playable = false;
 							self.displaytext = text;
-							self.displayNotification(text);
-							self.finishGame(game);
+							//self.displayNotification(text);
+							//self.finishGame(game);
 						},
 						informOpponent: function(opp) {
 							game.p2 = opp;
@@ -1663,6 +1661,14 @@ const app = new Vue({
 							var outcome_notif = "Draw! New round \n" + self.gameinfostr(game);
 							self.displaytext = outcome_notif;
 							self.displayNotification(outcome_notif);
+						},
+						acceptGame: async function(wager, deadline) {
+							game.wager = await getReadableCurrency(wager);
+							game.deadline = deadline;
+
+							var notif = "Joining game with wager " + game.wager + " " + self.currency + " and deadline of " + deadline + " blocks";
+							self.displaytext = notif;
+							self.displayNotification(notif);
 						},
 						seeOutcome: function(outcome) {
 							var outcome_notif = "";
@@ -1687,7 +1693,7 @@ const app = new Vue({
 							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
 							self.currentgame = game;
 							console.log(self);
-							console.log(self.currenctgame);
+							console.log(self.currentgame);
 							router.push('play');
 							//update game status
 							//notification
