@@ -93,7 +93,7 @@
 						<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 					</div>
 					<h3 class="column" style="width: 33vw;">Open Games</h3>
-					<h3 class="column" style="width: 33vw;">Committed: {{ committed }}<!--{{ money-committed }} {{ currency }}--></h3>
+					<h3 class="column" style="width: 33vw;">Committed: ...<!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
 				</div>
 					<div class="column" id="active-games">
 						<ul id="playable">
@@ -190,13 +190,6 @@
 			},
 			playable_games: function() {
 				return this.opengames.filter(x => (x.playable === true));
-			},
-			committed: function() {
-				if (this.opengames.length > 0) {
-					return this.opengames.reduce((acc,game) => acc + game.wager);
-				} else {
-					return "..."
-				}
 			}
 		},
 		watch : {

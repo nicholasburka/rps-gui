@@ -93,7 +93,7 @@
 						<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 					</div>
 					<h3 class="column" style="width: 33vw;">Open Games</h3>
-					<h3 class="column" style="width: 33vw;">Committed: {{ committed }}<!--{{ money-committed }} {{ currency }}--></h3>
+					<h3 class="column" style="width: 33vw;">Committed: ...<!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
 				</div>
 					<div class="column" id="active-games">
 						<ul id="playable">
@@ -112,7 +112,7 @@
 							</div>
 						</ul>
 						<ul id="waiting"> 
-							<div class="cwaiting" v-bind:class="{}" v-for="game in awaiting_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
+							<div class="waiting" v-bind:class="{}" v-for="game in awaiting_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
 								<img src="img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
 							</div>
@@ -190,13 +190,6 @@
 			},
 			playable_games: function() {
 				return this.opengames.filter(x => (x.playable === true));
-			},
-			committed: function() {
-				if (this.opengames.length > 0) {
-					return this.opengames.reduce((acc,game) => acc + game.wager);
-				} else {
-					return "..."
-				}
 			}
 		},
 		watch : {
