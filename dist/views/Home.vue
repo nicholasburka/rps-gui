@@ -67,7 +67,6 @@
 	z-index: 5;
 }
 #wallet {
-	position: absolute;
 	left: 5vw;
 	top: 5vh;
 	max-height: 15vh;
@@ -85,10 +84,9 @@
 					<div class="column" style="max-width: 33vw;">
 						<img id="wallet" src="img/wallet.jpg" v-on:click="walletConfig()">
 						<div class="row">
-							<h3>Wallet addr: </h3>
 							<h3 style="font-size: 1vw;">{{walletaddr}}</h3>
 						</div>
-						<h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3>
+						<h3 class="row">{{balance}} {{currency}}</h3>
 					</div>
 					<h3 class="column">Open Games</h3>
 					<h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3>
@@ -200,9 +198,11 @@
 				this.$emit('displaycontractinfo', game);
 			},
 			timeLeft: function(game) {
-				//console.log("timeleft");
+				console.log("timeleft");
 				//console.log("game.starttime");
 				//console.log(game.starttime);
+
+				console.log(game.starttime + " deadline: " + game.deadline + " blocks");
 
 				return game.starttime + " deadline: " + game.deadline + " blocks"
 				/*var blocktime_est = 10000;
