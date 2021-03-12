@@ -1632,6 +1632,8 @@ const app = new Vue({
 					console.log("game chosen");
 					console.log(game);
 
+					game.prevHands = [];
+
 					const interact = {
 						...reach[this.currency].hasRandom,
 						wager: game.wager,
