@@ -1767,7 +1767,7 @@ const app = new Vue({
 				const hands_str = hands;
 				const hands_nums = hands.map(x => this.handStrToNum(x));
 				game.resolveHands(hands_nums);
-				game.prevHands = game.prevHands.concat(hands_str);
+				//game.prevHands = game.prevHands.concat(hands_str);
 				displayNotification("submitted hands " + hands_str);
 			},
 			ongamesearch: function(gameparams) {
