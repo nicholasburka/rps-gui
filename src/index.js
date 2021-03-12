@@ -1462,13 +1462,13 @@ const app = new Vue({
 		
 
 					//self.opengames.push(game);
-					console.log("not creating backend");
+					//console.log("not creating backend");
 					//await backend.Alice(game.contract, new Player(this, game.contract, game));
-					const atomicWager = await this.getAtomicCurrency(game.wager);
+					//const atomicWager = await this.getAtomicCurrency(game.wager);
 					//should these game mods modify the arr directly
 					const interact = {
 						...reach[this.currency].hasRandom,
-						wager: atomicWager,
+						wager: game.wager,
 						deadline: game.deadline,
 						informTimeout: function(who) {
 							if (who === 0 && isP1(game)) {
@@ -1504,6 +1504,7 @@ const app = new Vue({
 							self.displayNotification(outcome_notif);
 						},
 						getHands: async function() {
+							console.log("GET HANDS");
 							game.playable = true;
 							this.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
 							//update game status
@@ -1551,7 +1552,8 @@ const app = new Vue({
 				//console.log(game);
 				this.currentgame = game;
 				game.gameid = "fafa"; //temp
-				console.log(game);
+				this.log("on game select");
+				this.log(game);
 				//TO DO, right HERE
 				router.push({path: 'play', query: {game: game.gameid}});
 			},
