@@ -1068,10 +1068,10 @@ function Game(obj) {
 //games history
 //get games history from db
 //filter games
-function GameMetadata(form_params) {
-	this.title = ma.title;
-	this.wager = metadata.wager
-}
+//function GameMetadata(form_params) {
+//	this.title = ma.title;
+//	this.wager = metadata.wager
+//}
 /*function aGame(form_params) {
 	...form_params
 
@@ -1522,10 +1522,10 @@ const app = new Vue({
 							console.log(game);
 							console.log(self.opengames);
 							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
-							self.currentgame = game;
-							console.log(self);
-							console.log(self.currenctgame);
-							router.push('play');
+							//self.currentgame = game;
+							//console.log(self);
+							//console.log(self.currentgame);
+							//router.push('play');
 							//update game status
 							//notification
 							//resolve on moves submit
