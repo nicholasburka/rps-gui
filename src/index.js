@@ -1077,7 +1077,7 @@ function Game(obj) {
 
 }*/
 
-/*const store = new Vuex.Store({
+const store = new Vuex.Store({
 	state: {
 		reach,
 		wallet: {
@@ -1136,6 +1136,18 @@ function Game(obj) {
 			//metadata
 
 			return context.commit('setGames', activeGames);
+		},
+		createGame: function(context, game) {
+
+		},
+		joinGameByContract: function(context, contractinfo) {
+
+		},
+		joinGame: function(context, game) {
+
+		},
+		submitHands: function(context, game) {
+			context.commit('')
 		}
 	},
 	getters: {
@@ -1143,7 +1155,7 @@ function Game(obj) {
 			return state.acc[currency];
 		}
 	}
-});*/
+});
 
 console.log("APP");
 Vue.use(VueRouter);
@@ -1203,6 +1215,10 @@ const app = new Vue({
 					console.log(message);
 				}
 			},
+			copyToClipboard: function(text) {
+				var promise = navigator.clipboard.writeText(text);
+				promise.then(() => {console.log("wrote to clipboard");}, () => {console.log("clipboard failed")});
+			},
 			loadReachLib: async function(currency) {
 				this.log("getting reach stdlib for currency " + currency);
 				this.stdlib = await loader.loadStdlib(currency);
@@ -1259,6 +1275,14 @@ const app = new Vue({
 					this.log(err);
 					this.walletErr = err;
 				}
+			},
+			forceOpenGamesUpdate: function() {
+				this.opengames.push({});
+				this.opengames.pop();
+			},
+			switchGamePlayable: function(game) {
+				game.playable = !(game.playable);
+				this.forceOpenGamesUpdate();
 			},
 			/*reqAccount: async function() {
 				//right now this requires the user to click "Enable Ethereum" to run
@@ -1483,7 +1507,7 @@ const app = new Vue({
 								text = "Other player timed out";
 							}
 							game.status = "Complete";
-							game.playable = false;
+							self.switchGamePlayable(game);
 							self.displaytext = text;
 							self.displayNotification(text);
 							self.finishGame(game);
@@ -1518,7 +1542,7 @@ const app = new Vue({
 						},
 						getHands: async function() {
 							console.log("GET HANDS");
-							game.playable = true;
+							self.switchGamePlayable(game);
 							console.log(game);
 							console.log(self.opengames);
 							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
@@ -1532,7 +1556,7 @@ const app = new Vue({
 							function resolveHands() {
 								return new Promise((resolve,reject) => {
 									game.resolveHands = resolve;
-								})
+								});
 							};
 							const hands = await resolveHands();
 							self.log("received hands");
@@ -1643,11 +1667,11 @@ const app = new Vue({
 							} else {
 								text = "Other player timed out";
 							}
-							//game.status = "Complete";
-							//game.playable = false;
+							game.status = "Complete";
+							self.switchGamePlayable(game);
 							self.displaytext = text;
-							//self.displayNotification(text);
-							//self.finishGame(game);
+							self.displayNotification(text);
+							self.finishGame(game);
 						},
 						informOpponent: function(opp) {
 							game.p2 = opp;
@@ -1687,7 +1711,7 @@ const app = new Vue({
 						},
 						getHands: async function() {
 							console.log("GET HANDS");
-							game.playable = true;
+							self.switchGamePlayable(game);
 							console.log(game);
 							console.log(self.opengames);
 							self.displaytext = "Ready to play! \n" + self.gameinfostr(game); 
@@ -1785,6 +1809,7 @@ const app = new Vue({
 				const hands_str = hands;
 				const hands_nums = hands.map(x => this.handStrToNum(x));
 				console.log(hands_nums);
+				this.switchGamePlayable(game);
 				game.resolveHands(hands_nums);
 				//game.prevHands = game.prevHands.concat(hands_str);
 				this.displayNotification("submitted hands " + hands_str);
