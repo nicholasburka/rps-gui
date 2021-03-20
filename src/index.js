@@ -1634,6 +1634,8 @@ const app = new Vue({
 				console.log(gamecontractinfo);
 				console.log(gamecontractinfo.address);
 
+				var self = this;
+
 				
 				try {
 
@@ -1677,6 +1679,7 @@ const app = new Vue({
 							self.displayNotification(outcome_notif);
 						},
 						acceptGame: async function(wager, deadline) {
+							console.log("acceptGame");
 							game.wager = await getReadableCurrency(wager);
 							game.deadline = deadline;
 
