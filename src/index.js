@@ -1644,7 +1644,7 @@ const app = new Vue({
 						});//this.getgame(gamecontractinfo.address);
 					console.log("received response from API");
 					console.log(res);
-					var game = res.data[0];
+					var game = res.data;
 					console.log("got game");
 					console.log(game);
 					//needs to check if game is a game (from search) or contract (from join by contract)
