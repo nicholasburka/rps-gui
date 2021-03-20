@@ -1077,7 +1077,7 @@ function Game(obj) {
 
 }*/
 
-const store = new Vuex.Store({
+/*const store = new Vuex.Store({
 	state: {
 		reach,
 		wallet: {
@@ -1118,9 +1118,11 @@ const store = new Vuex.Store({
 			try {
 				const currency = currency;
 				if (currency === "ALGO") {
-					const acc = await reach[currency].newAccountFromAlgoSigner();
+					reach[currency].setSignStrategy('mnemonic');
+					//reach[currency].setSignStrategy('AlgoSigner');
+					//const acc = await reach[currency].getDefaultAccount();
 				} else if (currency === "ETH") {
-					const acc = await reach[currency].getDefaultAccount();
+					//const acc = await reach[currency].getDefaultAccount();
 				}
 				const acc = await reach[currency].getDefaultAccount();
 				const address = await acc.networkAccount.getAddress();
@@ -1134,14 +1136,33 @@ const store = new Vuex.Store({
 		refreshGames: async function(context) {
 			//get games call
 			//metadata
+			try {
+				const getGamesByAddressResponse = await axios({
+						method: "GET",
+						url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress=".concat(String(this.walletAddr)))
+					});
 
-			return context.commit('setGames', activeGames);
+				const activeGames = getGamesByAddressResponse.data;
+				return context.commit('setActiveGames', activeGames);
+			} catch (err) {
+				console.log("error getting activeGames");
+				console.log(err);
+				return false;
+			}
 		},
 		createGame: function(context, game) {
 
+			//upload to db
+			//add game to active games
+			//interact object
+				//get hands ()
+				//commit make game playable
+				//await resolve
+			//deploy
 		},
 		joinGameByContract: function(context, contractinfo) {
-
+			//upload to db
+			//add game to active games
 		},
 		joinGame: function(context, game) {
 
@@ -1155,7 +1176,7 @@ const store = new Vuex.Store({
 			return state.acc[currency];
 		}
 	}
-});
+});*/
 
 console.log("APP");
 Vue.use(VueRouter);
@@ -1284,32 +1305,7 @@ const app = new Vue({
 				game.playable = !(game.playable);
 				this.forceOpenGamesUpdate();
 			},
-			/*reqAccount: async function() {
-				//right now this requires the user to click "Enable Ethereum" to run
-				
-				console.log(stdlib.getDefaultAccount);
-				
-				console.log("get account");
-				var acc = await stdlib.getDefaultAccount();
-				this.acc = acc;
-				console.log(this.acc);
-				console.log("get address");
-				this.walletAddr = await acc.networkAccount.getAddress();
-				console.log(this.walletAddr);
-				console.log("get balance");
-				await this.updateBalance();
-				console.log(this.balance);
-
-				//this will eventually be a place where currency is determined and set
-				this.walletCurrency = "ETH";
-
-				try {
-					this.getGames();
-				} catch (err) {
-					console.log(err);
-				}
-			},
-			getCurrencyPrice: async function() {
+			/*getCurrencyPrice: async function() {
 				axios({
 						method: 'get',
 						withCredentials: true,
@@ -1589,8 +1585,9 @@ const app = new Vue({
 				}
 
 			},
-
 			ongameselect: function(game) {
+				//call ongameaccept with game's contractinfostr
+
 				//console.log("on game select");
 				//console.log(game);
 				this.currentgame = game;
@@ -1640,21 +1637,20 @@ const app = new Vue({
 				try {
 
 
-					/*var res = await axios({
+					var res = await axios({
 							method: "GET",
 							url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress=".concat(String(gamecontractinfo.address)),
 						});//this.getgame(gamecontractinfo.address);
+					console.log("received response from API");
+					console.log(res);
 					var game = res.data[0];
 					console.log("got game");
-					console.log(game);*/
+					console.log(game);
 					//needs to check if game is a game (from search) or contract (from join by contract)
 					
 					router.push('home');
-					game = {title: "A nice game"};
+					//game = {title: "A nice game"};
 					this.setpopup("Connecting to contract provided...");
-
-					console.log("game chosen");
-					console.log(game);
 
 					game.prevHands = [];
 
@@ -1672,13 +1668,6 @@ const app = new Vue({
 							self.displaytext = text;
 							self.displayNotification(text);
 							self.finishGame(game);
-						},
-						informOpponent: function(opp) {
-							game.p2 = opp;
-							game.status = "Awaiting outcome";
-							var outcome_notif = opp + " joined game!\n" + self.gameinfostr(game);
-							self.displaytext = outcome_notif;
-							self.displayNotification(outcome_notif);
 						},
 						informDraw: function() {
 							game.status = "Draw";
@@ -1733,14 +1722,13 @@ const app = new Vue({
 							return hands;
 						}
 					};
-					//console.log("game contract address");
-					//console.log(game.ContractAddress);
+
 					var gameOnChain = false;
-					var ctcbob = this.acc.attach(backend, gamecontractinfo);
-					console.log("ctcbob, stdlib");
-					console.log(ctcbob);
+					var ctcAttacher = this.acc.attach(backend, gamecontractinfo);
+					console.log("ctcAttacher, stdlib");
+					console.log(ctcAttacher);
 					console.log(stdlib);
-					var result = await backend.Attacher(ctcbob, interact);
+					var result = await backend.Attacher(ctcAttacher, interact);
 					console.log("created backend");
 					console.log(result);
 					// axios call to edit the status of the game to accepted
