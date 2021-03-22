@@ -1657,8 +1657,10 @@ const app = new Vue({
 
 					game.prevHands = [];
 
+					console.log("self");
+					console.log(self);
 					const interact = {
-						...reach[this.currency].hasRandom,
+						...reach[self.currency].hasRandom,
 						informTimeout: function(who) {
 							var text = "";
 							if (who === 0 && isP1(game)) {
@@ -1728,7 +1730,7 @@ const app = new Vue({
 					};
 
 					var gameOnChain = false;
-					var ctcAttacher = this.acc.attach(backend, gamecontractinfo);
+					var ctcAttacher = this.acc.attach(backend, gamecontractinfo); //TODO await?
 					console.log("ctcAttacher, stdlib");
 					console.log(ctcAttacher);
 					console.log(stdlib);
