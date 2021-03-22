@@ -1682,7 +1682,8 @@ const app = new Vue({
 						},
 						acceptGame: async function(wager, deadline) {
 							console.log("acceptGame");
-							game.wager = await getReadableCurrency(wager);
+							console.log(wager);
+							game.wager = await self.getReadableCurrency(wager);
 							game.deadline = deadline;
 
 							var notif = "Joining game with wager " + game.wager + " " + self.currency + " and deadline of " + deadline + " blocks";
