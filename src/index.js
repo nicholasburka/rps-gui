@@ -1056,7 +1056,7 @@ const app = new Vue({
 							self.currentgame = game;
 							console.log(self);
 							console.log(self.currentgame);
-							router.push('play');
+							//router.push('play');
 							//update game status
 							//notification
 							//resolve on moves submit
@@ -1131,6 +1131,7 @@ const app = new Vue({
 				game.resolveHands(hands_nums);
 				//game.prevHands = game.prevHands.concat(hands_str);
 				this.displayNotification("submitted hands " + hands_str);
+				router.push("home");
 			},
 			ongamesearch: function(gameparams) {
 				console.log(gameparams);
