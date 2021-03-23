@@ -758,7 +758,7 @@ const app = new Vue({
 				return (game.p1 === this.walletAddr);
 			},
 			opponent: function(game) {
-				if (isP1(game)) {
+				if (this.isP1(game)) {
 					return game.p2;
 				} else {
 					return game.p1;
