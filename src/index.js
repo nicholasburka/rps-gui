@@ -41,9 +41,6 @@ console.log(stdlib.connectAccount);
 
 function removeClass(elementID, className) {
 	document.getElementById(elementID).className.replace( /(?:^|\s)className(?!\S)/g , '' )	};
-function addClass(elementID, className) {
-
-}
 var source;
 function dragstarted(e) {
 	source = e.target;
@@ -70,114 +67,8 @@ function play(choice) {
 	//animate page away
 };
 
-/* Templates for the pages */
+/* Base templates not in separate files */
 
-//need to add extending open games if there's more than displayable open games
-const home = {
-	props: ['walletaddr', 'balance', 'opengames', 'awaiting_games', 'accepted_games', 'invites', 'currency', 'money-committed'],
-	template: `
-		<div id="home" class="column page-container">
-			<transition appear appear-active-class="slideInRight">
-			<div id="home-th">
-				<img id="faucet" src="assets/faucet.png" v-on:click="tryfaucet()">
-				<div id="open-games-header" class="row"><div class="column" style="max-width: 33vw;"><div class="row"><h3>Wallet addr: </h3><h3 style="font-size: 1vw;">{{walletaddr}}</h3></div><h3 class="row">Balance uncommitted: {{balance}} {{currency}}</h3></div><h3 class="column">Open Games</h3><h3 class="column" style="flex-grow:1"> Committed: <!--{{ money-committed }} {{ currency }}--></h3></div>
-				<ul id="open-games">
-					<div class="row activeitem" v-for="game in opengames" v-bind:game="game" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}">
-						<img src="assets/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-						<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
-					</div>
-					<!--<li class="row activeitem" v-for="game in opengames" v-bind:key="game.ContractAddress" v-bind:style="{'background-color': randomcolor()}" v-on:click="() => {$emit('ongameselect', game)}"><img src="assets/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)"> {{game.wagerreadable}} {{game.currency}} : status - {{game.status}} : time left - {{ timeLeft(game) }}</li>-->
-				</ul>
-				<ul id="invites">
-					<li class="row activeitem" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
-						Invited by {{ invite.p1 }} for {{ invite.wager }} {{currency}} : {{ invite.delay }} blocks left
-						<div class="buttons">
-							<button onclick="confirmGame()" class="column">Accept</button>
-							<button onclick="deny()" class="column">Reject</button>
-						</div>
-					</li>
-				</ul>
-				<h2 id="game-history" v-on:click="getHistory()">game history</h2>
-			</div>
-			</transition>
-			<hr style="width: 80%; text-align: center;">
-			<transition appear appear-active-class="slideInLeft">
-			<div id="home-bh">
-				<h1 id="create-game" class="row active" v-on:click="$router.push('create')">create</h1>
-				<h1 id="search" class="row active" v-on:click="$router.push('search')">search</h1>
-				<h1 id="join" class="row active" v-on:click="$router.push('join')">join with contract</h1>
-			</div>
-			</transition>
-		</div>
-	`, 
-	methods: {
-		randomcolor: function() { 
-		  return "hsl(" + 360 * Math.random() + ',' +
-		             (25 + 70 * Math.random()) + '%,' + 
-		             (65 + 10 * Math.random()) + '%)'
-		},
-		tryfaucet: function() {
-			console.log("clicked faucet");
-			this.$emit('tryfaucet');
-		},
-		getGame: function(gameid) {
-			$router.push('gameplay', gameid);
-		},
-		getHistory: function() {
-			this.$emit('gamehistory');
-		},
-		contractInfo: function(game) {
-			console.log("clicked contractinfo clipboard, emitting");
-			this.$emit('displaycontractinfo', game);
-		},
-		timeLeft: function(game) {
-			//console.log("timeleft");
-			//console.log("game.starttime");
-			//console.log(game.starttime);
-
-			var blocktime_est = 10000;
-			function isoToObj(s) {
-			    var b = s.split(/[-TZ:]/i);
-
-			    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5]));
-
-			}
-
-
-			function timeToGo(s) {
-
-			    // Utility to add leading zero
-			    function z(n) {
-			      return (n < 10? '0' : '') + n;
-			    }
-
-			    // Convert string to date object
-			    var d = isoToObj(s);
-			    var diff = d - new Date();
-
-			    // Allow for previous times
-			    var sign = diff < 0? '-' : '';
-			    diff = Math.abs(diff);
-
-			    // Get time components
-			    var hours = diff/3.6e6 | 0;
-			    var mins  = diff%3.6e6 / 6e4 | 0;
-			    var secs  = Math.round(diff%6e4 / 1e3);
-
-			    // Return formatted string
-			    return sign + z(hours) + ' hrs, ' + z(mins) + ' mins, ' + z(secs) + ' s';   
-			}
-			//need to check units
-			//this will actually be a call to Reach or a blockchain API
-			//return (this.delay + this.timeCreated) - (new Date()).getTime();
-			var enddate = new Date(game.starttime);
-			enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
-			var tleft = timeToGo(enddate.toISOString());
-			//console.log(tleft);
-			return tleft;
-		}
-	}
-}
 //shows basic info:
 //players, wager, outcome if outcome
 const gameinfo = {
@@ -211,551 +102,12 @@ const displaytext = {
 		}
 	}
 };
-const confirmaGame = {
-	props: ['game', 'action', 'blocktime', 'currency'],
-	template: `
-		<div id="confirm-game" class="row confirmPopup">
-			<h1 class="row"> Create game?</h1>
-			<p class="row">(Your {{currency}} will be committed unless there's a timeout)</p>
-			<p class="row"> {{ game.title }}</p>
-			<p class="row"> {{ game.wager }} {{currency}} </p>
-			<p class="row"> {{ game.delay }} block timeout (Est. time with ~15s per block: {{ game.delay * 15 }}s) </p>
-			<p class="row" v-if="currency==='ETH'"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
-			<p class="row"> Permissions: {{ game.permissions }} </p>
-			<div id="buttons" class="row">
-			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('confirm')">Yes!</button>
-			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('deny')">Back</button>
-			</div>
-		</div>
-	`
-
-}
-/*
-
-<div id="confirm-game" class="column confirmPopup">
-	<h1 class="row">{{ this.action }} Game?</h1>
-	<p class="row">(Your ETH will be committed unless there's a timeout)</p>
-	<p class="row" v-if="game.title"> {{game.title}}</p>
-	<p class="row"> {{ game.wager }} ETH </p>
-	<p class="row"> {{ game.delay }} block timeout (Est. time with {{ ~15s }} per block: {{ game.delay * 15 }}s) </p>
-	<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
-	<p v-if="action === 'create'" class="row"> {{ game.permissions }} </p>
-	<p v-else class="row"> {{ game.p1 }}</p>
-	<div id="buttons" class="row">
-	<button id="go" class="column" v-on:click="$emit('confirm')">Yes!</button>
-	<button id="go" class="column" v-on:click="$emit('deny')">Back</button>
-	</div>
-</div>
-				<confirmGame v-if="this.confirm" class="confirmPopup" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>
-				<p v-if="this.confirm">hello</p>
-
-				<div v-if="this.confirm" id="confirm-game" class="confirmPopup">
-					<h1 class="row">Create Game?</h1>
-					<p class="row">(Your ETH will be committed unless there's a timeout)</p>
-					<p class="row" v-if="this.game.title"> {{this.game.title}}</p>
-					<p class="row"> {{ this.game.wager }} ETH </p>
-					<p class="row"> {{ this.game.delay }} block timeout (Est. time with {{ ~15s }} per block: {{ this.game.delay * 15 }}s) </p>
-					<p class="row"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
-					<p class="row"> {{ this.game.permissions }} </p>
-					<p v-else class="row"> {{ this.game.p1 }}</p>
-					<div id="buttons" class="row">
-					<button id="go" class="column" v-on:click="confirmm()">Yes!</button>
-					<button id="go" class="column" v-on:click="deny()">Back</button>
-					</div>
-				</div>
-
-<div v-if="this.confirm" id="confirm-game" class="column confirmPopup">
-	<h1 class="row"> Create game?</h1>
-	<div id="buttons" class="row">
-	<button id="go" class="column" v-on:click="$emit('confirm')">Yes!</button>
-	<button id="go" class="column" v-on:click="$emit('deny')">Back</button>
-	</div>
-</div>
-*/
-const createGame = {
-	// "creating..." --> "Game Created!" & Home screen, w/ Added to list of Games
-	props: ['walletaddr', 'prevopponents', 'balance', 'currency', 'invite', 'private_game', 'price'], //'confirm'
-	components: {
-		confirmaGame
-	},
-	data: function() {
-		const titles = ["Rock Paper Skissors", "I always choose paper", "Rock lovers only", "Srossics repar kcor", "My R-P-S Game"];
-		const rand_title = titles[Math.floor(Math.random()*titles.length)];
-		confirm = false;
-		//console.log("wallet addr");
-		//console.log(walletAddr);
-		return {
-			'wager': .0005,
-			'delay': 100,
-			'title': rand_title,
-			'addrentry': null,
-			'addrprev': null,
-			'err_msg': null,
-			'confirm': false,
-			'walletaddress': this.walletaddr,
-			'currency': this.currency,
-			//'private': false,
-			//<!---<confirmGame v-if="confirm" class="confirmPopup row" :game="this.game" :action="'Create'" :blocktime="100" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmGame>-->
-			'game': {}
-		}
-	},
-	template: `
-		<div id="create-game" class="column">
-				<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-				<form id="game-settings" class="column" v-on:submit.prevent>
-					<!--<p v-model="this.err_msg" class="row">{{ this.err_msg }}</p>-->
-					<h3 class="row form-caption">Wager</h3>
-					<div class="row">
-						<p class="column" style="flex-basis:10%"></p>
-						<input v-model="wager" v-bind:max="balance" class="form-input column" style="flex-grow: 3" type="number" name="wager" step="0.0001" min="0" default="0">
-						<p class="column" style="flex-basis: 5%">{{currency}}</p>
-						<p class="column" style="flex-basis: 5%"></p>
-					</div>
-					<p v-if="price" class="row" class="form-detail-text">1 {{currency}} to {{ price }} USD * {{ wager }}, est. invested {{ price * wager }}</p>
-					<h3 class="row form-caption">Delay</h3>
-					<div class="row" style="justify-content: center">
-						<p class="column" style="flex-basis: 10%"></p>
-						<input v-model="delay" class="form-input column" style="flex-grow: 3;" type="number" name="delay" step="1" min="1" default="100" placeholder="default">
-						<p class="column" style="flex-basis:5%">blocks until timeout</p>
-						<p class="column" style="flex-basis: 5%"></p>
-					</div>
-					<p class="row" class="form-detail-text">(Est. time per block ~15s, see https://etherscan.io/chart/blocktime for current blocktime)</p>
-					<h3 class="row form-caption">Title</h3>
-					<input v-model="title" class="form-input" style="flex-basis:50%" type="text" name="title" placeholder="">
-					<h3 class="row form-caption">Who</h3>
-					<div class="row" id="priv-pub">
-						<p style="flex-basis: 30%"></p>
-						<label class="column">
-							<input id="public" type="radio" style="flex-basis:20%" name="permissions" checked="true" v-on:click="private_game = false;">Public 
-						</label>
-						<label class="column">
-							<input id="priv" type="radio" style="flex-basis:20%" name="permissions" v-on:click="private_game = true; console.log(private_game);">Private
-						</label>
-						<p style="flex-basis: 30%"></p>
-					</div>
-					<div v-if="private_game" class="column">
-						<p class="row" style="flex-basis: 60%; font-size: 10px;">Optional: specify opponents to invite - you can also share the invite link after submitting.</p>
-						<input v-model="addrentry" class="row form-input" type="text" name="who-addr-entry" placeholder="enter a wallet address">
-						<select v-model="addrprev" class="row form-input" type="text" name="who" placeholder="select from previous opponents">
-							<option selected="selected">select from previous opponents</option>
-							<option v-for="player in prevopponents" v-bind:value="player.walletAddr" >{{ player.nickname }} : {{ player.walletAddr }}</option>
-						</select>
-						<!---<label class="row">
-							<input type="radio" v-on:click="invite = true;">Invite link
-						</label>-->
-					</div>
-					<div v-else>
-					</div>
-					<button id="go" class="row" v-on:click="onSubmit(wager, delay, title, addrentry, addrprev, walletaddress, private_game, $emit)">Go!</button>
-				</form>
-				<confirmaGame v-if="this.confirm" :game="this.game" :action="'Create'" :blocktime="100" :currency="this.currency" v-on:confirm="confirmm()" v-on:deny="deny()"></confirmaGame>
-		</div>
-`,
-	methods: {
-		game: function(title, wager, delay, p1addr, p2addrentry, p2select) {
-			var game = {};
-		},
-		err: function(err_msg) {
-
-		},
-		onClick: function() {
-
-		},
-		onSubmit: function(wager, delay, title, addrentry, addrprev, walletaddr, private_game, emit) {
-			console.log("walletaddr");
-			console.log(walletaddr);
-			console.log(this.walletaddr);
-			console.log(this.walletaddress);
-			/*var incomplete_fields = [];
-			if (!wager) {
-				incomplete_fields.push("Wager");
-			}
-			if (!delay) {
-				incomplete_fields.push("Delay");
-			} 
-			if (!title) {
-				incomplete_fields.push("Title");
-			}
-			if (!(addrprev || addrentry)) {
-				incomplete_fields.push("Who");
-			}
-			if (incomplete_fields) {
-				this.err_msg = "Please enter a value for " + incomplete_fields;
-			}
-			//this could maybe just be an 
-			else */if(this.wager && this.delay) {
-				var p2;
-				var permissions;
-				if (addrprev) {
-					p2 = {walletaddr: addrprev};
-					permissions = "private";
-				} else if(addrentry) {
-					p2 = {walletaddr: addrentry};
-					permissions = "private";
-				} else if (private_game) {
-					p2 = undefined;
-					permissions = "private";
-				} else {
-					p2 = undefined;
-					permissions = "public";
-				}
-				this.game = {
-					title: this.title,
-					wager: this.wager,
-					currency: this.currency,
-					delay: this.delay,
-					p1: this.walletaddr,
-					p2: p2,
-					status: "pending",
-					permissions: permissions
-				}
-				this.confirm = true;
-				console.log("this.game");
-				console.log(this.game);
-				console.log("confirmed");
-				console.log(confirm);
-				console.log(confirmaGame);
-				//this.$emit('ongamecreate', this.game);
-			} else {
-				//alert("HEY!");
-				//alert(this);
-				console.log(this.wager);
-				console.log(this.delay);
-				console.log(this.addrprev);
-				console.log(this.addrentry);
-				console.log('not completed');
-			}
-		},
-		confirmm: function() {
-			console.log("conf");
-			console.log(this.game);
-			this.$emit('ongamecreate', this.game);
-			this.wager = null;
-			this.delay = null;
-			this.title = null;
-			this.addrentry = null;
-			this.addrprev = null;
-			this.err_msg = null;
-		},
-		deny: function() {
-			console.log("received");
-			this.confirm = false;
-		}
-}};
-const searchGame = {
-	props: ['walletaddr', 'prevopponents', 'balance', 'currency'],
-	data: function() {
-
-		return {
-			'wager': 0.001,
-			'sign': undefined,
-			'min': .001,
-			'max': .0015,
-			'addrprev': undefined,
-			'addrentry': undefined,
-			'title': undefined,
-			'walletaddr': this.walletaddr
-		}
-	},
-	template: `
-		<div id="search-game" class="page-container">
-		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-		<form id="game-settings" class="column" v-on:submit.prevent>
-			<h3 class="row form-caption">Wager</h3>
-				<div class="row" style="flex-basis: 40%; width: 80%; align-self: center;">
-				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
-				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="eq" class="column"><label for="eq">&#61;</label></div>
-				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="greaterthaneq" class="column"><label for="greaterthaneq">&#8805;</label></div>
-				<input class="column form-input" style="max-width: 25%;"  v-model="wager" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency">
-			</div>
-			<br/>
-			<div class="row" style="flex-basis: 40%; width: 80%; margin-top:2%; align-self: center;">
-			<div class="column" style="max-width: 30%;"><input v-model="sign" type="radio" name="wager-cond" value="between" class="column"><label for="greaterthaneq">between (inclusive)</label></div>
-				<label>min&nbsp;</label><input v-model="min" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency"><label>&nbsp;and&nbsp;</label>
-				<label>max&nbsp;</label><input v-model="max" class="column form-input" style="max-width: 25%;" type="number" name="wager" step="0.0001" min="0" default="0" placeholder="currency">
-			</div>
-			<!---<h3 class="row form-caption">Delay</h3>
-			<input class="row form-input" v-model="timeleft" type="number" name="delay" step="5" min="0" default="0" placeholder="default">--->
-			<h3 class="row form-caption">Title</h3>
-			<input class="row form-input" v-model="title" type="text" name="title" placeholder="(optional)">
-			<h3 class="row form-caption">Who</h3>
-			<input class="row form-input" v-model="addrentry" type="text" name="who-addr-entry" placeholder="(optional) enter a wallet address">
-			<select class="row form-input" v-model="addrprev" type="text" name="who" placeholder="choose from previous opponents">
-				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
-				<option selected="selected">select from previous opponents</option>
-			</select>
-			<button id="go" class="row" v-on:click="onSubmit(wager, sign, min, max, title, walletaddr, addrentry, addrprev);">Go!</button>
-		</form>
-	</div>
-	`,
-	methods: {
-		onSubmit: function(wager, sign, min, max, title, searchfromaddr, p2addrentry, p2prevselection) {
-			var searchparams = {
-				title: title,
-				sign: sign,
-				min: min,
-				max: max,
-				wager: wager,
-				searchfromaddr: searchfromaddr,
-				searchforaddr: undefined
-			};
-			//fill these in
-			if (p2prevselection) {
-				gameparams["searchforaddr"] = p2prevselection;//this.addrprev//
-			} else if (p2addrentry) {
-				gameparams["searchforaddr"] = p2addrentry;//this.addrentry//p2addrentry;
-			} else {
-
-			}
-
-			console.log("search params");
-			console.log(searchparams);
-			console.log(this);
-			console.log("max");
-			console.log(this.max);
-
-			if (!sign) {
-				// do not do anything since sign is necessary
-				// can display a message here for user "please choose wager condition"
-			} else {
-
-				this.$emit('ongamesearch', searchparams);
-
-				//clear all local vars / component data to null
-			}
-			/*$emit('ongamesearch',
-					 {title: title, 
-					 	wager: wager,
-					 	sign: sign,
-					 	min: min,
-					 	max: max, 
-					 	delay: delay,
-					 	p1: {walletaddr: walletaddr}, 
-					 	p2: undefined, 
-					 	p2addrentry: addrentry, 
-					 	p2prev: addrprev});*/
-		}
-	}
-};
-const confirmAcceptGame = {
-	props: ['game', 'action', 'blocktime', 'currency'],
-	template: `
-		<div id="confirm-game" class="row confirmPopup">
-			<h1 class="row">Accept game?</h1>
-			<p class="row">(Your {{currency}} will be committed unless there's a timeout)</p>
-			<p class="row"> {{ game.title }}</p>
-			<p class="row"> {{ game.wagerreadable }} {{currency}} </p>
-			<p class="row"> {{ game.delay }} block timeout</p>
-			<p v-if="currency==='ETH'" class="row"> (Est. time with ~15s per block: {{ game.delay * 15 }}s) (see https://etherscan.io/chart/blocktime for current blocktime) </p>
-			<p class="row"> Opponent: {{ game.p1 }}</p>
-			<div id="buttons" class="row">
-			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('confirm')">Yes!</button>
-			<button id="go" style="flex-direction: column; flex-basis: 30%;" v-on:click="$emit('deny')">Back</button>
-			</div>
-		</div>
-	`
-};
-const searchResult = {
-	props: ["title", "wager", "playerAddr"],
-	template: `
-		<div class="game-search-result">
-			<h2 class="row game-title">{{ title }}</h2>
-			<div class="row">
-				<h3 class="column wager">{{ wager }} ETH</h3>
-				<h3 class="column player-contract-addr">{{ playerAddr }}</h3>
-			</div>
-		</div>
-	`
-};
-
-//add "new search" button to return to search
-//also need to add back buttons (?)
-const gameSearchResults = {
-	props: ["foundgames"],
-	data: function() {
-		console.log(this.foundgames);
-		return {
-			confirm: false,
-			game: undefined,
-			test_games: [
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Fri, 11 Dec 2020 16:48:36 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Fri, 11 Dec 2020 16:48:36 GMT",
-    "title": "I always choose paper"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Fri, 11 Dec 2020 16:48:48 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Fri, 11 Dec 2020 16:48:48 GMT",
-    "title": "Rock Paper Skissors"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Fri, 11 Dec 2020 23:36:03 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Fri, 11 Dec 2020 23:36:03 GMT",
-    "title": "Rock lovers only"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Fri, 11 Dec 2020 23:36:18 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Fri, 11 Dec 2020 23:36:18 GMT",
-    "title": "Srossics repar kcor"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Thu, 10 Dec 2020 20:21:29 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Thu, 10 Dec 2020 20:21:29 GMT",
-    "title": "Rock lovers only"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Thu, 10 Dec 2020 20:57:03 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Thu, 10 Dec 2020 20:57:03 GMT",
-    "title": "Rock Paper Skissors"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Thu, 10 Dec 2020 21:06:11 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Thu, 10 Dec 2020 21:06:11 GMT",
-    "title": "Rock lovers only"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Thu, 10 Dec 2020 21:22:18 GMT",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Thu, 10 Dec 2020 21:22:18 GMT",
-    "title": "I always choose paper"
-  },
-  {
-    "p1": 12345931,
-    "currency": "ETH",
-    "starttime": "Tue Dec 01 202012:52:12 GMT-0500 (Eastern Standard Time)",
-    "wager": 0.001,
-    "delay": 100,
-    "ContractAddress": "12345931Tue Dec 01 202012:52:12 GMT-0500 (Eastern Standard Time)",
-    "title": "I always choose paper"
-  }
-]
-		};
-	},
-	components: {
-		'searchResult': searchResult,
-		'confirmAcceptGame': confirmAcceptGame
-	},
-	template: `
-		<div id="game-search-results" class="column" style="margin-top:2vh;">
-			<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-			<searchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
-			</searchResult>
-			<confirmAcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" :currency="this.currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></confirmAcceptGame>
-		</div>
-	`,
-	methods: {
-		onclick: function(game) {
-			console.log("clicked " + game.title);
-			this.game = game;
-			this.confirm = true;
-			console.log(this);
-			console.log(this.confirm);
-		},
-		confirmgame: function() {
-			//send to chain or to page?
-			this.$emit('ongameaccept', this.game);
-		},
-		deny: function() {
-			this.confirm = false;
-		},
-		randomcolor: function() { 
-		  return "hsl(" + 360 * Math.random() + ',' +
-		             (25 + 70 * Math.random()) + '%,' + 
-		             (65 + 10 * Math.random()) + '%)'
-		}
-	}
-};
-const joinGame = {
-	props: ["contract"],
-	template: `
-		<div id="joinGame" class="column" v-on:submit.prevent>
-			<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-			<h1 class="row">Join by Contract</h1>
-			<h3 class="row">Please paste the contract info below:</h3>
-			<textarea v-model="contract" id="" rows="10" cols="50">
-			</textarea>
-			<button id="go" class="row" v-on:submit.prevent v-on:click="$emit('ongameaccept', contract);">Submit</button>
-		</div>
-	`
-}
-const gameplay = {
-	props: ["currentgame", "rockCount", "paperCount", "scissorsCount"],
-	template: `
-	<div id="gameplay" class="">
-		<img id="back-arrow" src="assets/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-		<div class="row" id="game-header">
-			<h3 class="column">{{ currentgame.status }}</h3>
-			<h3 class="column" id="wager">{{currentgame.wagerreadable}} {{currentgame.currency}}</h3>
-		</div>
-		<div id="game" class="row" style="position: relative; height: 60vh;">
-			<div id="rock-cont">
-				<img id="rock" class="rps-piece" src="assets/rock.png" alt="rock" onclick="play('rock');" v-on:click="$emit('onmoveselect', currentgame, 'rock')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockCount}}</p>
-			</div>
-			<div id="paper-cont">
-				<img id="paper" class="rps-piece" src="assets/paper.jpg" alt="paper" onclick="play('paper');" v-on:click="$emit('onmoveselect', currentgame, 'paper')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{paperCount}}</p>
-			</div>
-			<div id="scissors-cont">
-				<img id="scissors" class="rps-piece" src="assets/scissors2.png" alt="scissors" onclick="play('scissors');" v-on:click="$emit('onmoveselect', currentgame, 'scissors')">
-				<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsCount}}</p>
-			</div>
-		</div>
-		<div id="history" class="">
-			<div class="row">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="rock" class="column">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="paper" class="column">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="scissors" class="column">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="rock" class="column">
-			</div>
-			<div class="row">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="paper" class="column">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="scissors" class="column">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="rock" class="column">
-				<img src="" draggable="true" ondragstart="dragstarted(event)" ondragover="draggingover(event)"  ondrop="dropped(event)" alt="scissors" class="column">
-			</div>
-		</div>
-	</div>
-	`
-
-};
 const notif = {
 	props: ['message'],
 	template: `
 		<p>{{message}}</p>
 	`
-}
+};
 const popupC = {
 	props: ['message', 'game-outcome', 'move1', 'move2'],
 	template: `
@@ -764,39 +116,15 @@ const popupC = {
 			</div>
 			<p class="column">{{message}}</p>
 		</div>
-	`
-}
+		`
+};
 
-const routes = [
-	{path: '/', component: Landing},
-	{path: '/home', component: Home},
-	{path: '/create', component: CreateGame},
-	{path: '/search', component: SearchGames},
-	{path: '/search-results', component: SearchResults},
-	{path: '/play', component: PlayGame},
-	{path: '/join', component: JoinGameByContract}
-];
-
-console.log("ROUTER");
-const router = new VueRouter({
-	routes
-});
+/* UNUSED functions / arch ideas */
 
 function getTime() {
 	var d = new Date();
 	var t = d.getTime();
 	return t;
-};
-
-function aPlayer(walletAddr, nickname) {
-	this.walletAddr = walletAddr;
-	this.nickname = nickname;
-};
-function Wallet(addr) {
-	this.addr = addr;
-	this.balance = undefined;
-	this.committed = undefined;
-	this.currency = undefined;
 };
 function timeLeft(game) {
 		var blocktime_est = 100;
@@ -838,7 +166,6 @@ function timeLeft(game) {
 		enddate.setSeconds(enddate.getSeconds() + blocktime_est*game.delay); //assuming that blocktime is in seconds
 		return timeToGo(enddate.toISOString());
 	};
-
 // Source: http://stackoverflow.com/questions/497790
 var dates = {
     convert:function(d) {
@@ -892,18 +219,25 @@ var dates = {
     }
 };
 
+
+function aPlayer(walletAddr, nickname) {
+	this.walletAddr = walletAddr;
+	this.nickname = nickname;
+};
+function Wallet(addr) {
+	this.addr = addr;
+	this.balance = undefined;
+	this.committed = undefined;
+	this.currency = undefined;
+};
 var examplePlayers = [];
 examplePlayers.push(new aPlayer("0588xf01", "jherod"));
 examplePlayers.push(new aPlayer("1125fxf01", "alli"));
 examplePlayers.push(new aPlayer("015aa39v", "mo"));
-
 var exampleGames = [];
 const moonLanding = new Date('July 20, 69 00:20:18 GMT+00:00');
 exampleGames.push(new Game({title: "Gerry's Mulligan", wager: "1.1", currency: "ETH", delay: 20, timeCreated: moonLanding, p1: examplePlayers[0]}));
 exampleGames.push(new Game({title: "Play me!", wager: ".001", currency: "ETH", delay: 21, timeCreated: moonLanding, p1: examplePlayers[0], p2: examplePlayers[2]}));
-/*exampleGames.push(new Game("A friendly game...", ".05", "ETH", 21, moonLanding, examplePlayers[0], examplePlayers[2]));
-exampleGames.push(new Game("Noobs only", ".01", "ETH", 21, moonLanding, examplePlayers[0]));*/
-
 //syntactic sugar for a funct that returns an object
 class Player {
 
@@ -975,8 +309,7 @@ class Deployer extends Player {
 	constructor(props) {
 		super(props);
 	}
-}
-
+};
 function Game(obj) {
 	this.title = obj.title;
 	this.wager = obj.wager;
@@ -1179,6 +512,22 @@ function Game(obj) {
 	}
 });*/
 
+
+const routes = [
+	{path: '/', component: Landing},
+	{path: '/home', component: Home},
+	{path: '/create', component: CreateGame},
+	{path: '/search', component: SearchGames},
+	{path: '/search-results', component: SearchResults},
+	{path: '/play', component: PlayGame},
+	{path: '/join', component: JoinGameByContract}
+];
+
+console.log("ROUTER");
+const router = new VueRouter({
+	routes
+});
+
 console.log("APP");
 Vue.use(VueRouter);
 console.log(Vue.use(VueRouter));
@@ -1197,16 +546,15 @@ const app = new Vue({
 				walletUnavailable: null, 
 				acc: null,
 				wallet: null,
+				walletErr: null,
+				walletCurrency: "ETH",
 				walletAddr: null,
 				balance: null,
-				walletErr: null,
 				balanceCommitted: null,
-				walletCurrency: "ETH",
-				prevopponents: examplePlayers, //this would be a function
+				prevopponents: [], //this would be a function
 				opengames: [],//exampleGames,
-				opengamesasgameobjs: [], //unused
+				invites: [],
 				foundgames: [],
-				invites: null,
 				notifications: [],
 				currentgame: null,
 				price: null,
@@ -1431,7 +779,7 @@ const app = new Vue({
 				if (game.status === "Awaiting Opponent") {
 					str += game.contractinfostr;
 				} else {
-					str += opponent(game);
+					str += this.opponent(game);
 					str += game.status;
 				}
 			},

@@ -5,6 +5,7 @@
 </style>
 
 <template>
+	<!-- UNUSED -->
 	<div class="column">
 		<div id="game" class="row" style="position: relative; height: 60vh;">
 			<div id="rock-cont" class="column">

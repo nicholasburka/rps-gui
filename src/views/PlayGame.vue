@@ -22,7 +22,7 @@
 	position:relative;
 	display: block;
 	max-height: 25vh;
-	max-width: 30vw;
+	max-width: 18vw;
 	object-fit: contain;
 	margin-left: auto;
 	margin-right: auto;
