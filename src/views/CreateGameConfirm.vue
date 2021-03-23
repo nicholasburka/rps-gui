@@ -21,7 +21,7 @@
 <script>
 	import HandsDisplayPanel from './HandsDisplayPanel.vue';
 
-	module.exports = {
+	export default {
 		props: ['game', 'action', 'blocktime', 'currency', 'hands']
 	}
 </script>

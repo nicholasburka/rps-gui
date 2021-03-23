@@ -21,7 +21,7 @@
 
 
 <script>
-	module.exports = {
+	export default {
 		props: ["walletAddress", "game"],
 		computed: {
 			isWinner: function() {
