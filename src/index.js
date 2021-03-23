@@ -782,6 +782,7 @@ const app = new Vue({
 					str += this.opponent(game);
 					str += game.status;
 				}
+				return str;
 			},
 			displayNotification: function(notif) {
 				this.displaytext = notif;
@@ -790,7 +791,6 @@ const app = new Vue({
 			ongamecreate: async function(game) {
 				var self = this;
 				router.push('home');
-				this.setpopup("Processing...");
 				console.log(game);
 				var d = new Date(); //note that dates are used to provide time *estimates* of how much time is left before expiry
 				d = d.toISOString(); //time format, does this convert back functionally
@@ -812,7 +812,6 @@ const app = new Vue({
 					//logging
 					console.log("contract");
 					console.log(game.contract);
-					self.setpopup("Deploying at " + game.contract);
 					console.log("awaiting contract info");
 					game.contractinfo = await game.contract.getInfo();
 					console.log(game.contractinfo);
@@ -833,13 +832,6 @@ const app = new Vue({
 					//update balance
 					self.balance = await this.updateBalance();//this.acc.getBalance();
 					
-		
-
-					//self.opengames.push(game);
-					//console.log("not creating backend");
-					//await backend.Alice(game.contract, new Player(this, game.contract, game));
-					//const atomicWager = await this.getAtomicCurrency(game.wager);
-					//should these game mods modify the arr directly
 					const interact = {
 						...reach[this.currency].hasRandom,
 						wager: game.wager,
@@ -872,12 +864,16 @@ const app = new Vue({
 						},
 						seeOutcome: function(outcome) {
 							var outcome_notif = "";
+							console.log(outcome);
+							console.log(isP1);
+							console.log(isP1(game));
+							console.log(self.isP1(game));
 							if (outcome === 0) {
 								game.winner = game.p2;
 							} else {
 								game.winner = game.p1;
 							}
-							if (outcome === 0 && isP1(game)) {
+							if (outcome === 0 && self.isP1(game)) {
 								outcome_notif = "You lost...\n" + self.gameinfostr(game);
 							} else {
 								outcome_notif = "You won! \n" + self.gameinfostr(game);
@@ -923,14 +919,13 @@ const app = new Vue({
 					console.log(response.data);
 					self.opengames.push(game);
 					console.log(self.opengames);
-					await backend.Deployer(game.contract, interact);
-					self.setpopup("Game \"" + game.title + "\" deployed!");
-					
+					self.displaytext = "Game deployed at " + game.contractinfo.address; //include contract info
+					//self.setpopup("Game \"" + game.title + "\" deployed!");
+					await backend.Deployer(game.contract, interact);			
 				} catch (error) {
-					this.setpopup("Deploy failed.");
-					console.log("Deploy failed");
+					this.setpopup("Contract error: " + error);
+					console.log("Contract error");
 					console.log(error);
-					
 				}
 
 			},
@@ -986,7 +981,7 @@ const app = new Vue({
 
 				
 				try {
-
+					this.setpopup("Connecting to contract...");
 
 					var res = await axios({
 							method: "GET",
@@ -1001,7 +996,6 @@ const app = new Vue({
 					
 					router.push('home');
 					//game = {title: "A nice game"};
-					this.setpopup("Connecting to contract provided...");
 
 					game.prevHands = [];
 
@@ -1045,7 +1039,7 @@ const app = new Vue({
 							} else {
 								game.winner = game.p1;
 							}
-							if (outcome === 0 && isP1(game)) {
+							if (outcome === 0 && self.isP1(game)) {
 								outcome_notif = "You lost...\n" + self.gameinfostr(game);
 							} else {
 								outcome_notif = "You won! \n" + self.gameinfostr(game);
@@ -1083,12 +1077,6 @@ const app = new Vue({
 					console.log("ctcAttacher, stdlib");
 					console.log(ctcAttacher);
 					console.log(stdlib);
-					var result = await backend.Attacher(ctcAttacher, interact);
-					console.log("created backend");
-					console.log(result);
-					// axios call to edit the status of the game to accepted
-
-					gameOnChain = true;
 
 					var update_game = await axios({
 						method: "POST",
@@ -1103,36 +1091,23 @@ const app = new Vue({
 
 					self.opengames.push(game);
 					console.log(self.opengames);
-					self.setpopup("Game \"" + game.title + "\" accepted!");
+					self.setpopup("Joined game \"" + game.title + "\" ");
+
+					var result = await backend.Attacher(ctcAttacher, interact);
+					console.log("created backend");
+					console.log(result);
+					// axios call to edit the status of the game to accepted
+
+					gameOnChain = true;
+
+					
 
 
  				} catch (error) {
-					this.setpopup("Could not connect to contract.");
-					console.log("Could not connect to contract.");
+					//this.setpopup("Contract error.");
+					console.log("Contract error.");
 					console.log(error);
 					gameOnChain = false;
-				}
-
-				if (gameOnChain) {
-					//update game status
-					//accepted, p1 submitted, p2 submitted
-					//playable = true
-					//set p2 in db
-					axios({
-						method: "POST",
-						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-3AXA73S81IZH",
-						data: {
-							"walletAddress": this.walletaddr,
-							"ContractAddress": gamecontractinfo.address
-						}
-					}).then(function(response) {
-						console.log(response);
-						console.log(response.data);
-						//TODO probably want this to change local game given status update
-						self.opengames.push(game);
-						console.log(self.opengames);
-						self.setpopup("Game \"" + game.title + "\" accepted!");
-					});
 				}
 			},
 			handStrToNum: function(hand) {
