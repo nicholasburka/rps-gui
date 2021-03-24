@@ -634,7 +634,7 @@ const app = new Vue({
 					this.acc = await reach[currency].getDefaultAccount();
 					console.log(this.acc);
 					if (currency === "ALGO") {
-						this.walletAddr = await this.acc.networkAccount.addr;
+						this.walletAddr = this.acc.networkAccount.addr;
 					} else if (currency === "ETH") {
 						this.walletAddr = await this.acc.networkAccount.getAddress();
 					}

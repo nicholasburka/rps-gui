@@ -92,7 +92,7 @@ export const main =
 
 			D.publish(wager, deadline, DFirstCommit)
 			  .pay(wager);
-			commit();
+			commit();``
 
 			unknowable(A, D(_DFirstHandsSalt, _DFirstHands));
 
