@@ -1080,7 +1080,7 @@ const app = new Vue({
 
 					var update_game = await axios({
 						method: "POST",
-						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-3AXA73S81IZH",
+						url: "https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-4JOWB6APQ5WQ",
 						data: {
 							"walletAddress": this.walletaddr,
 							"ContractAddress": gamecontractinfo.address
@@ -1130,7 +1130,7 @@ const app = new Vue({
 				this.switchGamePlayable(game);
 				game.resolveHands(hands_nums);
 				//game.prevHands = game.prevHands.concat(hands_str);
-				this.displayNotification("submitted hands " + hands_str);
+				this.displayNotification("Submitting hands " + hands_str);
 				router.push("home");
 			},
 			ongamesearch: function(gameparams) {
