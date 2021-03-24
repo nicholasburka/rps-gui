@@ -4,7 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
-    "@reach-sh/stdlib": "^0.1.2-rc.28",
+    "@reach-sh/stdlib": "^0.1.2-rc.29",
     "axios": "^0.21.1",
     "bufferutil": "^4.0.1",
     "howler": "^2.2.1",

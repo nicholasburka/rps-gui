@@ -10,8 +10,8 @@ const reach = {
 	"ETH": ethstdlib,
 	"ALGO": algostdlib
 };
-//reach["ALGO"].setSignStrategy('mnemonic');
-reach["ALGO"].setSignStrategy('AlgoSigner');
+reach["ALGO"].setSignStrategy('mnemonic');
+//reach["ALGO"].setSignStrategy('AlgoSigner');
 import * as loader from "@reach-sh/stdlib/loader.mjs";
 import * as backend from "../build/rps.main.mjs"
 
