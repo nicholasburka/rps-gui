@@ -1,7 +1,8 @@
 const path = require('path');
 var webpack = require('webpack');
 var htmlWebpackPlugin = require('html-webpack-plugin');
-var nodeExternals = require('webpack-node-externals')
+var nodeExternals = require('webpack-node-externals');
+var dotenv = require('dotenv');
 //var nodeExternals = require('web')
 const { VueLoaderPlugin } = require("vue-loader");
 
@@ -50,7 +51,7 @@ const clientConfig = {
 	},
   plugins: [new htmlWebpackPlugin(),
   	new webpack.DefinePlugin({
-      'process.env.REACH_CONNECTOR_MODE': 'ALGO-browser'
+      'process.env': JSON.stringify(dotenv.config().parsed)
     }),
     new VueLoaderPlugin()
   ]

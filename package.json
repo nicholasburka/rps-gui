@@ -23,6 +23,7 @@
     "@vue/compiler-sfc": "^3.0.5",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.2",
+    "dotenv": "^8.2.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.0.0",
     "vue-loader": "^15.9.6",
