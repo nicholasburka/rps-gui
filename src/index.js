@@ -865,8 +865,6 @@ const app = new Vue({
 						seeOutcome: function(outcome) {
 							var outcome_notif = "";
 							console.log(outcome);
-							console.log(isP1);
-							console.log(isP1(game));
 							console.log(self.isP1(game));
 							if (outcome === 0) {
 								game.winner = game.p2;
