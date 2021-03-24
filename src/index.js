@@ -4,8 +4,8 @@ import Vuex from "Vuex";
 import detectProvider from "@metamask/detect-provider";
 import * as axios from "axios";
 import * as stdlib from "@reach-sh/stdlib/ETH.mjs";
-import * as ethstdlib from "@reach-sh/stdlib/ETH.mjs";
-import * as algostdlib from "@reach-sh/stdlib/ALGO.mjs";
+import * as ethstdlib from "@reach-sh/stdlib/ETH";
+import * as algostdlib from "@reach-sh/stdlib/ALGO";
 const reach = {
 	"ETH": ethstdlib,
 	"ALGO": algostdlib
