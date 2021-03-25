@@ -15,16 +15,16 @@ reach["ALGO"].setSignStrategy('mnemonic');
 import * as loader from "@reach-sh/stdlib/loader.mjs";
 import * as backend from "../build/rps.main.mjs"
 
-import Landing from "views/Landing.vue";
-import Home from "views/Home.vue";
-import CreateGame from "views/CreateGame.vue";
-import SearchGames from "views/SearchGames.vue";
-import SearchResults from "views/SearchResults.vue";
-import AcceptGame from "views/AcceptGame.vue";
-import JoinGameByContract from "views/JoinGameByContract.vue";
-import PlayGame from "views/PlayGame.vue";
-import BasePopup from "views/BasePopup.vue";
-import GameOutcomePopup from "views/GameOutcomePopup.vue";
+import Landing from "./views/Landing.vue";
+import Home from "./views/Home.vue";
+import CreateGame from "./views/CreateGame.vue";
+import SearchGames from "./views/SearchGames.vue";
+import SearchResults from "./views/SearchResults.vue";
+import AcceptGame from "./views/AcceptGame.vue";
+import JoinGameByContract from "./views/JoinGameByContract.vue";
+import PlayGame from "./views/PlayGame.vue";
+import BasePopup from "./views/BasePopup.vue";
+import GameOutcomePopup from "./views/GameOutcomePopup.vue";
 
 console.log("landing");
 console.log(Landing);
