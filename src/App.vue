@@ -895,7 +895,7 @@
         },
         ongamesearch: function (gameparams) {
           console.log(gameparams)
-          gameparams.wager = stdlib.parseCurrency(gameparams.wager)
+          gameparams.wager = reach[this.currency].parseCurrency(gameparams.wager)
           // this.$router.replace('home');
           this.setpopup('searching...')
           var search_param_str = Object.keys(gameparams).map(key => key + '=' + gameparams[key]).join('&')
