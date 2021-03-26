@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>block rock paper scissors</title>
+	<style>
+		html {
+			overflow: hidden;
+		}
+		body {
+			text-align: center;
+			margin: 0;
+			font-family: Gill Sans Extrabold, sans-serif;
+			/*color: #282c51;*/
+		}
+		#app {
+			width: 100vw;
+			height: 100vh;
+			max-height: 100vh;
+			overflow: hidden;
+		}
+		.row {
+		  display: flex;
+		  flex-direction: row;
+		  flex-wrap: wrap;
+		  flex-basis: 100%;
+		  width: 100%;
+		  align-items: center;
+		  justify-content: center;
+		  margin: 0;
+		}
+		.row-buff {
+		  display: flex;
+		  flex-direction: row;
+		  flex-basis: 50%;
+		  margin: 0;
+		}
+		.column {
+		  display: flex;
+		  flex-direction: column;
+		  flex-basis: 100%;
+		  flex: 1;
+		}
+		/*.display-val-box {
+			display: flex;
+			justify-content: center;
+			border: solid;
+			width: 80%;
+			max-width: 600px;
+		}*/
+		#popup {
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			align-self: center;
+			text-align: center;
+			border: solid;
+			top: 80vh;
+			width: 50vw;
+			left: 25vw;
+			font-size: 20px;
+			background-color: lightblue;
+			opacity: 80%;
+		}
+		.confirmPopup {
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			align-self: center;
+			text-align: center;
+			border: solid;
+			top: 3vh;
+			height: 90vh;
+			left: 15vw;
+			width: 70vw;
+			font-size: 20px;
+			background-color: gray;
+			opacity: 95%;
+			z-index:5;
+		}
+		#displaytext {
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			align-self: center;
+			text-align: center;
+			border: solid;
+			top: 60vh;
+			height: 30vh;
+			left: 15vw;
+			width: 70vw;
+			font-size: 1vw;
+			background-color: gray;
+			opacity: 80%;
+		}
+		.flex-center {
+			display: flex;
+			justify-content: center;
+			text-align: center;
+			align-self: center;
+			/*padding-top: 1%;*/
+		}
+		.form-detail-text {
+			flex-basis: 60%;
+			font-size: 10px;
+			margin: 0;
+		}
+		#form-submit {
+			display: flex;
+			width: 40%;
+			max-height: 150px;
+			min-width: 100px;
+			align-self: center;
+			margin-top: 1%;
+			font-size: 3vw;
+			font-family: Gill Sans Extrabold, sans-serif;
+		}
+		.form-input {
+			width: 80%;
+			max-height: 50px;
+			font-size: 18px;
+			align-self: center;
+		}
+		.bottomBanner {
+			position: absolute;
+			z-index: 5;
+			opacity: 80%;
+			top: 93vh;
+			height: 5vh;
+			width: 80vw;
+			left: 10vw;
+			border: black;
+			background: darkgrey;
+			display: flex;
+		}
+		.slideOut-left {
+			animation-name: slideOutLeft;
+			animation-duration: .5s;
+		}
+		.slideOut-right {
+			animation-name: slideOutRight;
+			animation-duration: .5s;
+		}
+		@keyframes slideOutLeft {
+			0% {
+				transform: translateX(0);
+			}
+			100% {
+				transform: translateX(130vw);
+			}
+		}
+		@keyframes slideOutRight {
+			0% {
+				transform: translateX(0);
+			}
+			100% {
+				transform: translateX(-130vw);
+			}
+		}
+		.slide {
+			animation: slideIn 1s;
+		}
+		@keyframes slideIn {
+			0% {
+				transform: translateX(-500px);
+			}
+			100% {
+				transform: translateX(0px);
+			}
+		}
+		.slideInRight {
+			animation: slideInRight .3s ease-out;
+		}
+		@keyframes slideInRight {
+			0% {
+				transform: translateX(-300px);
+			}
+			100% {
+				transform: translateX(0px);
+			}
+		}
+		.slideInLeft {
+			animation: slideInLeft .3s ease-out;
+		}
+		@keyframes slideInLeft {
+			0% {
+				transform: translateX(300px);
+			}
+			100% {
+				transform: translateX(0px);
+			}
+		}
+		.slideup {
+			animation: .5s slideupframes;
+			transition: opacity .5s;
+		}
+		.slideup-leave-to {
+			opacity: 0;
+		}
+		.slideup-enter-active {
+			animation: .5s slideupframes;
+		}
+		@keyframes slideupframes {
+			0% {
+				transform: translateY(200px);
+			}
+			100% {
+				transform: translateY(0px);
+			}
+		}
+		.disappear {
+			animation: disappearframes;
+		}
+		.activeitem:hover {
+			-webkit-filter: invert(100%);
+			filter: invert(100%);
+		}
+		.active:hover {
+			background-color: lightblue;
+		}
+		#rock-cont {
+			position:absolute;
+			top: 20vh;
+			left:0;
+			width: 33vw;
+		}
+		#paper-cont {
+			position:absolute;
+			top: 20vh;
+			left:33.3vw;
+			width: 33vw;
+		}
+		#scissors-cont {
+			position:absolute;
+			top: 20vh;
+			left:66.6vw;
+			width: 33vw;
+		}
+		#back-arrow {
+			position: absolute;
+			z-index: 5;
+			height: 5vh;
+			width: auto;
+			top: 2vh;
+			left: 2vh;
+		}
+		li {
+			list-style-type: none;
+		}
+		.currency {
+			color: teal;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" style="display: flex; height: 100vh;">
+		<!-- Bind all necessary props for components in router from vue data here --->
+		<router-view class="view" :walletFound="walletFound":prevopponents="prevopponents" :walletAddr="walletAddr" :balance="balance" :currency="walletCurrency" :walletErr="walletErr" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:submithands="submithands" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismissdisplaytext="dismissdisplaytext" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo" v-on:refreshWallet="refreshWallet"></router-view>
+		<!--<div v-if="($router.currentRoute.path === '/')">
+			<h3 class="bottomBanner row" v-if="walletLoading && (walletAddr === null)">Detecting crypto service...</h3>
+			<div v-else-if="walletFound && displayWalletText" id="wallet" class="bottomBanner">
+				<div style="flex-basis: 30%" class="row"></div>
+				<h3 style="display: flex" class="row">{{ walletText }}</h3><button class="row" style="top: 25%" v-on:click="reqAccount" v-if="this.walletAddr===null">Enable crypto</button>
+				<div style="flex-basis: 30%" class="row"></div>
+			</div>
+			<h3 v-else-if="walletUnavailable" class="bottomBanner row">No crypto service found, please install the &nbsp;<a href="https://metamask.io/">MetaMask</a>&nbsp; or &nbsp;<a href="https://www.purestake.com/technology/algosigner/">AlgoSigner (chrome)</a> browser extensions.</h3>
+		</div>-->
+		<transition name="slideup">
+		<div v-if="popups.length" v-bind:popups="popups">
+			<popupC v-for="popup in popups" v-bind:key="popups" message="popup.message"></popupC>
+		</div>
+		<p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
+		<displaytextarea v-if="displaytext" v-bind:text="displaytext" id="displaytext" v-on:dismissdisplaytext="dismissdisplaytext"></displaytextarea>
+		</transition>
+	</div>
+</body>
+</html>
