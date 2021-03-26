@@ -113,9 +113,9 @@
 			},
 			imsrc: function(hand) {
 				switch (hand) {
-					case "Rock": return "img/rock.png";
-					case "Paper": return "img/paper.jpg";
-					case "Scissors": return "img/scissors2.png";
+					case "Rock": return require("../img/rock.png");
+					case "Paper": return require("../img/paper.jpg");
+					case "Scissors": return require("../img/scissors2.png");
 				}
 			},
 			/*removeHand: function() {

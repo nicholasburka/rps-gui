@@ -104,7 +104,7 @@ ul {
 						</div>
 					</div>
 					<h3 class="column" style="width: 33vw;">Open Games</h3>
-					<h3 class="column" style="width: 33vw;">Committed: ... <!--{{ committed }}{{ money-committed }} {{ currency }}--></h3>
+					<div class="row column" style="width: 33vw;"><h3>Committed: {{wagers_committed}} </h3><h3 class="currency">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
 				</div>
 					<div class="column" id="open-games">
 						<div class="row activeitem playable" v-for="game in this.playable_games" v-bind:game="game" v-bind:key="game.ContractAddress"  style="height: 4vh">

@@ -278,8 +278,8 @@
     ETH: ethstdlib,
     ALGO: algostdlib
   };
-  reach.ALGO.setSignStrategy('AlgoSigner');
-  //reach.ALGO.setSignStrategy('mnemonic');
+  //reach.ALGO.setSignStrategy('AlgoSigner');
+  reach.ALGO.setSignStrategy('mnemonic');
   export default {
       components: {
         TextDisplay
@@ -335,11 +335,11 @@
           promise.then(() => { console.log('wrote to clipboard') }, () => { console.log('clipboard failed') })
         },
         loadReachLib: async function (currency) {
-          this.log('getting reach stdlib for currency ' + currency)
+          /*this.log('getting reach stdlib for currency ' + currency)
           this.stdlib = await loader.loadStdlib(currency)
           this.log('loaded stdlib')
           this.log(this.stdlib)
-          this.currency = currency
+          this.currency = currency*/
         },
         getAtomicCurrency: async function (val) {
           // assert(this.currency === "ETH" || this.currency === "ALGO");
@@ -426,6 +426,8 @@
             await reach[this.currency].transfer(this.acc, faucet, reach[this.currency].parseCurrency(100))//reach[this.currency].parseCurrency(100)*/
             await reach[this.currency].fundFromFaucet(this.acc, reach[this.currency].parseCurrency(1)) //reach[this.currency].parseCurrency(1))
             console.log('transferred?')
+            this.balanceAtomic = await reach[this.currency].balanceOf(this.acc)
+            this.balance = await this.getReadableCurrency(this.balanceAtomic)
           } catch (e) {
             console.log(e)
           }
@@ -737,15 +739,19 @@
           try {
             this.setpopup('Connecting to contract...')
 
-            var res = await axios({
-              method: 'GET',
-              url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(gamecontractinfo.address))
-            })// this.getgame(gamecontractinfo.address);
-            console.log('received response from API')
-            console.log(res)
-            var game = res.data
-            console.log('got game')
-            console.log(game)
+            if (this.onLocalhost()) {
+              var game = {title: 'localgame', wager: 1, currency: this.currency, contractinfo: gamecontractinfo}
+            } else {
+              var res = await axios({
+                method: 'GET',
+                url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(gamecontractinfo.address))
+              })// this.getgame(gamecontractinfo.address);
+              console.log('received response from API')
+              console.log(res)
+              var game = res.data
+              console.log('got game')
+              console.log(game)
+            }
             // needs to check if game is a game (from search) or contract (from join by contract)
 
             this.$router.push('home')
@@ -830,18 +836,22 @@
             var ctcAttacher = this.acc.attach(backend, gamecontractinfo) // TODO await?
             console.log('ctcAttacher, stdlib')
             console.log(ctcAttacher)
-            console.log(stdlib)
+            //console.log(stdlib)
 
-            var update_game = await axios({
-              method: 'POST',
-              url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-4JOWB6APQ5WQ',
-              data: {
-                walletAddress: this.walletaddr,
-                ContractAddress: gamecontractinfo.address
-              }
-            })
-            console.log('updated game in db')
-            console.log(update_game)
+            if (this.onLocalhost()) {
+
+            } else {
+              var update_game = await axios({
+                method: 'POST',
+                url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-4JOWB6APQ5WQ',
+                data: {
+                  walletAddress: this.walletaddr,
+                  ContractAddress: gamecontractinfo.address
+                }
+              })
+              console.log('updated game in db')
+              console.log(update_game)
+            }
 
             self.opengames.push(game)
             console.log(self.opengames)
