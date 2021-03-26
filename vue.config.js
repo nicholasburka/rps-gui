@@ -1,5 +1,5 @@
 module.exports = {
-	publicPath: '/rps-gui/', //https://cli.vuejs.org/guide/deployment.html
+	publicPath: process.env.NODE_ENV === 'production' ? '/rps-gui/dist/' : '/', //https://cli.vuejs.org/guide/deployment.html
 	devServer: {
 		allowedHosts: [
 		      'localhost',
