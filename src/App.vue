@@ -74,7 +74,7 @@
     opacity: 95%;
     z-index:5;
   }
-  #displaytext {
+  #textdisplay {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -249,18 +249,26 @@
 </style>
 <template>
 	<div>
-		<router-view class="view" :walletFound="walletFound" :prevopponents="prevopponents" :walletaddr="walletaddr" :balance="balance" :currency="currency" :walletErr="walletErr" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:submithands="submithands" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismissdisplaytext="dismissdisplaytext" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo" v-on:refreshwallet="refreshwallet"/>
+		<router-view class="view" :walletFound="walletFound" :prevopponents="prevopponents" :walletaddr="walletaddr" :balance="balance" :currency="currency" :walletErr="walletErr" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:submithands="submithands" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismisstextdisplay="dismisstextdisplay" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo" v-on:refreshwallet="refreshwallet"/>
+
+    <transition name="slideup">
+      <TextDisplay v-if="textdisplay" v-bind:text="textdisplay" id="textdisplay" v-on:dismisstextdisplay="dismisstextdisplay"></TextDisplay>
+      <p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
+    </transition>
     <!--<router-view />-->
     <!--<transition name="slideup">
     <div v-if="popups.length" v-bind:popups="popups">
       <popupC v-for="popup in popups" v-bind:key="popups" message="popup.message"></popupC>
     </div>
     <p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
-    <displaytextarea v-if="displaytext" v-bind:text="displaytext" id="displaytext" v-on:dismissdisplaytext="dismissdisplaytext"></displaytextarea>
+    <textdisplayarea v-if="textdisplay" v-bind:text="textdisplay" id="textdisplay" v-on:dismisstextdisplay="dismisstextdisplay"></textdisplayarea>
     </transition>-->
 	</div>
 </template>
 <script>
+  import TextDisplay from "./views/TextDisplay.vue"
+
+
   import * as axios from 'axios'
   import * as backend from '../build/rps.main.mjs'
   //import * as stdlib from '@reach-sh/stdlib/ETH.mjs'
@@ -274,7 +282,7 @@
   reach.ALGO.setSignStrategy('mnemonic');
   export default {
       components: {
-
+        TextDisplay
       },
       data: function () {
         return {
@@ -298,7 +306,7 @@
           popup: null,
           popuptime: 3000,
           popups: [],
-          displaytext: '',
+          textdisplay: '',
           TEST: false,
           DEV_LOG: true
         }
@@ -426,10 +434,10 @@
           this.log('received a displaycontractinfo event')
           this.log(game)
           this.log(this)
-          this.log(this.displaytext)
+          this.log(this.textdisplay)
           this.log(JSON.stringify(game.contractinfo, null, 2))
-          this.displaytext = JSON.stringify(game.contractinfo, null, 2)
-          this.log(this.displaytext)
+          this.textdisplay = JSON.stringify(game.contractinfo, null, 2)
+          this.log(this.textdisplay)
         },
         setpopup: function (msg) {
           this.popup = msg
@@ -441,9 +449,9 @@
         removePopup: function () {
           this.popup = null
         },
-        dismissdisplaytext: function () {
+        dismisstextdisplay: function () {
           console.log('dismiss in vue parent')
-          this.displaytext = null
+          this.textdisplay = null
         },
         getGames: function () {
           // need to edit to ensure correct form of request
@@ -529,7 +537,7 @@
           return str
         },
         displayNotification: function (notif) {
-          this.displaytext = notif
+          this.textdisplay = notif
           this.notifications.push(notif)
         },
         ongamecreate: async function (game) {
@@ -560,11 +568,11 @@
             game.contractinfo = await game.contract.getInfo()
             console.log(game.contractinfo)
             game.contractinfostr = JSON.stringify(game.contractinfo, null, 2)
-            self.displaytext = game.contractinfostr
-            console.log(this.displaytext)
+            self.textdisplay = game.contractinfostr
+            console.log(this.textdisplay)
             /* try {
                   await navigator.clipboard.writeText(game.contractinfostr);
-                  self.displaytext = self.displaytext + "&#13;&#10;copied to clipboard";
+                  self.textdisplay = self.textdisplay + "&#13;&#10;copied to clipboard";
                   //self.setpopup("copied contract info to clipboard");
               } catch (error) {
                   console.error("copy failed", error);
@@ -589,7 +597,7 @@
                 }
                 game.status = 'Complete'
                 self.switchGamePlayable(game)
-                self.displaytext = text
+                self.textdisplay = text
                 self.displayNotification(text)
                 self.finishGame(game)
               },
@@ -597,13 +605,13 @@
                 game.p2 = opp
                 game.status = 'Awaiting outcome'
                 var outcome_notif = opp + ' joined game!\n' + self.gameinfostr(game)
-                self.displaytext = outcome_notif
+                self.textdisplay = outcome_notif
                 self.displayNotification(outcome_notif)
               },
               informDraw: function () {
                 game.status = 'Draw'
                 var outcome_notif = 'Draw! New round \n' + self.gameinfostr(game)
-                self.displaytext = outcome_notif
+                self.textdisplay = outcome_notif
                 self.displayNotification(outcome_notif)
               },
               seeOutcome: function (outcome) {
@@ -620,7 +628,7 @@
                 } else {
                   outcome_notif = 'You won! \n' + self.gameinfostr(game)
                 }
-                self.displaytext = outcome_notif
+                self.textdisplay = outcome_notif
                 self.displayNotification(outcome_notif)
               },
               getHands: async function () {
@@ -628,7 +636,7 @@
                 self.switchGamePlayable(game)
                 console.log(game)
                 console.log(self.opengames)
-                self.displaytext = 'Ready to play! \n' + self.gameinfostr(game)
+                self.textdisplay = 'Ready to play! \n' + self.gameinfostr(game)
                 // self.currentgame = game;
                 // console.log(self);
                 // console.log(self.currentgame);
@@ -667,7 +675,7 @@
             console.log(response.data)
             self.opengames.push(game)
             console.log(self.opengames)
-            self.displaytext = 'Game deployed at ' + game.contractinfo.address // include contract info
+            self.textdisplay = 'Game deployed at ' + game.contractinfo.address // include contract info
             // self.setpopup("Game \"" + game.title + "\" deployed!");
             await backend.Deployer(game.contract, interact)
           } catch (error) {
@@ -758,14 +766,14 @@
                 }
                 game.status = 'Complete'
                 self.switchGamePlayable(game)
-                self.displaytext = text
+                self.textdisplay = text
                 self.displayNotification(text)
                 self.finishGame(game)
               },
               informDraw: function () {
                 game.status = 'Draw'
                 var outcome_notif = 'Draw! New round \n' + self.gameinfostr(game)
-                self.displaytext = outcome_notif
+                self.textdisplay = outcome_notif
                 self.displayNotification(outcome_notif)
               },
               acceptGame: async function (wager, deadline) {
@@ -775,7 +783,7 @@
                 game.deadline = deadline
 
                 var notif = 'Joining game with wager ' + game.wager + ' ' + self.currency + ' and deadline of ' + deadline + ' blocks'
-                self.displaytext = notif
+                self.textdisplay = notif
                 self.displayNotification(notif)
               },
               seeOutcome: function (outcome) {
@@ -790,7 +798,7 @@
                 } else {
                   outcome_notif = 'You won! \n' + self.gameinfostr(game)
                 }
-                self.displaytext = outcome_notif
+                self.textdisplay = outcome_notif
                 self.displayNotification(outcome_notif)
               },
               getHands: async function () {
@@ -798,7 +806,7 @@
                 self.switchGamePlayable(game)
                 console.log(game)
                 console.log(self.opengames)
-                self.displaytext = 'Ready to play! \n' + self.gameinfostr(game)
+                self.textdisplay = 'Ready to play! \n' + self.gameinfostr(game)
                 self.currentgame = game
                 console.log(self)
                 console.log(self.currentgame)
@@ -926,7 +934,7 @@
           this.setpopup(popupmsg)
         },
         runTests: function () {
-          this.displaytext = 'please click this example text'
+          this.textdisplay = 'please click this example text'
           // how to do await within synchronous function as a Promise
 
           // test Player function, does not seem to be working
