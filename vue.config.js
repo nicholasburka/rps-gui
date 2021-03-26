@@ -1,5 +1,5 @@
 module.exports = {
-	publicPath: '/',
+	publicPath: '/rps-gui/', //https://cli.vuejs.org/guide/deployment.html
 	devServer: {
 		allowedHosts: [
 		      'localhost',
@@ -7,6 +7,7 @@ module.exports = {
 		proxy: {
 			'^/algod': {
 				target: 'http://localhost:4180',
+				//target: ''
 				//changeOrigin: true,
 				pathRewrite: {'^/algod': ''},
 				logLevel: 'debug'
