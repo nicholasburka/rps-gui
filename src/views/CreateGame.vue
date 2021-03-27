@@ -1,5 +1,7 @@
 <style scoped>
-
+#create-game {
+	height: 100vh;
+}
 </style>
 
 
@@ -148,7 +150,7 @@
 					console.log("this.game");
 					console.log(this.game);
 					console.log("confirmed");
-					console.log(confirm);
+					console.log(this.confirm);
 					console.log(CreateGameConfirm);
 					//this.$emit('ongamecreate', this.game);
 				} else {
