@@ -459,9 +459,10 @@
           // need to edit to ensure correct form of request
           var self = this
           try {
+
             axios({
               method: 'GET',
-              url: ('https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesBywalletaddressFunction-16UGOIN5N63P?walletAddress='.concat(String(this.walletaddr)))
+              url: ('https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress='.concat(String(this.walletaddr)))
             }).then(function (response) {
               self.log(response)
               self.log(response.data)
