@@ -811,7 +811,7 @@
           try {
             this.setpopup('Connecting to contract...')
             this.$router.push('home')
-            var ctcAttacher = this.acc.attach(backend, gamecontractinfo)
+            var ctcAttacher = this.acc.attach(backend, game.contractinfo)
 
             if (this.onLocalhost()) {
 
@@ -821,7 +821,7 @@
                 url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-4JOWB6APQ5WQ',
                 data: {
                   walletAddress: this.walletaddr,
-                  ContractAddress: gamecontractinfo.address
+                  ContractAddress: game.ContractAddress
                 }
               })
               console.log('updated game in db')
