@@ -832,6 +832,8 @@
             console.log(this.opengames)
             this.setpopup('Joined game "' + game.title + '" ')
 
+            const interact = getAttacherInteract(game);
+
             var result = await backend.Attacher(ctcAttacher, interact)
             console.log('created backend')
             console.log(result)
