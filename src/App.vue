@@ -665,7 +665,7 @@
             }
 
             // console.log("backend Alice not npmcreated");
-            game.wager = game.wagerreadable
+            //game.wager = game.wagerreadable
             console.log('POSTing game')
             if (!self.onLocalhost()) {
               var response = await axios({
@@ -901,7 +901,7 @@
         },
         ongamesearch: function (gameparams) {
           console.log(gameparams)
-          gameparams.wager = reach[this.currency].parseCurrency(gameparams.wager)
+          //gameparams.wager = reach[this.currency].parseCurrency(gameparams.wager)
           // this.$router.replace('home');
           this.setpopup('searching...')
           var search_param_str = Object.keys(gameparams).map(key => key + '=' + gameparams[key]).join('&')

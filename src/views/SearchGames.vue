@@ -72,7 +72,7 @@
 				console.log("max");
 				console.log(this.max);
 
-				if (!sign) {
+				if ((!sign) && (!title) && (!searchforaddr)) {
 					// do not do anything since sign is necessary
 					// can display a message here for user "please choose wager condition"
 				} else {
