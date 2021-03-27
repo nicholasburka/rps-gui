@@ -837,7 +837,7 @@
             console.log(result)
           } catch (err) {
             console.log('Contract error.')
-            console.log(error)
+            console.log(err)
           }
         },
         ongameaccept: async function (gamecontractinfo) {
