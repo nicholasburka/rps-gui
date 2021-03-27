@@ -218,7 +218,7 @@ ul {
  			wagers_committed: function() {
  				return this.opengames.reduce((acc, curr)  => {
  					return acc + curr.wager;
- 				})
+ 				}, 0)
  			}
 		},
 		watch : {
