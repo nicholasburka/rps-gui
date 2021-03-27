@@ -218,9 +218,12 @@ ul {
  			wagers_committed: function() {
  				//return '';
  				//appends strings with low decimals, need to convert to wager readable
- 				return this.opengames.reduce((acc, curr)  => {
- 					return acc + curr.wagerreadable;
+ 				var sum = this.opengames.reduce((acc, curr)  => {
+ 					return acc + Number(curr.wagerreadable);
  				}, 0)
+ 				console.log ("committed")
+ 				console.log (sum)
+ 				return sum
  			}
 		},
 		watch : {
