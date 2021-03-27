@@ -104,7 +104,7 @@ ul {
 						</div>
 					</div>
 					<h3 class="column" style="width: 33vw;">Open Games</h3>
-					<div class="row column" style="width: 33vw;"><h3>Committed: {{wagers_committed}} </h3><h3 class="currency">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
+					<div class="row column" style="width: 33vw;"><h3>Committed: ~{{wagers_committed}} </h3><h3 class="currency_t">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
 				</div>
 					<div class="column" id="open-games">
 						<div class="row activeitem playable" v-for="game in this.playable_games" v-bind:game="game" v-bind:key="game.ContractAddress"  style="height: 4vh">
@@ -216,6 +216,10 @@ ul {
 				return this.opengames.filter(x => {return x.playable});
 			},
  			wagers_committed: function() {
+ 				//https://www.jacklmoore.com/notes/rounding-in-javascript/
+ 				function round(value, decimals) {
+ 				  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+ 				}
  				//return '';
  				//appends strings with low decimals, need to convert to wager readable
  				var sum = this.opengames.reduce((acc, curr)  => {
@@ -223,7 +227,7 @@ ul {
  				}, 0)
  				console.log ("committed")
  				console.log (sum)
- 				return sum
+ 				return round(sum, 7)
  			}
 		},
 		watch : {
