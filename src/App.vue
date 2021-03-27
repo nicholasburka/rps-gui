@@ -375,6 +375,7 @@
           this.log(reach[currency]);
           try {
             this.currency = currency
+            this.balance = 0
             /* if (currency === "ALGO") {
                 const acc = await reach[currency].newAccountFromAlgoSigner();
               } else if (currency === "ETH") {
@@ -488,7 +489,7 @@
                   if (self.currency === "ETH") {
                     game.wagerreadable = reach[this.currency].formatCurrency(reach[this.currency].hexToBigNumber(game.wager.hex), 4)
                   } else {
-                    
+
                   }
                 }
                 return game
@@ -915,7 +916,7 @@
             console.log(response.data)
             self.foundgames = response.data
             console.log(self.foundgames)
-            this.$router.push('search-results')
+            self.$router.push('search-results')
           }).catch((error) => {
             console.log(error)
           })
