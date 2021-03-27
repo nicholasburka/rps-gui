@@ -278,8 +278,8 @@
     ETH: ethstdlib,
     ALGO: algostdlib
   };
-  //reach.ALGO.setSignStrategy('AlgoSigner');
-  reach.ALGO.setSignStrategy('mnemonic');
+  reach.ALGO.setSignStrategy('AlgoSigner');
+  //reach.ALGO.setSignStrategy('mnemonic');
   export default {
       components: {
         TextDisplay
