@@ -47,7 +47,7 @@
 			},
 			confirmgame: function() {
 				//send to chain or to page?
-				this.$emit('ongameaccept', this.game);
+				this.$emit('ongameacceptsearch', this.game);
 			},
 			deny: function() {
 				this.confirm = false;

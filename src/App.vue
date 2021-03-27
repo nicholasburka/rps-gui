@@ -249,7 +249,7 @@
 </style>
 <template>
 	<div>
-		<router-view class="view" :walletFound="walletFound" :prevopponents="prevopponents" :walletaddr="walletaddr" :balance="balance" :currency="currency" :walletErr="walletErr" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:submithands="submithands" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismisstextdisplay="dismisstextdisplay" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo" v-on:refreshwallet="refreshwallet"/>
+		<router-view class="view" :walletFound="walletFound" :prevopponents="prevopponents" :walletaddr="walletaddr" :balance="balance" :currency="currency" :walletErr="walletErr" :price="price" :opengames="opengames" :foundgames="foundgames" :invites="invites"  :currentgame="currentgame" v-on:submithands="submithands" v-on:ongameselect="ongameselect" v-on:ongamecreate="ongamecreate" v-on:ongamesearch="ongamesearch" v-on:ongameacceptsearch="ongameacceptsearch" v-on:ongameaccept="ongameaccept" v-on:onmoveselect="onmoveselect" v-on:dismisstextdisplay="dismisstextdisplay" v-on:gamehistory="gamehistory" v-on:tryfaucet="tryfaucet" v-on:displaycontractinfo="displaycontractinfo" v-on:refreshwallet="refreshwallet"/>
 
     <transition name="slideup">
       <TextDisplay v-if="textdisplay" v-bind:text="textdisplay" id="textdisplay" v-on:dismisstextdisplay="dismisstextdisplay"></TextDisplay>
@@ -733,6 +733,113 @@
               throw Error(err);
             });
           }, */
+        getAttacherInteract: function(game) {
+          var self = this;
+          const interact = {
+            ...reach[self.currency].hasRandom,
+            informTimeout: function (who) {
+              var text = ''
+              if (who === 0 && isP1(game)) {
+                text = 'You timed out \n '
+              } else {
+                text = 'Other player timed out'
+              }
+              game.status = 'Complete'
+              self.switchGamePlayable(game)
+              self.textdisplay = text
+              self.displayNotification(text)
+              self.finishGame(game)
+            },
+            informDraw: function () {
+              game.status = 'Draw'
+              var outcome_notif = 'Draw! New round \n' + self.gameinfostr(game)
+              self.textdisplay = outcome_notif
+              self.displayNotification(outcome_notif)
+            },
+            acceptGame: async function (wager, deadline) {
+              console.log('acceptGame')
+              console.log(wager)
+              game.wager = await self.getReadableCurrency(wager)
+              game.deadline = deadline
+
+              var notif = 'Joining game with wager ' + game.wager + ' ' + self.currency + ' and deadline of ' + deadline + ' blocks'
+              self.textdisplay = notif
+              self.displayNotification(notif)
+            },
+            seeOutcome: function (outcome) {
+              var outcome_notif = ''
+              if (outcome === 0) {
+                game.winner = game.p2
+              } else {
+                game.winner = game.p1
+              }
+              if (outcome === 0 && self.isP1(game)) {
+                outcome_notif = 'You lost...\n' + self.gameinfostr(game)
+              } else {
+                outcome_notif = 'You won! \n' + self.gameinfostr(game)
+              }
+              self.textdisplay = outcome_notif
+              self.displayNotification(outcome_notif)
+            },
+            getHands: async function () {
+              console.log('GET HANDS')
+              self.switchGamePlayable(game)
+              console.log(game)
+              console.log(self.opengames)
+              self.textdisplay = 'Ready to play! \n' + self.gameinfostr(game)
+              self.currentgame = game
+              console.log(self)
+              console.log(self.currentgame)
+              // this.$router.push('play');
+              // update game status
+              // notification
+              // resolve on moves submit
+              function resolveHands () {
+                return new Promise((resolve, reject) => {
+                  game.resolveHands = resolve
+                })
+              };
+              const hands = await resolveHands()
+              self.log('received hands')
+              self.log(hands)
+              return hands
+            }
+          }
+          return interact
+        },
+        ongameacceptsearch: async function(game) {
+          try {
+            this.setpopup('Connecting to contract...')
+            this.$router.push('home')
+            var ctcAttacher = this.acc.attach(backend, gamecontractinfo)
+
+            if (this.onLocalhost()) {
+
+            } else {
+              var update_game = await axios({
+                method: 'POST',
+                url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-acceptGameFunction-4JOWB6APQ5WQ',
+                data: {
+                  walletAddress: this.walletaddr,
+                  ContractAddress: gamecontractinfo.address
+                }
+              })
+              console.log('updated game in db')
+              console.log(update_game)
+            }
+
+            self.opengames.push(game)
+            console.log(self.opengames)
+            self.setpopup('Joined game "' + game.title + '" ')
+
+            var result = await backend.Attacher(ctcAttacher, interact)
+            console.log('created backend')
+            console.log(result)
+          } catch (err) {
+            console.log('Contract error.')
+            console.log(error)
+          }
+        },
         ongameaccept: async function (gamecontractinfo) {
           console.log('on game accept - feb 4')
           console.log('given')
@@ -767,76 +874,7 @@
 
             console.log('self')
             console.log(self)
-            const interact = {
-              ...reach[self.currency].hasRandom,
-              informTimeout: function (who) {
-                var text = ''
-                if (who === 0 && isP1(game)) {
-                  text = 'You timed out \n '
-                } else {
-                  text = 'Other player timed out'
-                }
-                game.status = 'Complete'
-                self.switchGamePlayable(game)
-                self.textdisplay = text
-                self.displayNotification(text)
-                self.finishGame(game)
-              },
-              informDraw: function () {
-                game.status = 'Draw'
-                var outcome_notif = 'Draw! New round \n' + self.gameinfostr(game)
-                self.textdisplay = outcome_notif
-                self.displayNotification(outcome_notif)
-              },
-              acceptGame: async function (wager, deadline) {
-                console.log('acceptGame')
-                console.log(wager)
-                game.wager = await self.getReadableCurrency(wager)
-                game.deadline = deadline
-
-                var notif = 'Joining game with wager ' + game.wager + ' ' + self.currency + ' and deadline of ' + deadline + ' blocks'
-                self.textdisplay = notif
-                self.displayNotification(notif)
-              },
-              seeOutcome: function (outcome) {
-                var outcome_notif = ''
-                if (outcome === 0) {
-                  game.winner = game.p2
-                } else {
-                  game.winner = game.p1
-                }
-                if (outcome === 0 && self.isP1(game)) {
-                  outcome_notif = 'You lost...\n' + self.gameinfostr(game)
-                } else {
-                  outcome_notif = 'You won! \n' + self.gameinfostr(game)
-                }
-                self.textdisplay = outcome_notif
-                self.displayNotification(outcome_notif)
-              },
-              getHands: async function () {
-                console.log('GET HANDS')
-                self.switchGamePlayable(game)
-                console.log(game)
-                console.log(self.opengames)
-                self.textdisplay = 'Ready to play! \n' + self.gameinfostr(game)
-                self.currentgame = game
-                console.log(self)
-                console.log(self.currentgame)
-                // this.$router.push('play');
-                // update game status
-                // notification
-                // resolve on moves submit
-                function resolveHands () {
-                  return new Promise((resolve, reject) => {
-                    game.resolveHands = resolve
-                  })
-                };
-                const hands = await resolveHands()
-                self.log('received hands')
-                self.log(hands)
-                return hands
-              }
-            }
+            const interact = this.getAttacherInteract(game);
 
             var gameOnChain = false
             var ctcAttacher = this.acc.attach(backend, gamecontractinfo) // TODO await?
