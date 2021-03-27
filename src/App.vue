@@ -485,7 +485,11 @@
                   // console.log(stdlib.hexToBigNumber(game.wager.hex));
                   // console.log(stdlib.formatCurrency(stdlib.hexToBigNumber(game.wager.hex), 4));
                   // console.log(stdlib.standardUnit);
-                  game.wagerreadable = reach[this.currency].formatCurrency(reach[this.currency].hexToBigNumber(game.wager.hex), 4)
+                  if (self.currency === "ETH") {
+                    game.wagerreadable = reach[this.currency].formatCurrency(reach[this.currency].hexToBigNumber(game.wager.hex), 4)
+                  } else {
+                    
+                  }
                 }
                 return game
               })

@@ -216,8 +216,10 @@ ul {
 				return this.opengames.filter(x => {return x.playable});
 			},
  			wagers_committed: function() {
+ 				//return '';
+ 				//appends strings with low decimals, need to convert to wager readable
  				return this.opengames.reduce((acc, curr)  => {
- 					return acc + curr.wager;
+ 					return acc + curr.wagerreadable;
  				}, 0)
  			}
 		},
