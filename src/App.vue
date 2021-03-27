@@ -828,9 +828,9 @@
               console.log(update_game)
             }
 
-            self.opengames.push(game)
-            console.log(self.opengames)
-            self.setpopup('Joined game "' + game.title + '" ')
+            this.opengames.push(game)
+            console.log(this.opengames)
+            this.setpopup('Joined game "' + game.title + '" ')
 
             var result = await backend.Attacher(ctcAttacher, interact)
             console.log('created backend')
