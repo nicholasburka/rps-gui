@@ -214,7 +214,12 @@ ul {
 			},
 			playable_games: function() {
 				return this.opengames.filter(x => {return x.playable});
-			}
+			},
+ 			wagers_committed: function() {
+ 				return this.opengames.reduce((acc, curr)  => {
+ 					return acc + curr.wager;
+ 				})
+ 			}
 		},
 		watch : {
 			opengames: function (gamesold, gamesnew) {

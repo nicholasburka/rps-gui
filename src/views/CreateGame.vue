@@ -68,7 +68,7 @@
 			CreateGameConfirm
 		},
 		data: function() {
-			const titles = ["Rock Paper Skissors", "I always choose paper", "Rock lovers only", "Srossics repar kcor", "My R-P-S Game"];
+			const titles = ["Rock Paper Skissors", "I always choose paper", "Rock lovers only", "Srossics repap kcor", "My R-P-S Game", "Clunk clunk shh shh snip snip"];
 			const rand_title = titles[Math.floor(Math.random()*titles.length)];
 			confirm = false;
 			//console.log("wallet addr");
