@@ -87,7 +87,7 @@
     width: 70vw;
     font-size: 1vw;
     background-color: gray;
-    opacity: 80%;
+    /*opacity: 80%;*/
   }
   .flex-center {
     display: flex;
