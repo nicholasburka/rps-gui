@@ -56,7 +56,7 @@
     left: 25vw;
     font-size: 20px;
     background-color: lightblue;
-    opacity: 80%;
+    /*opacity: 80%;*/
   }
   .confirmPopup {
     position: absolute;
