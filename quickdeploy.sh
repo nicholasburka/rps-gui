@@ -1,4 +1,4 @@
-npm run build
+npm run build src/index.js
 
 git add .
 git commit -m "quickdeploy: $1"
