@@ -278,8 +278,8 @@
     ETH: ethstdlib,
     ALGO: algostdlib
   };
-  reach.ALGO.setSignStrategy('AlgoSigner');
-  //reach.ALGO.setSignStrategy('mnemonic');
+  //reach.ALGO.setSignStrategy('AlgoSigner');
+  reach.ALGO.setSignStrategy('mnemonic');
   export default {
       components: {
         TextDisplay
@@ -364,6 +364,7 @@
         updateBalance: async function () {
           var atomicBalance = await reach[this.currency].balanceOf(this.acc)
           this.balance = await this.getReadableCurrency(atomicBalance)
+          console.log ("balance update " + this.balance);
           return this.balance
         },
         onLocalhost: function() {
@@ -387,6 +388,7 @@
               this.walletaddr = this.acc.networkAccount.addr
               console.log(this.acc);
               console.log(this.walletaddr);
+              await this.updateBalance()
             } else if (currency === 'ETH') {
               this.walletaddr = await this.acc.networkAccount.getAddress()
               await this.updateBalance()
@@ -425,11 +427,15 @@
             /*const faucet = await reach[this.currency].getFaucet()
             console.log(faucet)
             await reach[this.currency].transfer(this.acc, faucet, reach[this.currency].parseCurrency(100))//reach[this.currency].parseCurrency(100)*/
-            await reach[this.currency].fundFromFaucet(this.acc, reach[this.currency].parseCurrency(1)) //reach[this.currency].parseCurrency(1))
+            var fundamt = 1;
+            this.setpopup('Transferring ' + fundamt + ' ' + this.currency + ' from faucet')
+            await reach[this.currency].fundFromFaucet(this.acc, reach[this.currency].parseCurrency(fundamt)) //reach[this.currency].parseCurrency(1))
+            this.setpopup('Transfer complete')
             console.log('transferred?')
             this.balanceAtomic = await reach[this.currency].balanceOf(this.acc)
             this.balance = await this.getReadableCurrency(this.balanceAtomic)
           } catch (e) {
+            this.setpopup('Could not complete transfer - are you on a Reach devnet?')
             console.log(e)
           }
         },
