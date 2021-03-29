@@ -1,5 +1,7 @@
-In order to make draws less likely, we can collect a batch of moves from each player, and compute an outcome by finding the first hand in a batch that returns a winner (or returning a draw if there is none). First, we specify the batchSize, a getBatch function - either from the interact interface or by repeatedly calling getHand(), and a batchWinner function that computes a winner given two batches. Jay outlines the two approaches to get a batch, and two approaches to computer a batchWinner: 
+https://github.com/nicholasburka/rps-gui/blob/vuecli/reach/tut1/seriousrps_tutorial.md
 
+In order to make draws less likely, we can collect a batch of moves from each player, and compute an outcome by finding the first hand in a batch that returns a winner (or returning a draw if there is none). First, we specify the batchSize, a getBatch function - either from the interact interface or by repeatedly calling getHand(), and a batchWinner function that computes a winner given two batches. Jay outlines the two approaches to get a batch, and two approaches to computer a batchWinner: 
+```
 const batchSize = 5;
 
 // This program shows two different ways to get a batch: either have the
@@ -31,6 +33,7 @@ const Player =
         getBatch: Fun([], Array(UInt, batchSize)),
         seeOutcome: Fun([UInt], Null),
         informTimeout: Fun([], Null) };
+```
 
 We've changed firstHand to firstBatch, using the syntax for specifying an Array in Reach - the type UInt is the first parameter, and the size batchSize is the second parameter. 
 
@@ -38,6 +41,7 @@ Array.iota(batchSize) creates an array [0,1,2,3,4] that can be used to map the o
 
 Now we modify the program so any reference to getHand becomes getBatch, and outcomes are computed by batchWinner. 
 
+```
 export const main =
   Reach.App(
     {},
@@ -111,9 +115,9 @@ export const main =
       each([A, B], () => {
         interact.seeOutcome(outcome); });
       exit(); });
-
+```
 We change the CLI similarly, by setting the batchSize, adding a getBatch function and replacing references to firstHand and getHand with firstBatch and getBatch.
-
+```
 const batchSize = 5;
 const getBatch = async () => {
   var batch = [];
@@ -150,8 +154,9 @@ if (isAlice) {
     }
   };
 }
-
+```
 Now the Reach program is much less likely to return a DRAW at the end of any given round, reducing the likelihood of transactions & thereby associated fees. 
 
 In the next section, we modify our while loop to alternate who goes first, so that the extra transaction cost paid by the first person in a round is switched.
 
+https://github.com/nicholasburka/rps-gui/blob/vuecli/reach/tut3/serousrps_tutorial3.md

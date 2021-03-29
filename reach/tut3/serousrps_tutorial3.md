@@ -1,4 +1,8 @@
+https://github.com/nicholasburka/rps-gui/blob/vuecli/reach/tut2/seriousrps_tutorial2.md
+
 In this section, we'll make the cost distribution more equal between participants, by modifying our while loop. The first player in any round has two transactions, in order to commit their hand secretly and reveal it after the second player's hand has published. It would be more fair if the first person to play rotated, to distribute these costs. We can do this using if/else blocks, and rotating who goes first based on whether it's an even or odd round.
+
+```
 
 var [outcome, round] = [batchWinner(AFirstBatch, BFirstBatch), 0];
 invariant(balance() == 2 * wager && isOutcome(outcome) );
@@ -57,11 +61,13 @@ while ( outcome == DRAW ) {
     continue; 
   }
  }
+```
 
 Bob goes first in the loop, because Alice paid an extra transaction already. We initialize the round number at 0, and determine if a round is even or odd by calculating the remainder when divided by 2 using the modulo % operator. 
 
 The code is long, because we simply copy and pasted the logic for each round and changed the participant ordering. It's more concise to define a function doRound within our while loop, which we pass each participant in within the if/else blocks:
 
+```
 var [outcome, round] = [batchWinner(AFirstBatch, BFirstBatch), 0];
 invariant(balance() == 2 * wager && isOutcome(outcome) );
 while ( outcome == DRAW ) {
@@ -101,6 +107,7 @@ while ( outcome == DRAW ) {
     continue; 
   }
  }
+```
 
 We defined a function doRound which takes a Participant Interface First, Participant Interface Second, and the roundNumber. Once these participant variables are available to the function, all we need to do is write the logic for a round of RPS. Then we take the result of the round and input it in the correct order to batchWinner to compute the outcome.
 
