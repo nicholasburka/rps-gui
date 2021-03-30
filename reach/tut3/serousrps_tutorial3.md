@@ -3,7 +3,6 @@ https://github.com/nicholasburka/rps-gui/blob/vuecli/reach/tut2/seriousrps_tutor
 In this section, we'll make the cost distribution more equal between participants, by modifying our while loop. The first player in any round has two transactions, in order to commit their hand secretly and reveal it after the second player's hand has published. It would be more fair if the first person to play rotated, to distribute these costs. We can do this using if/else blocks, and rotating who goes first based on whether it's an even or odd round.
 
 ```
-
 var [outcome, round] = [batchWinner(AFirstBatch, BFirstBatch), 0];
 invariant(balance() == 2 * wager && isOutcome(outcome) );
 while ( outcome == DRAW ) {
@@ -62,10 +61,10 @@ while ( outcome == DRAW ) {
   }
  }
 ```
+- Line 1 adds the 'round' loop variable and initializes it at 0
+- Line 4 specifies that the following code block should run if the round is an even number. Evenness is determined by calculating the remainder of the rond number when divided by 2, using the modulo % operator.
 
-Bob goes first in the loop, because Alice paid an extra transaction already. We initialize the round number at 0, and determine if a round is even or odd by calculating the remainder when divided by 2 using the modulo % operator. 
-
-The code is long, because we simply copy and pasted the logic for each round and changed the participant ordering. It's more concise to define a function doRound within our while loop, which we pass each participant in within the if/else blocks:
+Bob goes first in the loop, because Alice paid an extra transaction already. The code is long, because we simply copy and pasted the logic for each round and changed the participant ordering. It's more concise to define a function doRound within our while loop, which we pass each participant in within the if/else blocks:
 
 ```
 var [outcome, round] = [batchWinner(AFirstBatch, BFirstBatch), 0];
@@ -108,8 +107,8 @@ while ( outcome == DRAW ) {
   }
  }
 ```
-
-We defined a function doRound which takes a Participant Interface First, Participant Interface Second, and the roundNumber. Once these participant variables are available to the function, all we need to do is write the logic for a round of RPS. Then we take the result of the round and input it in the correct order to batchWinner to compute the outcome.
+- In Lines 4-27, we define a function doRound which takes a Participant Interface 'First', Participant Interface 'Second', and the roundNumber. Once these participant variables are available to the function, all we need to do is write the logic for a round of RPS. 
+- Lines 29-30 & 33-34 take the result of the round and input it in the correct order to batchWinner to compute the outcome.
 
 We don't have to modify our CLI. If we wanted to, we could inform each player that there is a draw, to clarify the contract state. To do this, we'd add a function informDraw to our Player interface in Reach and our CLI, and call informDraw at the beginning of doRound (after commit(), which establishes contract state such that local steps can be called).
 

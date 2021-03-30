@@ -76,6 +76,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     console.log("submitting batch " + batch);
     return batch;
   }
+  interact.getBatch = getBatch;
 
   if (isAlice) {
     const amt = await ask(

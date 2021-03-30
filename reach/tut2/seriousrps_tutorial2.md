@@ -34,10 +34,10 @@ const Player =
         seeOutcome: Fun([UInt], Null),
         informTimeout: Fun([], Null) };
 ```
-
-We've changed firstHand to firstBatch, using the syntax for specifying an Array in Reach - the type UInt is the first parameter, and the size batchSize is the second parameter. 
-
-Array.iota(batchSize) creates an array [0,1,2,3,4] that can be used to map the outcome of our regular winner function for each hand in handsA and handsB, which in the C-style syntax is afterwards sequentially reduced by a function selecting (using the conditional expression syntax cond ? true_val : false_val) the next hand if this hand is a DRAW, or returning this hand if it's not a DRAW. The functional style does the same thing, by combining handsA and handsB into one array [(handA1, handB1), (handA2, handB2)...] where either the next winner is returned if this outcome is DRAW, or the outcome is returned. In both cases, on the last hand in a batch, DRAW is returned.
+- Line 28 changes firstHand to firstBatch, using the syntax for specifying an Array in Reach - the type UInt is the first parameter, and the size batchSize is the second parameter. 
+- Line 30 includes the getBatch function, which returns the same type of Array
+- In Lines 18-22, the winner is calculated 'C-style'. Array.iota(batchSize) creates an array [0,1,2,3,4] that can be used to map the outcome of our regular winner function for each hand in handsA and handsB, which in the C-style syntax is afterwards sequentially reduced by a function selecting (using the conditional expression syntax cond ? true_val : false_val) the next hand if this hand is a DRAW, or returning this hand if it's not a DRAW. 
+- In Lines 21-22, the functional style does the same thing, by combining handsA and handsB into one array [(handA1, handB1), (handA2, handB2)...] where either the next winner is returned if this outcome is DRAW, or the outcome is returned. In both cases, on the last hand in a batch, DRAW is returned.
 
 Now we modify the program so any reference to getHand becomes getBatch, and outcomes are computed by batchWinner. 
 
@@ -116,7 +116,10 @@ export const main =
         interact.seeOutcome(outcome); });
       exit(); });
 ```
-We change the CLI similarly, by setting the batchSize, adding a getBatch function and replacing references to firstHand and getHand with firstBatch and getBatch.
+- We change every reference from hand to batch, in this case find-and-replace works
+- In Line 35 and 63 the winner function call is changed to batchWinner 
+
+The CLI changes similarly, by setting the batchSize, adding a getBatch function and replacing references to firstHand and getHand with firstBatch and getBatch.
 ```
 const batchSize = 5;
 const getBatch = async () => {
@@ -129,6 +132,7 @@ const getBatch = async () => {
   console.log("submitting batch " + batch);
   return batch;
 }
+interact.getBatch = getBatch;
 
 if (isAlice) {
   const amt = await ask(
@@ -155,6 +159,11 @@ if (isAlice) {
   };
 }
 ```
+- Line 1 defines the batchSize (we could get this from the contract, but it's not necessary)
+- Line 2 - 8 define the getBatch function, which fills an array by calling getHand batchSize times
+- Line 11 assigns getBatch to the interact interface
+- Line 22 and 30 change firstHand to firstBatch
+
 Now the Reach program is much less likely to return a DRAW at the end of any given round, reducing the likelihood of transactions & thereby associated fees. 
 
 In the next section, we modify our while loop to alternate who goes first, so that the extra transaction cost paid by the first person in a round is switched.
