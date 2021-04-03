@@ -171,6 +171,7 @@ export default new Vuex.Store({
   				url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(gameContractInfo.address))
   			})
         console.log('got game from db')
+        console.log(res)
   			return res.data
   		} catch (err) {
         console.log('api get game err')
