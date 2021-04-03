@@ -59,7 +59,7 @@
 			},
 			opp: function() {
 				return this.isP1 ? this.game.p2 : this.game.p1
-			}.
+			},
 			headlineString: function() {
 				if (this.isWinner) {
 					return ("You won!")
