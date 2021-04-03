@@ -242,7 +242,7 @@ export default new Vuex.Store({
   			throw new Error(err)
   		}
   	},
-  	apiCompleteGame: async function({state, commit, dispatch}, game, winner, why) {
+  	apiCompleteGame: async function({state, commit, dispatch}, {game, winner, why}) {
   		try {
   			const res = await axios({
   				method: 'POST',
