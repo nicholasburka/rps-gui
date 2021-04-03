@@ -41,6 +41,8 @@
 		},
 		props: ['gameoutcome'],
 		data: function() {
+			console.log(gameoutcome)
+			console.log(this.gameoutcome)
 			return {
 				game: gameoutcome.game,
 				who: gameoutcome.who,
