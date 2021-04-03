@@ -166,10 +166,9 @@ export default new Vuex.Store({
   	},
   	apiGetGame: async function({state, commit, dispatch}, gameContractInfo) {
   		try {
-        const contractInfo = JSON.parse(gameContractInfo)
   			const res = await axios({
   				method: 'GET',
-  				url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(contractInfo.address))
+  				url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(gameContractInfo.address))
   			})
         console.log('got game from db')
         console.log(res)
@@ -343,6 +342,7 @@ export default new Vuex.Store({
           commit('setPopup', 'Attaching to contract and paying wager')
   				await contractBackend.Deployer(game.contract, interact)
   			} catch (err) {
+          console.log('error attaching to contract')
           console.log(err)
   				commit('setPopup', 'Error attaching to contract')
   			}
@@ -393,7 +393,10 @@ export default new Vuex.Store({
   	},
   	joinGame: async function({state, commit, dispatch}, game) {
   		try {
-  			const contract = state.wallet.acc.attach(contractBackend)
+  			const contract = state.wallet.acc.attach(contractBackend, game.contractInfo)
+
+        game.firstHandsReadable = game.firstHands
+        game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
 
   			if (!localhost) {await dispatch('apiJoinGame', game)}
 
@@ -418,6 +421,8 @@ export default new Vuex.Store({
 
   			await contractBackend.Attacher(contract, interact)
   		} catch (err) {
+        console.log('error attaching to contract')
+        console.log(err)
   			commit('setPopup', 'Error attaching to contract')
   		}
   	}

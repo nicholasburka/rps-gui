@@ -39,6 +39,7 @@ button {
 		},
 		methods: {
 			getGame: async function() {
+				this.contractInfo = JSON.parse(this.contractInfo)
 				try {
 					console.log(this.contractInfo)
 					this.game = await this.$store.dispatch('apiGetGame', this.contractInfo)
