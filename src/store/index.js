@@ -419,7 +419,7 @@ export default new Vuex.Store({
     },
     reattachOne: async function({state,commit,dispatch}, game) {
       console.log('reattaching game')
-      game.contract.stdlib = state.reach[state.wallet.currency]
+      //game.contract.stdlib = state.reach[state.wallet.currency]
       console.log(game)
       try {
         if (game.p1 === state.wallet.address) {
@@ -606,11 +606,11 @@ export default new Vuex.Store({
             commit('setGameUnplayable', game)
   					return hands
   				},
-  				seeOutcome: function(who) {
+  				seeOutcome: function(who, p1Hands, p2Hands) {
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
             who = (who === 2) ? 0 : 1
-  					commit('setGameOutcome', {game, who, why: 'winner'})
-            dispatch('apiCompleteGame', {game, who, why: 'winner'})
+  					commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
+            dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
             dispatch('updateBalance')
   				}
   			}

@@ -89,6 +89,20 @@
     background-color: gray;
     /*opacity: 80%;*/
   }
+  #gameoutcome {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    text-align: center;
+    border: solid;
+    top: 20vh;
+    height: 60vh;
+    left: 15vw;
+    width: 70vw;
+    font-size: 1vw;
+    background-color: orange;
+  }
   .flex-center {
     display: flex;
     justify-content: center;
@@ -254,12 +268,14 @@
     <transition name="slideup">
       <TextDisplay v-if="textDisplay" id="textdisplay"></TextDisplay>
       <p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
+      <GameOutcomeDisplay v-if="displayGameOutcome" v-bind:gameOutcome="gameOutcome" v-on:click="dismissOutcome" id="gameOutcome"></GameOutcomeDisplay>
     </transition>
 	</div>
 </template>
 <script>
   import store from './store/index.js' 
   import TextDisplay from "./views/TextDisplay.vue"
+  import GameOutcomeDisplay from "./views/GameOutcomeDisplay.vue"
   import {mapState} from 'vuex'
 
   export default {
@@ -270,7 +286,9 @@
       computed: {
         ...mapState({
           popup: 'popup',
-          textDisplay: 'textDisplay'
+          textDisplay: 'textDisplay',
+          displayGameOutcome: 'displayGameOutcome',
+          gameOutcome: 'gameOutcome'
         })
       },
       data: function () {
@@ -282,6 +300,9 @@
       methods: {
         removePopup: function() {
           this.$store.commit('setPopup', '')
+        },
+        dismissOutcome: function() {
+          this.$store.commit('dismissOutcome')
         }
       }
   }

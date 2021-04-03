@@ -24,13 +24,17 @@
 </template>
 <script>
 	import HandsDisplayPanel from "./HandsDisplayPanel.vue"
+	import {mapState} from 'vuex'
 
 	export default {
 		components: {
 			HandsDisplayPanel
 		},
-		props: ["walletAddress", "game", "winnerNum"],
+		props: ["game", "winnerNum"],
 		computed: {
+			...mapState({
+				walletAddress: state => state.wallet.address
+			}),
 			isWinner: function() {
 				return (winnerNum ? !(this.isP1) : isP1)
 			},

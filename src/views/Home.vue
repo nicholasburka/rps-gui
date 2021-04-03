@@ -136,7 +136,7 @@ li {
 							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: !game.playable}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4vh; max-width: 100vw">
 								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 								<li v-on:click="gameSelect(game)">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li> <!--{{ timeLeft(game) }}-->
-								<img src="../img/redo.png" class="redo" v-on:click="reattach(game)" alt="reattach to game contract" title="reattach to game contract">
+								<!--<img src="../img/redo.png" class="redo" v-on:click="reattach(game)" alt="reattach to game contract" title="reattach to game contract">-->
 								<!--<img src="../img/x2.png" class="gamex" v-on:click="deleteConfirm(game)">-->
 							</div>
 							<h3> waiting on {{ activeGames.length - playable_games.length }} games... </h3>
