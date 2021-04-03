@@ -282,7 +282,8 @@
   export default {
       store: store,
       components: {
-        TextDisplay
+        TextDisplay,
+        GameOutcomeDisplay
       },
       computed: {
         ...mapState({
