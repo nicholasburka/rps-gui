@@ -97,7 +97,7 @@ li {
 
 <template>
 	<div id="home" class="column page-container">
-			<PlayGame v-if="this.play" :game="game" v-on:back="cancelPlay" v-on:submithands="addhandsandconfirm"></PlayGame>
+			<PlayGame v-if="this.play" :game="currentGame" v-on:back="cancelPlay" v-on:submithands="addhandsandconfirm"></PlayGame>
 			<WalletConfigPanel v-if="walletConfigOn" v-on:dismissWalletConfig="dismissWalletConfig()" v-on:refreshWallet="refreshWallet" v-on:tryfaucet="tryfaucet()"></WalletConfigPanel>
 			<transition appear appear-active-class="slideInRight">
 				<div id="home-th" v-bind:class="{ updateAnimation: gameUpdate }">

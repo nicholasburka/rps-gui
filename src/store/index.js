@@ -93,10 +93,6 @@ export default new Vuex.Store({
   			})
   		}
   		game.playable = true //this should work without mutating activeGames obj, but check
-      state.activeGames.push({})
-      state.activeGames.pop()
-  		state.popup = 'Draw! Play another round'
-      setTimeout(() => state.popup = '', 2000)
   	},
     setGameUnplayable: function(state, game) {
       game.playable = false
@@ -370,6 +366,7 @@ export default new Vuex.Store({
   				},
   				getHands: async function() {
   					commit('setGamePlayable', game)
+            commit('setPopup', 'Draw! Play another round')
   					const hands = await game.resolveHands()
   					console.log("store/game/interact received hands in getHands " + hands)
             commit('setGameUnplayable', game)
@@ -458,6 +455,7 @@ export default new Vuex.Store({
   				},
   				getHands: async function() {
   					commit('setGamePlayable', game)
+            commit('setPopup', 'Draw! play another round')
   					const hands = await game.resolveHands()
             console.log("store/game/interact received hands in getHands " + hands)
             commit('setGameUnplayable', game)
