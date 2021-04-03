@@ -102,6 +102,8 @@
     width: 70vw;
     font-size: 1vw;
     background-color: orange;
+    opacity: 85%;
+    z-index: 10;
   }
   .flex-center {
     display: flex;

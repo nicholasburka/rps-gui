@@ -7,25 +7,27 @@
 </style>
 
 <template>
-	<div id="gameoutcome">
+	<div id="GameOutcome">
 		<div>
-			<div v-if="why==='winner'">
-				<h1 v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
-				<div style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerReadable }}</h3><h3 class="currencyString"> {{game.currency}}</h3></div>
+			<div class="column" v-if="why==='winner'">
+				<h1 class="row" v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
+				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerReadable }}</h3><h3 class="currencyString"> {{game.currency}}</h3></div>
 				<h3 class="row">{{game.ContractAddress}}</h3>
 				<HandsDisplayPanel v-bind:hands="playerHands"></HandsDisplayPanel>
 				<HandsDisplayPanel v-bind:hands="opponentHands"></HandsDisplayPanel>
+				<button class="row" v-on:click="dismiss">Dismiss</button>
 			</div>
-			<div v-else>
-				<h1>{{ winnerString }} timed out</h1>
-				<h3>{{ game.wagerReadable }} {{game.currency}}</h3>
-				<h3>Against {{ opp }}</h3>
+			<div class="column" v-else>
+				<h1 class="row">{{ winnerString }} timed out</h1>
+				<h3 class="row">{{ game.wagerReadable }} {{game.currency}}</h3>
+				<h3 class="row">Against {{ opp }}</h3>
+				<button class="row" v-on:click="dismiss">Dismiss</button>
 			</div>
 			<!--<ul v-for="move in game.moves">
 					<img v-bind:src="imsrc(move.p1)" class="{playerMove: isP1, opponentMove: !isP1}">
 					<img v-bind:src="imsrc(move.p2)" class="{playerMove: !isP1, opponentMove: isP1}">
 			</ul>-->
-			<button v-on:click="dismiss">Dismiss</button>
+			
 		</div>
 	</div>
 </template>
