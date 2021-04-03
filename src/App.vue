@@ -269,7 +269,7 @@
     <transition name="slideup">
       <TextDisplay v-if="textDisplay" id="textdisplay"></TextDisplay>
       <p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
-      <GameOutcomeDisplay v-if="displayGameOutcome" v-bind:gameoutcome="gameOutcome" v-on:click="dismissOutcome" id="gameOutcome"></GameOutcomeDisplay>
+      <GameOutcomeDisplay v-if="displayGameOutcome" v-bind:gameoutcome="gameOutcome" id="gameOutcome"></GameOutcomeDisplay>
     </transition>
 	</div>
 </template>
