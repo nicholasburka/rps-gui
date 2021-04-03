@@ -418,6 +418,8 @@ export default new Vuex.Store({
       }
     },
     reattachOne: async function({state,commit,dispatch}, game) {
+      console.log('reattaching game')
+      console.log(game)
       try {
         if (game.p1 === state.wallet.address) {
           dispatch('reattachDeployer', game)
