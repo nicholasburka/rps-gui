@@ -18,7 +18,7 @@ button {
 			</textarea>
 			<button id="form-submit" class="row" v-on:click="getGame()" v-on:submit.prevent>Submit</button>
 		</div>
-		<PlayGame v-if="this.play" :game="this.game" v-on:back="this.play=false" v-on:submithands="submitGame"></PlayGame>
+		<PlayGame v-if="this.play" :game="this.game" v-on:back="cancelPlay()" v-on:submithands="submitGame"></PlayGame>
 	</div>
 </template>
 
@@ -48,6 +48,9 @@ button {
 				} catch (err) {
 					console.log(err)
 				}
+			},
+			cancelPlay: function() {
+				this.play = false
 			},
 			submitGame: async function(hands) {
 				try {

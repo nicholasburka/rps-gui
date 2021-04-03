@@ -16,7 +16,7 @@
 		<SearchResult v-for="game in searchResults" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 		</SearchResult>
 	</div>
-	<PlayGame v-else-if="this.play" :game="this.game" v-on:back="this.play=false" v-on:submithands="this.submitHands"></PlayGame>
+	<PlayGame v-else-if="this.play" :game="this.game" v-on:back="cancelPlay()" v-on:submithands="this.submitHands"></PlayGame>
 	<AcceptGame v-else-if="this.confirm" :game="this.game" :blocktime="100" :currency="currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></AcceptGame>
 </template>
 
@@ -58,6 +58,9 @@
 				this.play = true;
 				console.log(this);
 				console.log(this.confirm);
+			},
+			cancelPlay: function() {
+				this.play = false
 			},
 			submitHands: function(hands) {
 				this.game.firstHands = hands
