@@ -289,7 +289,7 @@
           popup: 'popup',
           textDisplay: 'textDisplay',
           displayGameOutcome: 'displayGameOutcome',
-          gameOutcome: 'gameOutcome'
+          gameOutcome: state => state.gameOutcome
         })
       },
       data: function () {
