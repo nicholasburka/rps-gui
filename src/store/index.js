@@ -94,6 +94,9 @@ export default new Vuex.Store({
   		}
   		game.playable = true //this should work without mutating activeGames obj, but check
       state.activeGames = state.activeGames
+      const ind = state.activeGames.map((g) => {return g.ContractAddress}).indexOf(game.ContractAddress)
+      state.activeGames[ind].playable = true
+      console.log('set game playable!')
   	},
     setGameUnplayable: function(state, game) {
       game.playable = false
