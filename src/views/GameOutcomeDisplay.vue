@@ -10,9 +10,11 @@
 	<div id="GameOutcome">
 		<div>
 			<div class="column" v-if="reasonWinner">
+				<h1 class="row"> </h1>
+				<h1 class="row"> </h1>
 				<h1 class="row" v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
-				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerReadable }}</h3><h3 class="currencyString"> {{game.currency}}</h3></div>
-				<h3 class="row">{{game.ContractAddress}}</h3>
+				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerreadable }}</h3><h3 class="currency"> {{game.currency}}</h3></div>
+				<h3 class="row">game {{game.ContractAddress}}</h3>
 				<HandsDisplayPanel v-bind:hands="playerHands"></HandsDisplayPanel>
 				<HandsDisplayPanel v-bind:hands="opponentHands"></HandsDisplayPanel>
 				<button class="row" v-on:click="dismiss">Dismiss</button>
@@ -21,6 +23,7 @@
 				<h1 class="row">{{ this.winnerString }} timed out</h1>
 				<h3 class="row">{{ this.game.wagerReadable }} {{game.currency}}</h3>
 				<h3 class="row">Against {{ this.opp }}</h3>
+				<h3 class="row">game {{game.ContractAddress}}</h3>
 				<button class="row" v-on:click="dismiss">Dismiss</button>
 			</div>
 			<!--<ul v-for="move in game.moves">
@@ -61,6 +64,9 @@
 				p1Hands: state => state.gameOutcome.p1Hands,
 				p2Hands: state => state.gameOutcome.p2Hands,*/
 			}),
+			dismiss: function () {
+				this.$store.commit('dismissOutcome')
+			},
 			reasonWinner: function() {
 				return this.why === "winner"
 			},
