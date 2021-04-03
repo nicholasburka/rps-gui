@@ -93,7 +93,10 @@ export default new Vuex.Store({
   			})
   		}
   		game.playable = true //this should work without mutating activeGames obj, but check
+      state.activeGames.push({})
+      state.activeGames.pop()
   		state.popup = 'Draw! Play another round'
+      setTimeout(() => state.popup = '', 2000)
   	},
     setGameUnplayable: function(state, game) {
       game.playable = false
@@ -438,7 +441,11 @@ export default new Vuex.Store({
         game.firstHandsReadable = game.firstHands
         game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
 
+        commit('setPopup', 'Updating game in games database')
   			if (!localhost) {await dispatch('apiJoinGame', game)}
+
+        commit('addActiveGame', game)
+        commit('setPopup', 'Paying wager & submitting hands')
 
   			const interact = {
   				...state.reach[state.wallet.currency].hasRandom,
