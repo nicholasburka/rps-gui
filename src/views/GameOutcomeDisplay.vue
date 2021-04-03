@@ -9,7 +9,7 @@
 <template>
 	<div id="GameOutcome">
 		<div>
-			<div class="column" v-if="why==='winner'">
+			<div class="column" v-if="reasonWinner">
 				<h1 class="row" v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
 				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerReadable }}</h3><h3 class="currencyString"> {{game.currency}}</h3></div>
 				<h3 class="row">{{game.ContractAddress}}</h3>
@@ -53,6 +53,9 @@
 			...mapState({
 				walletAddress: state => state.wallet.address
 			}),
+			reasonWinner: function() {
+				return this.why === "winner"
+			},
 			isWinner: function() {
 				return (who ? !(this.isP1) : isP1)
 			},

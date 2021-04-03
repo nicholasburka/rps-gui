@@ -102,7 +102,6 @@
     width: 70vw;
     font-size: 1vw;
     background-color: orange;
-    opacity: 85%;
     z-index: 10;
   }
   .flex-center {
@@ -270,7 +269,7 @@
     <transition name="slideup">
       <TextDisplay v-if="textDisplay" id="textdisplay"></TextDisplay>
       <p v-if="popup" v-bind:popup="popup" v-on:click="removePopup" id="popup" class="row">{{ popup }}</p>
-      <GameOutcomeDisplay v-if="displayGameOutcome" v-bind:gameOutcome="gameOutcome" v-on:click="dismissOutcome" id="gameOutcome"></GameOutcomeDisplay>
+      <GameOutcomeDisplay v-if="displayGameOutcome" v-bind:gameoutcome="gameOutcome" v-on:click="dismissOutcome" id="gameOutcome"></GameOutcomeDisplay>
     </transition>
 	</div>
 </template>
