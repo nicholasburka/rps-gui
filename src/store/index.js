@@ -142,6 +142,9 @@ export default new Vuex.Store({
 
   		const ind = state.activeGames.map((g) => {return g.ContractAddress}).indexOf(game.ContractAddress)
   		state.activeGames.splice(ind, 1)
+
+      console.log('ind of removed game')
+      console.log(ind)
   	},
   	dismissOutcome: function(state) {
   		state.displayGameOutcome = false
@@ -361,6 +364,7 @@ export default new Vuex.Store({
   				deadline: game.deadline,
   				firstHands: game.firstHands,
   				informTimeout: function (who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
   					commit('setGameOutcome', {game, who, why: 'timeout'})
   					const winner = !who
   					dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
@@ -377,6 +381,7 @@ export default new Vuex.Store({
   					return hands
   				},
   				seeOutcome: function(who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
   					commit('setGameOutcome', {game, who, why: 'winner'})
   					dispatch('apiCompleteGame', {game, who, why: 'winner'})
   				}
@@ -452,7 +457,10 @@ export default new Vuex.Store({
   				...state.reach[state.wallet.currency].hasRandom,
   				firstHands: game.firstHands,
   				informTimeout: function (who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
   					commit('setGameOutcome', {game, who, why: 'timeout'})
+            const winner = !who
+            dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
   				},
   				informOpponent: function (opp) {
   					commit('setGameJoined', {game, opp})
@@ -466,6 +474,7 @@ export default new Vuex.Store({
   					return hands
   				},
   				seeOutcome: function(who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
   					commit('setGameOutcome', {game, who, why: 'winner'})
   				}
   			}
