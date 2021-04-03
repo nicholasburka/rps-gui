@@ -93,11 +93,50 @@ export default new Vuex.Store({
   			})
   		}
   		game.playable = true //this should work without mutating activeGames obj, but check
-  		state.setPopup = 'Draw! Play another round'
+  		state.popup = 'Draw! Play another round'
   	},
+    setGameUnplayable: function(state, game) {
+      game.playable = false
+    },
   	setGameOutcome: function(state, {game, who, why}) {
   		state.displayGameOutcome = true
   		state.gameOutcome = {game,who,why}
+
+      console.log("game outcome")
+      var outcome_msg = ''
+      if (state.wallet.address === game.p1) {
+        if (why === "winner") {
+          if (who === 0) {
+            outcome_msg = "You won " + game.wagerreadable + " " + game.currency
+          } else {
+            outcome_msg = "You lost " + game.wagerreadable + " " + game.currency
+          }
+        } else {
+          if (who === 0) {
+            outcome_msg = "You timed out - " + game.p2 + " wins " + game.wagerreadable + " " + game.currency
+          } else {
+            outcome_msg = game.p2 + " timed out - you win " + game.wagerreadable + " " + game.currency + "!"
+          }
+        }
+      } else if (state.wallet.address === game.p2) {
+        if (why === "winner") {
+          if (who === 1) {
+            outcome_msg = "You won " + game.wagerreadable + " " + game.currency
+          } else {
+            outcome_msg = "You lost " + game.wagerreadable + " " + game.currency
+          }
+        } else {
+          if (who === 1) {
+            outcome_msg = "You timed out - " + game.p1 + " wins " + game.wagerreadable + " " + game.currency
+          } else {
+            outcome_msg = game.p1 + " timed out - you win " + game.wagerreadable + " " + game.currency + "!"
+          }
+        }
+      } else {
+        throw new Error("trying to show game outcome for a game the player isn't in")
+      }
+      state.setTextDisplay(outcome_msg)
+
   		const ind = state.activeGames.map((g) => {return g.ContractAddress}).indexOf(game.ContractAddress)
   		state.activeGames.splice(ind, 1)
   	},
@@ -330,6 +369,7 @@ export default new Vuex.Store({
   					commit('setGamePlayable', game)
   					const hands = await game.resolveHands()
   					console.log("store/game/interact received hands in getHands " + hands)
+            commit('setGameUnplayable', game)
   					return hands
   				},
   				seeOutcome: function(who) {
@@ -412,6 +452,8 @@ export default new Vuex.Store({
   				getHands: async function() {
   					commit('setGamePlayable', game)
   					const hands = await game.resolveHands()
+            console.log("store/game/interact received hands in getHands " + hands)
+            commit('setGameUnplayable', game)
   					return hands
   				},
   				seeOutcome: function(who) {

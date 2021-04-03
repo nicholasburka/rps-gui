@@ -240,7 +240,7 @@ li {
 				this.play = false
 			},
 			submitHands: function(hands) {
-				this.currentGame.resolveHands(hands)
+				this.currentGame.submitHands(hands)
 				this.play = false
 				this.currentGame = undefined
 			},
