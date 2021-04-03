@@ -240,6 +240,8 @@ li {
 			contractInfo: async function(game) {
 				console.log("clicked contractinfo clipboard, emitting");
 				//this.$emit('displaycontractinfo', game);
+				console.log(game)
+				console.log(game.contractInfo)
 				try {
 					await navigator.clipboard.writeText(JSON.stringify(game.contractInfo));
 					this.$store.commit('setPopup', 'Copied game\'s contract info to clipboard');
