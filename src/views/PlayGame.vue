@@ -138,7 +138,7 @@
 					//this.game.resolveHands(this.hands)
 					//this.$router.push('home')
 					//const hands = this.hands.map((hand) => this.handStrToNum(hand))
-					this.$emit('submithands', hands);
+					this.$emit('submithands', this.hands);
 				} else {
 					this.$store.commit('setPopup', '5 hands to play')
 					this.err = "Need 5 hands!"
