@@ -118,9 +118,8 @@ export default new Vuex.Store({
   					method: "GET",
   					url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress=".concat(String(this.walletAddr)))
   				})
-
   			const activeGames = getGamesByAddressResponse.data
-  			context.commit('setActiveGames', activeGames)
+  			commit('setActiveGames', activeGames)
   		} catch (err) {
   			console.log("Error getting games from db")
   			console.log(err)
@@ -139,7 +138,8 @@ export default new Vuex.Store({
         console.log(res)
         return true
   		} catch (err) {
-        console.log('db err')
+        console.log('api new game err')
+        console.log(err)
   			throw new Error(err)
   			return false
   		}
@@ -154,10 +154,14 @@ export default new Vuex.Store({
   				  ContractAddress: game.ContractAddress
   				}
   			})
+        console.log('updated game in db to joined')
+        console.log(res)
   			return true
   		} catch (err) {
-  		    commit('setPopup', 'Error: could not connect to games database')
-  		    throw new Error(err)
+        consoel.log('api join game err')
+        console.log(err)
+  		  commit('setPopup', 'Error: could not connect to games database')
+  		  throw new Error(err)
   		}
   	},
   	apiGetGame: async function({state, commit, dispatch}, gameContractInfo) {
@@ -166,8 +170,11 @@ export default new Vuex.Store({
   				method: 'GET',
   				url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(gameContractInfo.address))
   			})
+        console.log('got game from db')
   			return res.data
   		} catch (err) {
+        console.log('api get game err')
+        console.log(err)
   			commit('setPopup', 'Could not retreive game from database')
   			throw new Error(err)
   		}
@@ -179,8 +186,11 @@ export default new Vuex.Store({
            	  method: 'GET',
               url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-searchGamesFunction-ZR0MD8OA2QNR?'.concat(searchParamString)
             })
-            return res.data
+        console.log('searched db for games')
+        return res.data
   		} catch (err) {
+        console.log('api searchgames err')
+        console.log(err)
   			commit('setPopup', 'Could not connect to games database')
   			throw new Error(err)
   		}
@@ -197,7 +207,12 @@ export default new Vuex.Store({
   				  ContractAddress: game.ContractAddress
   				}
   			})
+        console.log('updated game to complete in db')
+        console.log(res)
+        return true
   		} catch (err) {
+        console.log('api complete game err')
+        console.log(err)
   			commit('setPopup', 'Could not connect to games database')
   			throw new Error(err)
   		}
