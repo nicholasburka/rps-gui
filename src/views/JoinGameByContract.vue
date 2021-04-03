@@ -49,7 +49,7 @@ button {
 					console.log(err)
 				}
 			},
-			submitGame: async function({game, hands}) {
+			submitGame: async function(hands) {
 				try {
 					this.game.firstHands = hands
 					this.$store.dispatch('joinGame', this.game)
