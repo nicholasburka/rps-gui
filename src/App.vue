@@ -89,7 +89,7 @@
     background-color: gray;
     /*opacity: 80%;*/
   }
-  #gameoutcome {
+  #gameOutcome {
     position: absolute;
     display: flex;
     justify-content: center;

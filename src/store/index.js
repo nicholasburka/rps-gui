@@ -145,7 +145,7 @@ export default new Vuex.Store({
       } else {
         throw new Error("trying to show game outcome for a game the player isn't in")
       }
-      state.textDisplay = outcome_msg
+      //state.textDisplay = outcome_msg
 
   		const ind = state.activeGames.map((g) => {return g.ContractAddress}).indexOf(game.ContractAddress)
   		state.activeGames.splice(ind, 1)
