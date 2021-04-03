@@ -39,33 +39,33 @@
 		components: {
 			HandsDisplayPanel
 		},
-		props: [],
+		props: ["gameoutcome"],
 		data: function() {
 			//console.log(gameoutcome)
 			//console.log(this.gameoutcome)
 			return {
-				/*game: gameoutcome.game,
+				game: gameoutcome.game,
 				who: gameoutcome.who,
 				why: gameoutcome.why,
 				p1Hands: gameoutcome.p1Hands,
-				p2Hands: gameoutcome.p2Hands*/
+				p2Hands: gameoutcome.p2Hands
 			}
 		},//
 		computed: {
 			...mapState({
 				walletAddress: state => state.wallet.address,
-				gameoutcome: state => state.gameOutcome,
+				/*gameoutcome: state => state.gameOutcome,
 				game: state => state.gameOutcome.game,
 				who: state => state.gameOutcome.who,
 				why: state => state.gameOutcome.why,
 				p1Hands: state => state.gameOutcome.p1Hands,
-				p2Hands: state => state.gameOutcome.p2Hands,
+				p2Hands: state => state.gameOutcome.p2Hands,*/
 			}),
 			reasonWinner: function() {
 				return this.why === "winner"
 			},
 			isWinner: function() {
-				return (who ? !(this.isP1) : isP1)
+				return (this.who ? !(this.isP1) : this.isP1)
 			},
 			isP1: function() {
 				return (this.game.p1 === this.walletAddress)
@@ -88,10 +88,10 @@
 				}
 			},
 			playerHands: function() {
-				return (this.isP1 ? game.p1Hands : game.p2Hands)
+				return (this.isP1 ? this.p1Hands : this.p2Hands)
 			},
 			opponentHands: function() {
-				return (this.isP1 ? game.p2Hands : game.p1Hands)
+				return (this.isP1 ? this.p2Hands : this.p1Hands)
 			}
 		}
 	}
