@@ -54,7 +54,7 @@
 		computed: {
 			...mapState({
 				walletAddress: state => state.wallet.address,
-				gameoutcome: state => state.gameOutcome
+				gameoutcome: state => state.gameOutcome,
 				game: state => state.gameOutcome.game,
 				who: state => state.gameOutcome.who,
 				why: state => state.gameOutcome.why,
