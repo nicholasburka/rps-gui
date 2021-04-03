@@ -240,7 +240,7 @@ export default new Vuex.Store({
               url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-searchGamesFunction-ZR0MD8OA2QNR?'.concat(searchParamString)
             })
         console.log('searched db for games')
-        return res
+        return res.data
   		} catch (err) {
         console.log('api searchgames err')
         console.log(err)
