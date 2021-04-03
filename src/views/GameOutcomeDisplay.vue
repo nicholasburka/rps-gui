@@ -4,6 +4,9 @@
 	flex-direction: column;
 	align-items: center
 }
+.handsdisplay {
+	max-width: 100%;
+}
 </style>
 
 <template>
@@ -15,8 +18,8 @@
 				<h1 class="row" v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
 				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerreadable }}</h3><h3 class="currency"> {{game.currency}}</h3></div>
 				<h3 class="row">game {{game.ContractAddress}}</h3>
-				<HandsDisplayPanel v-bind:hands="playerHands"></HandsDisplayPanel>
-				<HandsDisplayPanel v-bind:hands="opponentHands"></HandsDisplayPanel>
+				<HandsDisplayPanel class="handsdisplay" v-bind:hands="playerHands"></HandsDisplayPanel>
+				<HandsDisplayPanel class="handsdisplay" v-bind:hands="opponentHands"></HandsDisplayPanel>
 				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>
 			<div class="column" v-else>
@@ -94,9 +97,11 @@
 				}
 			},
 			playerHands: function() {
+				console.log(this.isP1 ? this.p1Hands : this.p2Hands)
 				return this.isP1 ? this.p1Hands : this.p2Hands
 			},
 			opponentHands: function() {
+				console.log(this.isP1 ? this.p2Hands : this.p1Hands)
 				return this.isP1 ? this.p2Hands : this.p1Hands
 			}
 		}
