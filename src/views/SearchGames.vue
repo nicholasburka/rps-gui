@@ -63,7 +63,7 @@
 					min: min,
 					max: max,
 					wager: wager,
-					searchfromaddr: searchfromaddr,
+					searchfromaddr: this.walletAddress,
 					searchforaddr: ''
 				};
 				//fill these in

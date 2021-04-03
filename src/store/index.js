@@ -267,6 +267,9 @@ export default new Vuex.Store({
   			throw new Error(err)
   		}
   	},
+    apiDeleteGame: async function({state, commit, dispatch}, game) {
+
+    },
   	connectWallet: async function({commit, state, dispatch}, currency) {
   		try {
   			commit('setWalletLoading', true)
@@ -331,6 +334,100 @@ export default new Vuex.Store({
   			commit('setPopup', 'Could not connect to faucet')
   		}
   	},
+    reattachDeployer: async function({state, commit, dispatch}, game) {
+      try {
+        const interact = {
+          ...state.reach[state.wallet.currency].hasRandom,
+          wager: game.wager,
+          deadline: game.deadline,
+          firstHands: game.firstHands,
+          informTimeout: function (who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
+            commit('setGameOutcome', {game, who, why: 'timeout'})
+            const winner = !who
+            dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+          },
+          informOpponent: function (opp) {
+            commit('setGameJoined', {game, opp})
+          },
+          getHands: async function() {
+            commit('setGamePlayable', game)
+            commit('setPopup', 'Draw! Play another round')
+            const hands = await game.resolveHands()
+            console.log("store/game/interact received hands in getHands " + hands)
+            commit('setGameUnplayable', game)
+            return hands
+          },
+          seeOutcome: function(who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
+            who = (who === 2) ? 0 : 1
+            commit('setGameOutcome', {game, who, why: 'winner'})
+            dispatch('apiCompleteGame', {game, who, why: 'winner'})
+            dispatch('updateBalance')
+          }
+        }
+        await contractBackend.Deployer(game.contract, interact)
+      } catch (err) {
+        console.log("error reattaching to contract")
+        console.log(err)
+        dispatch('apiDeleteGame', game)
+      }
+    },
+    reattachAttacher: async function({state, commit, dispatch}, game) {
+      try {
+        const interact = {
+          ...state.reach[state.wallet.currency].hasRandom,
+          firstHands: game.firstHands,
+          informTimeout: function (who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
+            commit('setGameOutcome', {game, who, why: 'timeout'})
+            const winner = !who
+            dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+          },
+          informOpponent: function (opp) {
+            commit('setGameJoined', {game, opp})
+          },
+          getHands: async function() {
+            commit('setGamePlayable', game)
+            commit('setPopup', 'Draw! play another round')
+            const hands = await game.resolveHands()
+            console.log("store/game/interact received hands in getHands " + hands)
+            commit('setGameUnplayable', game)
+            return hands
+          },
+          seeOutcome: function(who) {
+            who = state.reach[state.wallet.currency].bigNumberToNumber(who)
+            who = (who === 2) ? 0 : 1
+            commit('setGameOutcome', {game, who, why: 'winner'})
+            dispatch('apiCompleteGame', {game, who, why: 'winner'})
+            dispatch('updateBalance')
+          }
+        }
+        await contractBackend.Attacher(game.contract, interact)
+      } catch (err) {
+        console.log("error reattaching to contract")
+        console.log(err)
+        dispatch('apiDeleteGame', game)
+      }
+    },
+    reattachAll: async function({state,commit,dispatch}) {
+      try {
+        state.activeGames.forEach((game) => {
+          if (game.p1 === state.wallet.address) {
+            dispatch('reattachDeployer', game)
+          } else if (game.p2 === state.wallet.address) {
+            dispatch('reattachAttacher', game)
+          } else {
+            console.log("reattachAll: game does not have this wallet address")
+            console.log(game)
+          }
+        })
+      } catch (err) {
+        console.log('error reattaching all')
+        console.log(err)
+
+      }
+    },
   	createGame: async function({state, commit, dispatch}, game) {
   		try {
   			//this.$router.push('home')
