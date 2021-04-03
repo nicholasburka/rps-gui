@@ -413,6 +413,21 @@ export default new Vuex.Store({
         dispatch('apiDeleteGame', game)
       }
     },
+    reattachOne: async function({state,commit,dispatch}, game) {
+      try {
+        if (game.p1 === state.wallet.address) {
+          dispatch('reattachDeployer', game)
+        } else if (game.p2 === state.wallet.address) {
+          dispatch('reattachAttacher', game)
+        } else {
+          console.log("reattachOne: game does not have this wallet address")
+          console.log(game)
+        }
+      } catch (err) {
+        console.log("error reattaching to one")
+        console.log(err)
+      }
+    },
     reattachAll: async function({state,commit,dispatch}) {
       try {
         state.activeGames.forEach((game) => {
@@ -494,9 +509,11 @@ export default new Vuex.Store({
   			}
 
   			try {
+          game.attached = true
           commit('setPopup', 'Attaching to contract and paying wager')
   				await contractBackend.Deployer(game.contract, interact)
   			} catch (err) {
+          game.attached = false
           console.log('error attaching to contract')
           console.log(err)
   				commit('setPopup', 'Error attaching to contract')
@@ -591,8 +608,10 @@ export default new Vuex.Store({
   				}
   			}
 
+        game.attached = true
   			await contractBackend.Attacher(contract, interact)
   		} catch (err) {
+        game.attached = false
         console.log('error attaching to contract')
         console.log(err)
   			commit('setPopup', 'Error attaching to contract')
