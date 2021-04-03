@@ -446,6 +446,7 @@ export default new Vuex.Store({
 
         //game.firstHandsReadable = game.firstHands
         //game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
+        game.p2 = state.wallet.address
 
         commit('setPopup', 'Updating game in games database')
   			if (!localhost) {await dispatch('apiJoinGame', game)}
