@@ -39,7 +39,7 @@
 			<h3 v-if="game.title" class="column">{{ game.title }}</h3>
 			<h3 class="column" id="wager">{{game.wagerreadable}} {{game.currency}}</h3>
 		</div>
-		<h3 class="row">Winner chosen by first non-tie</h3>
+		<h3 class="row">Winner chosen by first non-tie hand</h3>
 		<div class="row" style="height: 80vh;">
 			<div id="game" class="row" style="position: relative; height: 40vh;">
 				<div id="rock-cont" class="column">
