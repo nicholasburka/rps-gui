@@ -79,6 +79,9 @@ export default new Vuex.Store({
   	setTextDisplay: function(state, text) {
   		state.textDisplay = text
   	},
+    setSearchResults: function(state, res) {
+      state.searchResults = res
+    },
   	setCurrentGame: function(state, game) {
   		state.currentGame = game
   	},
@@ -536,6 +539,8 @@ export default new Vuex.Store({
   		try {
   			commit('setPopup', 'Searching...')
   			const searchResults = await dispatch('apiSearchGames', params)
+        console.log('got search results')
+        console.log(searchResults)
   			commit('setSearchResults', searchResults)
   			return searchResults
   		} catch (err) {

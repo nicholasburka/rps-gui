@@ -35,8 +35,8 @@
 		props: [],
 		computed: {
 			...mapState({
-				currency: 'wallet.currency',
-				searchResults: 'searchResults'
+				currency: state => state.wallet.currency,
+				searchResults: state => state.searchResults
 			})
 		},
 		data: function() {
