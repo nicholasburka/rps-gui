@@ -18,9 +18,9 @@
 				<button class="row" v-on:click="dismiss">Dismiss</button>
 			</div>
 			<div class="column" v-else>
-				<h1 class="row">{{ winnerString }} timed out</h1>
-				<h3 class="row">{{ game.wagerReadable }} {{game.currency}}</h3>
-				<h3 class="row">Against {{ opp }}</h3>
+				<h1 class="row">{{ this.winnerString }} timed out</h1>
+				<h3 class="row">{{ this.game.wagerReadable }} {{game.currency}}</h3>
+				<h3 class="row">Against {{ this.opp }}</h3>
 				<button class="row" v-on:click="dismiss">Dismiss</button>
 			</div>
 			<!--<ul v-for="move in game.moves">
