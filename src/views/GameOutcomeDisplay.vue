@@ -44,11 +44,11 @@
 			//console.log(gameoutcome)
 			//console.log(this.gameoutcome)
 			return {
-				game: gameoutcome.game,
-				who: gameoutcome.who,
-				why: gameoutcome.why,
-				p1Hands: gameoutcome.p1Hands,
-				p2Hands: gameoutcome.p2Hands
+				game: this.gameoutcome.game,
+				who: this.gameoutcome.who,
+				why: this.gameoutcome.why,
+				p1Hands: this.gameoutcome.p1Hands,
+				p2Hands: this.gameoutcome.p2Hands
 			}
 		},//
 		computed: {
