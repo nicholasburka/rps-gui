@@ -68,6 +68,13 @@
 	z-index: 5;
 	object-fit: contain;
 }
+.gamex {
+	height: 80%;
+	width: auto;
+	max-height: 80%;
+	max-width: 10vw;
+	object-fit: contain;
+}
 #wallet {
 	max-height: 8vh;
 	max-width: auto;
@@ -120,6 +127,7 @@ li {
 							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: !game.playable}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" v-on:click="gameSelect(game)" style="height: 4vh; max-width: 100vw">
 								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 								<li>{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li> <!--{{ timeLeft(game) }}-->
+								<!--<img src="../img/x2.png" class="gamex" v-on:click="deleteConfirm(game)">-->
 							</div>
 							<h3> waiting on {{ activeGames.length - playable_games.length }} games... </h3>
 					</div>
