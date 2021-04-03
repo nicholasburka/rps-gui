@@ -104,9 +104,9 @@ export default new Vuex.Store({
     setGameUnplayable: function(state, game) {
       game.playable = false
     },
-  	setGameOutcome: function(state, {game, who, why}) {
+  	setGameOutcome: function(state, {game, who, why, p1Hands, p2Hands}) {
   		state.displayGameOutcome = true
-  		state.gameOutcome = {game,who,why}
+  		state.gameOutcome = {game,who,why,p1Hands,p2Hands}
       console.log('set game outcome, game, who, why')
       console.log(game)
       console.log(who)
@@ -506,10 +506,13 @@ export default new Vuex.Store({
             commit('setGameUnplayable', game)
   					return hands
   				},
-  				seeOutcome: function(who) {
+  				seeOutcome: function(who, p1Hands, p2Hands) {
+            console.log('see outcome deployer, p1hands, p2hands')
+            console.log(p1Hands)
+            console.log(p2Hands)
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
             who = (who === 2) ? 0 : 1
-  					commit('setGameOutcome', {game, who, why: 'winner'})
+  					commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
   					dispatch('apiCompleteGame', {game, who, why: 'winner'})
             dispatch('updateBalance')
   				}
