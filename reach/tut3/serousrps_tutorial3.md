@@ -30,7 +30,7 @@ while ( outcome == DRAW ) {
       .timeout(DEADLINE, () => closeTo(A, informTimeout));
     checkCommitment(commitB, saltB, BatchB);
 
-    outcome = batchWinner(AFirstBatch, BFirstBatch);
+    [outcome, round] = [batchWinner(AFirstBatch, BFirstBatch), round + 1];
     continue; 
   } else {
     commit();
@@ -56,7 +56,7 @@ while ( outcome == DRAW ) {
       .timeout(DEADLINE, () => closeTo(B, informTimeout));
     checkCommitment(commitA, saltA, BatchA);
 
-    outcome = batchWinner(AFirstBatch, BFirstBatch);
+    [outcome, round] = [batchWinner(AFirstBatch, BFirstBatch), round + 1];
     continue; 
   }
  }
@@ -98,11 +98,11 @@ while ( outcome == DRAW ) {
   }
   if (round % 2 == 0) {
     const [first, second] = doRound(B,A,round);
-    outcome = batchWinner(second, first);
+    [outcome, round] = [batchWinner(second, first), round + 1];
     continue; 
   } else {
     const [first, second] = doRound(B,A,round);
-    outcome = batchWinner(first, second);
+    [outcome, round] = [batchWinner(first, second), round + 1];
     continue; 
   }
  }
@@ -110,8 +110,8 @@ while ( outcome == DRAW ) {
 - In Lines 4-27, we define a function doRound which takes a Participant Interface 'First', Participant Interface 'Second', and the roundNumber. Once these participant variables are available to the function, all we need to do is write the logic for a round of RPS. 
 - Lines 29-30 & 33-34 take the result of the round and input it in the correct order to batchWinner to compute the outcome.
 
-We don't have to modify our CLI. If we wanted to, we could inform each player that there is a draw, to clarify the contract state. To do this, we'd add a function informDraw to our Player interface in Reach and our CLI, and call informDraw at the beginning of doRound (after commit(), which establishes contract state such that local steps can be called).
+We don't have to modify our CLI, since our interface function declarations remain the same.
 
 Now we have a rock paper scissors program that is efficient and fair. Hooray! 
 
-If you'd like to try the author's version of optimized, "serious" Rock Paper Scissors on a live net, with a complete backend & game search functionality, visit ____.
+If you'd like to try the author of this tutorial's version of "serious" Rock Paper Scissors on a live net, visit https://nicholasburka.github.io/rps-gui/dist/index.html

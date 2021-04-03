@@ -1,23 +1,36 @@
 import { loadStdlib } from '@reach-sh/stdlib';
 import * as stdlib from '@reach-sh/stdlib/ALGO.mjs'
-import * as backend from './build/tut3.main.mjs';
+import * as backend from './build/index.main.mjs';
 import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
 (async () => {
   const stdlib = await loadStdlib();
 
-  const isAlice = await ask(
-    `Are you Alice?`,
+  const isDeployer = await ask(
+    `Are you the deployer?`,
     yesno
   );
-  const who = isAlice ? 'Alice' : 'Bob';
+  const who = isDeployer ? 'Deployer' : 'Attacher';
 
   console.log(`Starting Rock, Paper, Scissors! as ${who}`);
 
-  let acc = await stdlib.newTestAccount(stdlib.parseCurrency(1000));
+  let acc = null;
+  const createAcc = await ask(
+    `Would you like to create an account? (only possible on devnet)`,
+    yesno
+  );
+  if (createAcc) {
+    acc = await stdlib.newTestAccount(stdlib.parseCurrency(1000));
+  } else {
+    const secret = await ask(
+      `What is your account secret?`,
+      (x => x)
+    );
+    acc = await stdlib.newAccountFromSecret(secret);
+  }
 
   let ctc = null;
-  if (isAlice) {
+  if (isDeployer) {
     console.log("deploying contract...");
     ctc = acc.deploy(backend);
     const info = await ctc.getInfo();
@@ -39,11 +52,21 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
   const interact = { ...stdlib.hasRandom };
 
   interact.informTimeout = (part_num) => {
-    console.log(`There was a timeout`);
+    var player_timed_out = undefined;
+    if (part_num === 0) {
+      player_timed_out = "deployer";
+    } else {
+      player_timed_out = "attacher";
+    }
+    console.log(`timeout, ${player_timed_out} was too slow`);
   };
 
   interact.informDraw = () => {
     console.log(`Draw, play again`);
+  };
+
+  interact.informOpponent = (opp) => {
+    console.log(opp + " joined your game!");
   };
 
   const HAND = ['Rock', 'Paper', 'Scissors'];
@@ -65,20 +88,24 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     return hand;
   };
 
-  const batchSize = 5;
   const getBatch = async () => {
-    var batch = [];
+    var hands = [];
     var hand = undefined;
-    for (var i = 0; i < batchSize; i++) {
+    for (var i = 0; i < 5; i++) {
       hand = await getHand();
-      batch.push(hand);
+      console.log(hand);
+      hands.push(hand);
     }
-    console.log("submitting batch " + batch);
-    return batch;
+    console.log("hands being submitted");
+    console.log(hands);
+    //console.log(typeof(hands));
+    //console.log(typeof([1,0,0]));
+    return hands;
   }
+
   interact.getBatch = getBatch;
 
-  if (isAlice) {
+  if (isDeployer) {
     const amt = await ask(
       `How much do you want to wager?`,
       stdlib.parseCurrency
@@ -86,29 +113,34 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     interact.wager = amt;
     const deadline = await ask(
       'How many blocks until a timeout?', (x) => x);
-    interact.DEADLINE = deadline;
-    //interact.firstBatch = await getBatch();
+    interact.deadline = deadline;
   } else {
-    interact.acceptWager = async (wager, deadline) => {
+    interact.acceptGame = async (wager, deadline) => {
       const accepted = await ask(
         `Do you accept the wager of ${fmt(wager)}? with the deadline of ${deadline} blocks`,
         yesno
       );
       if (accepted) {
+        return;
       } else {
         process.exit(0);
       }
     };
-    //interact.firstBatch = await getBatch();
   }
 
 
-  const OUTCOME = ['Bob wins', 'Draw', 'Alice wins'];
-  interact.seeOutcome = async (outcome) => {
+  const OUTCOME = ['Attacher wins', 'Draw', 'Deployer wins'];
+  interact.seeOutcome = async (outcome, dHands, aHands) => {
     console.log(`The outcome is: ${OUTCOME[outcome]}`);
+    const p1_move_strs = dHands.map(x => HAND[x]);
+    const p2_move_strs = aHands.map(x => HAND[x]);
+    console.log('p1 moves: ');
+    console.log(p1_move_strs);
+    console.log('p2 moves: ');
+    console.log(p2_move_strs);
   };
 
-  const part = isAlice ? backend.Alice : backend.Bob;
+  const part = isDeployer ? backend.Deployer : backend.Attacher;
   await part(ctc, interact);
 
   const after = await getBalance();

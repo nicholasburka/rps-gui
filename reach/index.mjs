@@ -1,6 +1,6 @@
 import { loadStdlib } from '@reach-sh/stdlib';
 import * as stdlib from '@reach-sh/stdlib/ALGO.mjs'
-import * as backend from './build/rps.main.mjs';
+import * as backend from './build/index.main.mjs';
 import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
 (async () => {
@@ -88,7 +88,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     return hand;
   };
 
-  const getHands = async () => {
+  const getBatch = async () => {
     var hands = [];
     var hand = undefined;
     for (var i = 0; i < 5; i++) {
@@ -103,7 +103,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     return hands;
   }
 
-  interact.getHands = getHands;
+  interact.getBatch = getBatch;
 
   if (isDeployer) {
     const amt = await ask(
@@ -126,20 +126,20 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
         process.exit(0);
       }
     };
-    //const hands = await getHands();
+    //const hands = await getBatch();
     //interact.firstMoves = hands;
   }
 
 
   const OUTCOME = ['Attacher wins', 'Draw', 'Deployer wins'];
-  interact.seeOutcome = async (outcome) => {
+  interact.seeOutcome = async (outcome, dHands, aHands) => {
     console.log(`The outcome is: ${OUTCOME[outcome]}`);
-    /*const p1_move_strs = p1Moves.map(x => HAND[x]);
-    const p2_move_strs = p2Moves.map(x => HAND[x]);
+    const p1_move_strs = dHands.map(x => HAND[x]);
+    const p2_move_strs = aHands.map(x => HAND[x]);
     console.log('p1 moves: ');
     console.log(p1_move_strs);
     console.log('p2 moves: ');
-    console.log(p2_move_strs);*/
+    console.log(p2_move_strs);
   };
 
   const part = isDeployer ? backend.Deployer : backend.Attacher;
