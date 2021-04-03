@@ -154,7 +154,7 @@ export default new Vuex.Store({
   		try {
   			const getGamesByAddressResponse = await axios({
   					method: "GET",
-  					url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress=".concat(String(this.walletAddr)))
+  					url: ("https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getAllGamesByWalletAddressFunction-16UGOIN5N63P?walletAddress=".concat(String(state.wallet.address)))
   				})
   			const activeGames = getGamesByAddressResponse.data
   			commit('setActiveGames', activeGames)
