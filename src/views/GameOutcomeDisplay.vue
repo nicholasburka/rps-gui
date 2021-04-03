@@ -39,14 +39,14 @@
 		components: {
 			HandsDisplayPanel
 		},
-		props: ['gameOutcome'],
+		props: ['gameoutcome'],
 		data: function() {
 			return {
-				game: gameOutcome.game,
-				who: gameOutcome.who,
-				why: gameOutcome.why,
-				p1Hands: gameOutcome.p1Hands,
-				p2Hands: gameOutcome.p2Hands
+				game: gameoutcome.game,
+				who: gameoutcome.who,
+				why: gameoutcome.why,
+				p1Hands: gameoutcome.p1Hands,
+				p2Hands: gameoutcome.p2Hands
 			}
 		},
 		computed: {

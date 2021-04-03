@@ -59,7 +59,7 @@
 				<img v-for="hand in hands" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand" v-on:click="removeHand(hand)">
 			</div>
 			<div id="submit" class="row" style="height: 10vh">
-				<h3 v-if="err">{{err}}</h3>
+				<!--<h3 v-if="err">{{err}}</h3>-->
 				<button v-on:click="submithands()">Shoo!</button>
 			</div>
 		</div>
