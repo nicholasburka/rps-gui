@@ -93,6 +93,7 @@ export default new Vuex.Store({
   			})
   		}
   		game.playable = true //this should work without mutating activeGames obj, but check
+      state.activeGames = state.activeGames
   	},
     setGameUnplayable: function(state, game) {
       game.playable = false
