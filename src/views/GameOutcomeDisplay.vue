@@ -17,14 +17,14 @@
 				<h3 class="row">game {{game.ContractAddress}}</h3>
 				<HandsDisplayPanel v-bind:hands="playerHands"></HandsDisplayPanel>
 				<HandsDisplayPanel v-bind:hands="opponentHands"></HandsDisplayPanel>
-				<button class="row" v-on:click="dismiss">Dismiss</button>
+				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>
 			<div class="column" v-else>
 				<h1 class="row">{{ this.winnerString }} timed out</h1>
 				<h3 class="row">{{ this.game.wagerReadable }} {{game.currency}}</h3>
 				<h3 class="row">Against {{ this.opp }}</h3>
 				<h3 class="row">game {{game.ContractAddress}}</h3>
-				<button class="row" v-on:click="dismiss">Dismiss</button>
+				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>
 			<!--<ul v-for="move in game.moves">
 					<img v-bind:src="imsrc(move.p1)" class="{playerMove: isP1, opponentMove: !isP1}">
@@ -64,7 +64,7 @@
 				p1Hands: state => state.gameOutcome.p1Hands,
 				p2Hands: state => state.gameOutcome.p2Hands,*/
 			}),
-			dismiss: function () {
+			dismissOutcome: function () {
 				this.$store.commit('dismissOutcome')
 			},
 			reasonWinner: function() {
@@ -94,10 +94,10 @@
 				}
 			},
 			playerHands: function() {
-				return (this.isP1 ? this.p1Hands : this.p2Hands)
+				return this.isP1 ? this.p1Hands : this.p2Hands
 			},
 			opponentHands: function() {
-				return (this.isP1 ? this.p2Hands : this.p1Hands)
+				return this.isP1 ? this.p2Hands : this.p1Hands
 			}
 		}
 	}
