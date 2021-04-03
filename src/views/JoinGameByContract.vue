@@ -16,7 +16,7 @@ button {
 			<h3 class="row">Please paste the contract info below:</h3>
 			<textarea v-model="contractInfo" id="" rows="10" cols="50">
 			</textarea>
-			<button id="form-submit" class="row" v-on:submit.prevent v-on:click="getGame(contractInfo)">Submit</button>
+			<button id="form-submit" class="row" v-on:click="getGame()" v-on:submit.prevent>Submit</button>
 		</div>
 		<PlayGame v-if="this.play" :game="this.game" v-on:back="this.play=false" v-on:submithands="submitGame"></PlayGame>
 	</div>
@@ -40,12 +40,12 @@ button {
 		methods: {
 			getGame: async function() {
 				try {
-					console.log(getGame)
+					console.log(this.contractInfo)
 					this.game = await this.$store.dispatch('apiGetGame', this.contractInfo)
 					console.log(this.game)
 					this.play = true
 				} catch (err) {
-
+					console.log(err)
 				}
 			},
 			submitGame: async function({game, hands}) {
