@@ -129,6 +129,7 @@
 					//this.$router.push('home')
 					this.$emit('submithands', this.hands);
 				} else {
+					this.$store.commit('setPopup', '5 hands to play')
 					this.err = "Need 5 hands!"
 				}
 			},
