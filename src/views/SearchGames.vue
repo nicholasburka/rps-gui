@@ -1,7 +1,7 @@
 <template>
 	<div id="search-game" class="page-container column">
-		<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 		<form id="game-settings" class="column" v-on:submit.prevent>
+			<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 			<h3 class="row flex-center">Wager</h3>
 				<div class="row" style="flex-basis: 40%; width: 80%; align-self: center;">
 				<div class="column" style="flex-basis: 10%; max-width: 15%;"><input v-model="sign" type="radio" name="wager-cond" value="lessthaneq"><label for="lessthaneq">&#8804;</label></div>
@@ -22,19 +22,29 @@
 			<h3 class="row flex-center">Who</h3>
 			<input class="row form-input" v-model="addrentry" type="text" name="who-addr-entry" placeholder="(optional) enter a wallet address">
 			<select class="row form-input" v-model="addrprev" type="text" name="who" placeholder="choose from previous opponents">
-				<option v-for="player in prevopponents" >{{ player.nickname }} : {{ player.walletAddr }}</option>
+				<option v-for="player in prevopponents" ><!--{{ player.nickname }} : -->{{ player.walletAddress }}</option>
 				<option selected="selected">select from previous opponents</option>
 			</select>
-			<button id="form-submit" class="row" v-on:click="onSubmit(wager, sign, min, max, title, walletaddr, addrentry, addrprev);">Go!</button>
+			<button id="form-submit" class="row" v-on:click="onSubmit(wager, sign, min, max, title, walletAddress, addrentry, addrprev);">Go!</button>
 		</form>
 	</div>
 </template>
 
 <script>
-	export default {
-		props: ['walletaddr', 'prevopponents', 'balance', 'currency'],
-		data: function() {
+	import {mapState} from 'vuex'
+	//import PlayGame from './PlayGame.vue'
 
+	export default {
+		props: [],
+		computed: {
+			...mapState({
+				walletAddress: 'wallet.address',
+				balance: 'wallet.balance',
+				currency: 'wallet.currency',
+				prevopponents: 'recentOpponents'
+			})
+		},
+		data: function() {
 			return {
 				'wager': 0.001,
 				'sign': undefined,
@@ -42,12 +52,11 @@
 				'max': .0015,
 				'addrprev': undefined,
 				'addrentry': undefined,
-				'title': undefined,
-				'walletaddr': this.walletaddr
+				'title': undefined
 			}
 		},
 		methods: {
-			onSubmit: function(wager, sign, min, max, title, searchfromaddr, p2addrentry, p2prevselection) {
+			onSubmit: async function(wager, sign, min, max, title, searchfromaddr, p2addrentry, p2prevselection) {
 				var searchparams = {
 					title: title,
 					sign: sign,
@@ -55,13 +64,13 @@
 					max: max,
 					wager: wager,
 					searchfromaddr: searchfromaddr,
-					searchforaddr: undefined
+					searchforaddr: ''
 				};
 				//fill these in
 				if (p2prevselection) {
-					gameparams["searchforaddr"] = p2prevselection;//this.addrprev//
+					searchparams["searchforaddr"] = p2prevselection;//this.addrprev//
 				} else if (p2addrentry) {
-					gameparams["searchforaddr"] = p2addrentry;//this.addrentry//p2addrentry;
+					searchparams["searchforaddr"] = p2addrentry;//this.addrentry//p2addrentry;
 				} else {
 
 				}
@@ -72,15 +81,28 @@
 				console.log("max");
 				console.log(this.max);
 
-				if ((!sign) && (!title) && (!searchforaddr)) {
+				if ((!sign) && (!title) && (!searchparams['searchforaddr'])) {
 					// do not do anything since sign is necessary
 					// can display a message here for user "please choose wager condition"
+					this.$store.commit('setPopup', 'Please enter a wager, title, or address')
 				} else {
+					//this.game = searchparams;
+					//this.play = true;
 
-					this.$emit('ongamesearch', searchparams);
+					//this.$emit('ongamesearch', searchparams);
+					try {
+						await this.$store.dispatch('searchGames', searchparams)
+						this.$router.push('search-results')
+					} catch (err) {
+						console.log(err)
+					}
 
 					//clear all local vars / component data to null
 				}
+			},
+			submitHands: function(hands) {
+				this.game.firstHands = hands;
+				this.$store.dispatch('joinGame', this.game)
 			}
 		}
 	}

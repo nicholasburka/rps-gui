@@ -11,26 +11,40 @@
 </style>
 
 <template>
-	<div id="game-search-results" class="column" style="margin-top:2vh;">
+	<div v-if="!this.play" id="game-search-results" class="column" style="margin-top:2vh;">
 		<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-		<SearchResult v-for="game in foundgames" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
+		<SearchResult v-for="game in searchResults" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
 		</SearchResult>
-		<AcceptGame v-if="this.confirm" :game="this.game" :blocktime="100" :currency="this.currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></AcceptGame>
 	</div>
+	<PlayGame v-else-if="this.play" :game="this.game" v-on:back="this.play=false" v-on:submithands="this.submitHands"></PlayGame>
+	<AcceptGame v-else-if="this.confirm" :game="this.game" :blocktime="100" :currency="currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></AcceptGame>
 </template>
 
 <script>
 	import SearchResult from "./SearchResult.vue";
 	import AcceptGame from "./AcceptGame.vue"
+	import PlayGame from './PlayGame.vue'
+	import {mapState} from 'vuex'
 
 	export default {
-		props: ["foundgames"],
+		components: {
+			PlayGame,
+			AcceptGame,
+			SearchResult
+		},
+		props: [],
+		computed: {
+			...mapState({
+				currency: 'wallet.currency',
+				searchResults: 'searchResults'
+			})
+		},
 		data: function() {
-			console.log(this.foundgames);
+			console.log(this.searchResults);
 			return {
 				confirm: false,
-				game: undefined,
-				
+				play: false,
+				game: undefined
 			};
 		},
 		components: {
@@ -41,14 +55,19 @@
 			onclick: function(game) {
 				console.log("clicked " + game.title);
 				this.game = game;
-				this.confirm = true;
+				this.play = true;
 				console.log(this);
 				console.log(this.confirm);
 			},
+			submitHands: function(hands) {
+				this.game.firstHands = hands
+				this.play = false
+				this.confirm = true
+			},
 			confirmgame: function() {
-				//send to chain or to page?
 				console.log(this.game);
-				this.$emit('ongameacceptsearch', this.game);
+				this.$store.dispatch('joinGame', this.game)
+				this.$router.push('home')
 			},
 			deny: function() {
 				this.confirm = false;

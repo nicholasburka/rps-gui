@@ -6,7 +6,7 @@
 	position:relative;
 	display: block;
 	max-height: 25vh;
-	max-width: 18vw;
+	max-width: 13vw;
 	object-fit: contain;
 	margin-left: auto;
 	margin-right: auto;
@@ -25,9 +25,9 @@ export default {
 	methods: {
 	   imsrc: function(hand) {
 	   	switch (hand) {
-	   		case "Rock": return "img/rock.png";
-	   		case "Paper": return "img/paper.jpg";
-	   		case "Scissors": return "img/scissors2.png";
+	   		case "Rock": return require("../img/rock.png");
+	   		case "Paper": return require("../img/paper.jpg");
+	   		case "Scissors": return require("../img/scissors2.png");
 	   	}
 	   },
 	   playHandSound: function(hand) {

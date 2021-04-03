@@ -5,16 +5,23 @@
 		<p class="row">
 			{{text}}
 		</p>
-		<button id="go" class="row" v-on:click="$emit('dismisstextdisplay')">Dismiss</button>
+		<button id="go" class="row" v-on:click="onclick">Dismiss</button>
 	</div>
 </template>
 <script>
+	import {mapState} from 'vuex'
 	export default {
-		props: ['text'],
+		props: [],
+		computed: {
+			...mapState({
+				text: 'textDisplay'
+			})
+		},
 		methods: {
 			onclick: function() {
 				console.log('dismiss')
-				this.$emit('dismisstextdisplay')
+				this.$store.commit('setTextDisplay', '')
+				//this.$emit('dismisstextdisplay')
 			}
 		}
 	}

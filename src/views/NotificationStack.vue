@@ -12,6 +12,9 @@
 </style>
 
 <template>
+	<div id="notif_stack">
+		<Notification v-for="notification in this.notifications" v-bind:msg="notification.msg" v-bind:game="notification.game" v-on:dismiss="dismissNotification"></Notification>
+	</div>
 </template>
 
 <script>

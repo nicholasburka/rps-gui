@@ -23,7 +23,7 @@
 	max-height: 35vh;
 	overflow-y: scroll;
 	margin: 0;
-	margin-top: 6vh;
+	margin-top: 13vh;
 	flex-shrink: 0;
 }
 #open-games-header {
@@ -33,10 +33,10 @@
 #open-games div {
 	height: 5vh;
 	display: flex;
-	width: 100%;
+	width: 80%;
 	align-items: center;
 	justify-content: center;
-	font-size: 150%;
+	font-size: 100%;
 	margin-bottom: .5%;
 	/*flex-shrink:0;*/
 }
@@ -64,6 +64,7 @@
 	height: 100%;
 	width: auto;
 	max-height: 100%;
+	max-width: 20vw;
 	z-index: 5;
 	object-fit: contain;
 }
@@ -77,178 +78,130 @@
 	height: 40vh;
 }
 .playable {
-	background-color: lightgreen;
+	background-color: purple;
 	margin-top: .1vh;
+}
+.waiting {
+	background-color: yellow;
 }
 ul {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
+li {
+	max-width: 80vw;
+	max-height: 3vh;
+}
 </style>
 
 <template>
 	<div id="home" class="column page-container">
-		<WalletConfigPanel v-if="walletConfigOn" v-on:dismissWalletConfig="dismissWalletConfig()" v-on:refreshWallet="refreshWallet" v-on:tryfaucet="tryfaucet()"></WalletConfigPanel>
-		<transition appear appear-active-class="slideInRight">
-			<div id="home-th" v-bind:class="{ updateAnimation: gameUpdate }">
-				<div id="open-games-header" class="row">
-					<div class="column" style="width: 33vw; max-height: 20vh;">
-						<div class="row">
-							<img class="column" id="wallet" src="../img/wallet.jpg" v-on:click="walletConfig()">
-							<div v-if="walletaddr" class="column">
-								<h3 style="font-size: .6vw;">{{walletaddr}}</h3>
-								<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
-							</div>
-							<h3 v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
-						</div>
-					</div>
-					<h3 class="column" style="width: 33vw;">Open Games</h3>
-					<div class="row column" style="width: 33vw;"><h3>Committed: ~{{wagers_committed}} </h3><h3 class="currency_t">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
-				</div>
-					<div class="column" id="open-games">
-						<div class="row activeitem playable" v-for="game in this.playable_games" v-bind:game="game" v-bind:key="game.ContractAddress"  style="height: 4vh">
-							<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-							<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }}</li>
-						</div>
-						<h3> waiting on {{ this.opengames.length - this.playable_games.length }} games... </h3>
-						<!--<ul id="playable">
-							<div id="playable-games">
-								<div class="row activeitem playable" v-for="game in playable_games" v-bind:game="game" v-bind:key="game.ContractAddress"  style="height: 4vh">
-									<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-									<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }}</li>
+			<PlayGame v-if="this.play" :game="game" v-on:back="cancelPlay" v-on:submithands="addhandsandconfirm"></PlayGame>
+			<WalletConfigPanel v-if="walletConfigOn" v-on:dismissWalletConfig="dismissWalletConfig()" v-on:refreshWallet="refreshWallet" v-on:tryfaucet="tryfaucet()"></WalletConfigPanel>
+			<transition appear appear-active-class="slideInRight">
+				<div id="home-th" v-bind:class="{ updateAnimation: gameUpdate }">
+					<div id="open-games-header" class="row">
+						<div class="column" style="width: 33vw; max-height: 13vh;">
+							<div class="row">
+								<img class="column" id="wallet" src="../img/wallet.jpg" v-on:click="walletConfig()">
+								<div v-if="walletAddress" class="column">
+									<h3 style="font-size: 1vw;">{{walletAddress}}</h3>
+									<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 								</div>
-							
+								<h3 v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
 							</div>
-						</ul>
-						<ul id="accepted">
-							<div class="accepted" v-bind:class="{}" v-for="game in accepted_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
-								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-								<li>{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }}</li>
-							</div>
-						</ul>
-						<ul id="waiting"> 
-							<div class="waiting" v-bind:class="{}" v-for="game in awaiting_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
-								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-								<li>{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }}</li>
-							</div>
-						</ul>
-						<div id="invites">
-						</div>-->
-					</div>
-					<!--<div class="row" id="accepted-games">
-						<ul id="accepted">
-							<div class="column accepted" v-bind:class="{}" v-for="game in accepted_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
-								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
-							</div>
-						</ul>
-					</div>
-					<div class="row" id="waiting-games">
-						<ul id="waiting"> 
-							<div class="column waiting" v-bind:class="{}" v-for="game in awaiting_games" v-bind:game="game" v-bind:key="game.ContractAddress" >
-								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
-								<li v-on:click="() => {$emit('ongameselect', game)}">{{game.wagerreadable}} {{game.currency}} : {{game.title}} : {{game.status}} : {{ timeLeft(game) }} left</li>
-							</div>
-						</ul>
-					</div>-->
-				<ul id="invites">
-					<li class="row" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
-						Invited by {{ invite.p1 }} for {{ invite.wager }} {{currency}} : {{ invite.delay }} blocks left
-						<div class="buttons">
-							<button onclick="confirmGame()" class="column">Accept</button>
-							<button onclick="deny()" class="column">Reject</button>
 						</div>
-					</li>
-				</ul>
-				<!--<h2 id="game-history" v-on:click="getHistory()">game history</h2>-->
-			</div>
-		</transition>
-		<hr style="width: 80%; text-align: center;">
-		<transition appear appear-active-class="slideInLeft">
-			<div id="home-bh">
-				<h1 id="create-game" class="row active" v-on:click="$router.push('create')">create</h1>
-				<h1 id="search" class="row active" v-on:click="$router.push('search')">search</h1>
-				<h1 id="join" class="row active" v-on:click="$router.push('join')">join with contract</h1>
-			</div>
-		</transition>
-	</div>
+						<h3 class="column" style="width: 33vw;">Open Games</h3>
+						<div class="row column" style="width: 33vw; flex-direction: row;"><h3>Committed: ~ {{balanceCommitted}} </h3><h3 class="currency_t">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
+					</div>
+						<div class="column" id="open-games">
+							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: !game.playable}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" v-on:click="gameSelect(game)" style="height: 4vh; max-width: 100vw">
+								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
+								<li>{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li> <!--{{ timeLeft(game) }}-->
+							</div>
+							<h3> waiting on {{ activeGames.length - playable_games.length }} games... </h3>
+					</div>
+					<ul id="invites">
+						<li class="row" v-for="invite in invites" v-bind:style="{'background-color': randomcolor()}">
+							Invited by {{ invite.p1 }} for {{ invite.wager }} {{currency}} : {{ invite.delay }} blocks left
+							<div class="buttons">
+								<button onclick="confirmGame()" class="column">Accept</button>
+								<button onclick="deny()" class="column">Reject</button>
+							</div>
+						</li>
+					</ul>
+					<!--<h2 id="game-history" v-on:click="getHistory()">game history</h2>-->
+				</div>
+			</transition>
+			<hr style="width: 80%; text-align: center;">
+			<transition appear appear-active-class="slideInLeft">
+				<div id="home-bh">
+					<h1 id="create-game" class="row active" v-on:click="$router.push('create')">create</h1>
+					<h1 id="search" class="row active" v-on:click="$router.push('search')">search</h1>
+					<h1 id="join" class="row active" v-on:click="$router.push('join')">join with contract</h1>
+				</div>
+			</transition>
+		</div>
 </template>
 
 <script>
-	import howler from 'howler';
-	import WalletConfigPanel from './WalletConfigPanel.vue';
+	//import howler from 'howler';
+	import WalletConfigPanel from './WalletConfigPanel.vue'
+	import PlayGame from './PlayGame.vue'
+	import {mapState} from 'vuex'
 
 	export default {
 		components: {
-			WalletConfigPanel
+			WalletConfigPanel,
+			PlayGame
 		},
-		props: ['walletaddr', 'balance', 'opengames', 'invites', 'currency', 'money-committed'],
+		props: ['invites'],
 		data: function () {
 			return {
 				gameUpdate: false,
 				walletConfigOn: false,
-				playableGames: []
+				playableGames: [],
+				currentGame: undefined,
+				play: false
 			}
 		},
 		computed: {
+			...mapState({
+				walletAddress: state => state.wallet.address,
+				balance: state => state.wallet.balance,
+				currency: state => state.wallet.currency,
+				activeGames: 'activeGames'
+			}),
+			balanceCommitted: function() {
+				return this.$store.getters.balanceCommitted
+			},
 			wallet_text: function() {
-				if (this.walletaddr) {
-					return this.walletaddr
+				if (this.walletAddress) {
+					return this.walletAddress
 				} else {
 					return "Please connect a cryptowallet by clicking on the wallet icon."
 				}
 			},
 			currency_text: function() {
-				if (!this.walletaddr) {
+				if (!this.walletAddress) {
 					return "";
 				} else {
 					return this.currency;
 				}
 			},
 			awaiting_games: function() {
-				return this.opengames.filter(x => (x.status === "Awaiting Opponent"));
+				return this.activeGames.filter(x => (x.status === "Awaiting Opponent"));
 			},
 			accepted_games: function() {
-				return this.opengames.filter(x => (x.status !== "Awaiting Opponent" && x.playable === false));
+				return this.activeGames.filter(x => (x.status !== "Awaiting Opponent" && x.playable === false));
 			},
 			playable_games: function() {
-				return this.opengames.filter(x => {return x.playable});
+				console.log('playable_games ' + this.activeGames)
+				return this.activeGames.filter(x => {return x.playable});
 			},
- 			wagers_committed: function() {
- 				//https://www.jacklmoore.com/notes/rounding-in-javascript/
- 				function round(value, decimals) {
- 				  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
- 				}
- 				//return '';
- 				//appends strings with low decimals, need to convert to wager readable
- 				var sum = this.opengames.reduce((acc, curr)  => {
- 					return acc + Number(curr.wagerreadable);
- 				}, 0)
- 				console.log ("committed")
- 				console.log (sum)
- 				return round(sum, 7)
- 			}
-		},
-		watch : {
-			opengames: function (gamesold, gamesnew) {
-				console.log("change in opengames");
-				/*var sound = new Howl({
-					src: './ding.mp3',
-					volume: 0.5
-				});
-				sound.play();*/
-				this.gameUpdate = true;
-				setTimeout(() => {
-					this.gameUpdate = false;
-
-				}, 1000);
-
-				console.log(gamesold);
-				console.log(gamesnew);
-				console.log(this.opengames);
-				this.playableGames = this.opengames.filter((x) => {return x.playable});
-				console.log(this.playableGames);
+			active_games_sorted: function() {
+				return this.playable_games.concat(this.awaiting_games).concat(this.accepted_games)
 			}
 		},
 		methods: {
@@ -257,24 +210,39 @@ ul {
 			             (25 + 70 * Math.random()) + '%,' + 
 			             (65 + 10 * Math.random()) + '%)'
 			},
-			tryfaucet: function() {
+			tryfaucet: async function() {
 				console.log("clicked faucet");
-				this.$emit('tryfaucet');
-			},
-			getGame: function(gameid) {
-				$router.push('gameplay', gameid);
+				await this.$store.dispatch('fundFromFaucet')
 			},
 			getHistory: function() {
-				this.$emit('gamehistory');
+				//this.$store.dispatch('getGameHistory');
 			},
-			updatePlayable: function() {
-				console.log("update playable");
-				this.playableGames = this.opengames.filter((x) => {return x.playable});
-				console.log(this.playableGames);
-			},
-			contractInfo: function(game) {
+			contractInfo: async function(game) {
 				console.log("clicked contractinfo clipboard, emitting");
-				this.$emit('displaycontractinfo', game);
+				//this.$emit('displaycontractinfo', game);
+				try {
+					await navigator.clipboard.writeText(JSON.stringify(game.contractInfo));
+					this.$store.commit('setPopup', 'Copied game\'s contract info to clipboard');
+				} catch (error) {
+					console.error("copy failed", error);
+				}
+				//this.$store.commit('setTextDisplay', JSON.stringify(game.contractInfo, null, 2))
+			},
+			gameSelect: function(game) {
+				if (game.playable) {
+					this.currentGame = game
+					this.play = true
+				} else {
+					this.contractInfo(game)
+				}
+			},
+			cancelPlay: function() {
+				this.play = false
+			},
+			submitHands: function(hands) {
+				this.currentGame.resolveHands(hands)
+				this.play = false
+				this.currentGame = undefined
 			},
 			timeLeft: function(game) {
 				//console.log("timeleft");
@@ -336,7 +304,7 @@ ul {
 			},
 			refreshWallet: function(currency) {
 				console.log("refreshWallet " + currency + " in Home.vue");
-				this.$emit('refreshwallet', currency);
+				this.$store.dispatch('connectWallet', currency);
 			}
 		}
 	}

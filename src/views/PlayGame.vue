@@ -21,7 +21,7 @@
 .rps-piece {
 	position:relative;
 	display: block;
-	max-height: 25vh;
+	max-height: 90%;
 	max-width: 18vw;
 	object-fit: contain;
 	margin-left: auto;
@@ -34,13 +34,14 @@
 
 <template>
 	<div id="gameplay" class="column">
-		<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
+		<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="this.back">
 		<div class="row" id="game-header">
-			<h3 v-if="currentgame.title" class="column">{{ currentgame.title }}</h3>
-			<h3 class="column" id="wager">{{currentgame.wagerreadable}} {{currentgame.currency}}</h3>
+			<h3 v-if="game.title" class="column">{{ game.title }}</h3>
+			<h3 class="column" id="wager">{{game.wagerreadable}} {{game.currency}}</h3>
 		</div>
+		<h3 class="row">Winner chosen by first non-tie</h3>
 		<div class="row" style="height: 80vh;">
-			<div id="game" class="row" style="position: relative; height: 50vh;">
+			<div id="game" class="row" style="position: relative; height: 40vh;">
 				<div id="rock-cont" class="column">
 					<img id="rock" class="rps-piece" src="../img/rock.png" alt="rock" v-on:click="addHand('Rock')">
 					<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockCount}}</p>
@@ -54,7 +55,7 @@
 					<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsCount}}</p>
 				</div>
 			</div>
-			<div id="chosen" class="row" style="height: 20vh; background-color: purple">
+			<div id="chosen" class="row" style="height: 25vh; background-color: purple" v-on:click="removeLastHand()">
 				<img v-for="hand in hands" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand" v-on:click="removeHand(hand)">
 			</div>
 			<div id="submit" class="row" style="height: 10vh">
@@ -81,11 +82,10 @@
 </template>
 
 <script>
-	import PlayHands from './PlayHands.vue';
+	import {mapState} from 'vuex'
 
 	export default {
-		components: PlayHands,
-		props: ["currentgame", "rockCount", "paperCount", "scissorsCount"],
+		props: ["game", "rockCount", "paperCount", "scissorsCount"],
 		data: function() {
 			return {
 				chosen_hands: [],
@@ -102,10 +102,6 @@
 					this.chosen_hands.pop();
 				}
 			},
-			submithands: function(hands) {
-				//this.currentgame.resolveHands(hands);
-				this.$emit('submithands', this.currentgame, hands);
-			},
 			addHand: function(hand) {
 				if (this.hands.length < 5) {
 					this.hands.push(hand);
@@ -118,21 +114,26 @@
 					case "Scissors": return require("../img/scissors2.png");
 				}
 			},
-			/*removeHand: function() {
-				this.hands.pop();
-			},*/
 			removeHand: function(hand) {
-				const index = this.hands.indexOf(hand);
+				const index = this.hands.indexOf(hand)
 				if (index > -1) {
-				  this.hands.splice(index, 1);
+				  this.hands.splice(index, 1)
 				}
+			},
+			removeLastHand: function() {
+				this.hands.pop()
 			},
 			submithands: function() {
 				if (this.hands.length === 5) {
-					this.$emit('submithands', {game: this.currentgame, hands: this.hands});
+					//this.game.resolveHands(this.hands)
+					//this.$router.push('home')
+					this.$emit('submithands', this.hands);
 				} else {
-					this.err = "Need 5 hands!";
+					this.err = "Need 5 hands!"
 				}
+			},
+			back: function() {
+				this.$emit('back')
 			}
 		}
 	}

@@ -1,19 +1,61 @@
+<style scoped>
+button {
+	margin-left: auto;
+	margin-right: auto;
+}
+#joinGame {
+	height: 100vh;
+}
+</style>
+
 <template>
 	<div id="joinGame" class="column" v-on:submit.prevent>
-		<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-		<h1 class="row">Join by Contract</h1>
-		<h3 class="row">Please paste the contract info below:</h3>
-		<textarea v-model="contractinfo" id="" rows="10" cols="50">
-		</textarea>
-		<button id="form-submit" class="row" v-on:submit.prevent v-on:click="$emit('ongameaccept', contractinfo);">Submit</button>
+		<div v-if="!this.play">
+			<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
+			<h1 class="row">Join by Contract</h1>
+			<h3 class="row">Please paste the contract info below:</h3>
+			<textarea v-model="contractInfo" id="" rows="10" cols="50">
+			</textarea>
+			<button id="form-submit" class="row" v-on:submit.prevent v-on:click="getGame(contractInfo)">Submit</button>
+		</div>
+		<PlayGame v-if="this.play" :game="this.game" v-on:back="this.play=false" v-on:submithands="submitGame"></PlayGame>
 	</div>
 </template>
 
 <script>
-	module.exports = {
+	import PlayGame from './PlayGame.vue'
+	import {mapState} from 'vuex'
+
+	export default {
+		components: {
+			PlayGame
+		},
 		data: function() {
 			return {
-				contractinfo: ""
+				contractInfo: "",
+				game: undefined,
+				play: false
+			}
+		},
+		methods: {
+			getGame: async function() {
+				try {
+					console.log(getGame)
+					this.game = await this.$store.dispatch('apiGetGame', this.contractInfo)
+					console.log(this.game)
+					this.play = true
+				} catch (err) {
+
+				}
+			},
+			submitGame: async function({game, hands}) {
+				try {
+					this.game.firstHands = hands
+					this.$store.dispatch('joinGame', this.game)
+					this.$router.push('home')
+				} catch (err) {
+
+				}
 			}
 		}
 	}
