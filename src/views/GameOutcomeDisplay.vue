@@ -39,21 +39,27 @@
 		components: {
 			HandsDisplayPanel
 		},
-		props: ['gameoutcome'],
+		props: [],
 		data: function() {
-			console.log(gameoutcome)
-			console.log(this.gameoutcome)
+			//console.log(gameoutcome)
+			//console.log(this.gameoutcome)
 			return {
-				game: gameoutcome.game,
+				/*game: gameoutcome.game,
 				who: gameoutcome.who,
 				why: gameoutcome.why,
 				p1Hands: gameoutcome.p1Hands,
-				p2Hands: gameoutcome.p2Hands
+				p2Hands: gameoutcome.p2Hands*/
 			}
 		},
 		computed: {
 			...mapState({
-				walletAddress: state => state.wallet.address
+				walletAddress: state => state.wallet.address,
+				gameoutcome: state => state.gameOutcome
+				game: state => state.gameOutcome.game,
+				who: state => state.gameOutcome.who,
+				why: state => state.gameOutcome.why,
+				p1Hands: state => state.gameOutcome.p1Hands,
+				p2Hands: state => state.gameOutcome.p2Hands,
 			}),
 			reasonWinner: function() {
 				return this.why === "winner"
