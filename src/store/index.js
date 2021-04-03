@@ -369,8 +369,10 @@ export default new Vuex.Store({
             dispatch('updateBalance')
           }
         }
+        game.attached = true
         await contractBackend.Deployer(game.contract, interact)
       } catch (err) {
+        game.attached = false
         console.log("error reattaching to contract")
         console.log(err)
         dispatch('apiDeleteGame', game)
@@ -406,8 +408,10 @@ export default new Vuex.Store({
             dispatch('updateBalance')
           }
         }
+        game.attached = true
         await contractBackend.Attacher(game.contract, interact)
       } catch (err) {
+        game.attached = false
         console.log("error reattaching to contract")
         console.log(err)
         dispatch('apiDeleteGame', game)
