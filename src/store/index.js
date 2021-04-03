@@ -382,6 +382,7 @@ export default new Vuex.Store({
   				},
   				seeOutcome: function(who) {
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
+            who = (who === 2) ? 0 : 1
   					commit('setGameOutcome', {game, who, why: 'winner'})
   					dispatch('apiCompleteGame', {game, who, why: 'winner'})
   				}
@@ -476,6 +477,7 @@ export default new Vuex.Store({
   				},
   				seeOutcome: function(who) {
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
+            who = (who === 2) ? 0 : 1
   					commit('setGameOutcome', {game, who, why: 'winner'})
   				}
   			}
