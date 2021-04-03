@@ -510,6 +510,8 @@ export default new Vuex.Store({
             console.log('see outcome deployer, p1hands, p2hands')
             console.log(p1Hands)
             console.log(p2Hands)
+            p1Hands = p1Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
+            p2Hands = p2Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
             who = (who === 2) ? 0 : 1
   					commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
@@ -612,6 +614,8 @@ export default new Vuex.Store({
   				seeOutcome: function(who, p1Hands, p2Hands) {
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
             who = (who === 2) ? 0 : 1
+            p1Hands = p1Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
+            p2Hands = p2Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
   					commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
             dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
             dispatch('updateBalance')
