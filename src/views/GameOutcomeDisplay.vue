@@ -46,7 +46,7 @@
 				p1Hands: gameOutcome.p1Hands,
 				p2Hands: gameOutcome.p2Hands
 			}
-		}
+		},
 		computed: {
 			...mapState({
 				walletAddress: state => state.wallet.address
