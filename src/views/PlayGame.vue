@@ -43,15 +43,15 @@
 		<div class="row" style="height: 80vh;">
 			<div id="game" class="row" style="position: relative; height: 40vh;">
 				<div id="rock-cont" class="column">
-					<img id="rock" class="rps-piece" src="../img/rock.png" alt="rock" v-on:click="addHand('Rock')">
+					<img id="rock" class="rps-piece" src="../img/rock.png" alt="rock" v-on:click="addHand(0)">
 					<p class="count-used" style="position: relative; text-align: center; display: block;">{{rockCount}}</p>
 				</div>
 				<div id="paper-cont" class="column">
-					<img id="paper" class="rps-piece" src="../img/paper.jpg" alt="paper" v-on:click="addHand('Paper')">
+					<img id="paper" class="rps-piece" src="../img/paper.jpg" alt="paper" v-on:click="addHand(1)">
 					<p class="count-used" style="position: relative; text-align: center; display: block;">{{paperCount}}</p>
 				</div>
 				<div id="scissors-cont" class="column">
-					<img id="scissors" class="rps-piece" src="../img/scissors2.png" alt="scissors" v-on:click="addHand('Scissors')">
+					<img id="scissors" class="rps-piece" src="../img/scissors2.png" alt="scissors" v-on:click="addHand(2)">
 					<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsCount}}</p>
 				</div>
 			</div>
@@ -112,6 +112,9 @@
 					case "Rock": return require("../img/rock.png");
 					case "Paper": return require("../img/paper.jpg");
 					case "Scissors": return require("../img/scissors2.png");
+					case 0: return require("../img/rock.png");
+					case 1: return require("../img/paper.jpg");
+					case 2: return require("../img/scissors2.png");
 				}
 			},
 			removeHand: function(hand) {
@@ -123,11 +126,19 @@
 			removeLastHand: function() {
 				this.hands.pop()
 			},
+			handStrToNum: function(hand) {
+			  switch (hand) {
+			    case "Rock": return 0;
+			    case "Paper": return 1;
+			    case "Scissors": return 2;
+			  }
+			},
 			submithands: function() {
 				if (this.hands.length === 5) {
 					//this.game.resolveHands(this.hands)
 					//this.$router.push('home')
-					this.$emit('submithands', this.hands);
+					//const hands = this.hands.map((hand) => this.handStrToNum(hand))
+					this.$emit('submithands', hands);
 				} else {
 					this.$store.commit('setPopup', '5 hands to play')
 					this.err = "Need 5 hands!"

@@ -332,8 +332,8 @@ export default new Vuex.Store({
 
   			game.wagerreadable = game.wager
   			game.wager = reach[state.wallet.currency].parseCurrency(game.wager)
-        game.firstHandsReadable = game.firstHands
-        game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
+        //game.firstHandsReadable = game.firstHands
+        //game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
   			game.ContractAddress = game.contractInfo.address
   			game.status = "Awaiting Opponent"
   			game.playable = false
@@ -435,8 +435,8 @@ export default new Vuex.Store({
   		try {
   			const contract = state.wallet.acc.attach(contractBackend, game.contractInfo)
 
-        game.firstHandsReadable = game.firstHands
-        game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
+        //game.firstHandsReadable = game.firstHands
+        //game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
 
         commit('setPopup', 'Updating game in games database')
   			if (!localhost) {await dispatch('apiJoinGame', game)}

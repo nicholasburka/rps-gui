@@ -28,6 +28,9 @@ export default {
 	   		case "Rock": return require("../img/rock.png");
 	   		case "Paper": return require("../img/paper.jpg");
 	   		case "Scissors": return require("../img/scissors2.png");
+	   		case 0: return require("../img/rock.png");
+	   		case 1: return require("../img/paper.jpg");
+	   		case 2: return require("../img/scissors2.png");
 	   	}
 	   },
 	   playHandSound: function(hand) {
