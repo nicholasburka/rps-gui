@@ -6,15 +6,20 @@ button {
 #joinGame {
 	height: 100vh;
 }
+#contractTextArea {
+	width: 80%; 
+	margin: auto;
+}
 </style>
 
 <template>
 	<div id="joinGame" class="column" v-on:submit.prevent>
-		<div v-if="!this.play">
+		<div v-if="!this.play" class="column
+		">
 			<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
 			<h1 class="row">Join by Contract</h1>
 			<h3 class="row">Please paste the contract info below:</h3>
-			<textarea v-model="contractInfo" id="" rows="10" cols="50">
+			<textarea v-model="contractInfo" id="contractTextArea" rows="10" cols="50">
 			</textarea>
 			<button id="form-submit" class="row" v-on:click="getGame()" v-on:submit.prevent>Submit</button>
 		</div>

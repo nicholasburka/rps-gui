@@ -261,6 +261,9 @@
   .currency {
     color: teal;
   }
+  button {
+    margin-bottom: 1vh;
+  }
 </style>
 <template>
 	<div id="app">
