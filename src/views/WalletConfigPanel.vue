@@ -8,14 +8,16 @@
 	left: 15vw;
 	background-color: hsla(120, 80%, 80%, 0.7);
 	flex: 1;
+	flex-direction: column;
 }
 #x {
-	top: 5%;
+	top: 1vw;
 	left: 1vw;
 	max-height: 7vh;
 	max-width: auto;
 	background-color: black;
 	border-radius: 50%;
+	position: absolute;
 }
 #faucet {
 	z-index: 5;
@@ -24,7 +26,7 @@
 	top: -5vh;
 }
 .smaller {
-	font-size: 80%;
+	font-size: 75%;
 }
 a {
 	margin-left: 4px;
@@ -34,6 +36,24 @@ button {
 	display: flex;
 	position: relative;
 	flex-basis: 40%;
+}
+.center_text {
+	position: relative;
+	margin: 0 auto;
+}
+#buttons {
+	display:flex; 
+	justify-content: space-around; 
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+button {
+	display: flex;
+	position: relative;
+	margin: auto;
+	width: 50%;
+	justify-content: center;
 }
 </style>
 
@@ -47,16 +67,16 @@ button {
 				<img id="x" src="../img/x2.png" v-on:click="dismissWalletConfig()">
 				<img id="faucet" src="../img/faucet.png" alt="faucet (only available on local devnets)"v-on:click="tryfaucet()">
 			</div>
-			<h3 class="row smaller"> Connect a cryptocurrency wallet using ETH <a href="https://metamask.io/download.html">&nbsp;&nbsp;MetaMask</a>&nbsp;or [available soon on Algorand Betanet, Chrome only]<a href="https://www.purestake.com/technology/algosigner/">&nbsp;AlgoSigner</a></h3>
+			<h3 class="row smaller center_text" style="top: 2vh; width: 90%;"> Connect a cryptocurrency wallet using ETH <a href="https://metamask.io/download.html">&nbsp;&nbsp;MetaMask</a>&nbsp;or [available soon on Algorand Betanet, Chrome only]<a href="https://www.purestake.com/technology/algosigner/">&nbsp;AlgoSigner</a></h3>
 			<!--<div v-if="this.walletAddress" id="current" class="flex-center">
 				<h3 class="smalltext">{{ this.walletAddress }}</h3>
 				<div class="row"><h3> {{ this.thebalance }} </h3><h3 class="currency"> {{ this.currency }} </h3><img class="currency-icon" v-bind:src="imsrc(this.currency)"></div>
 			</div>-->
 			<div id="status" style="height: 20vh; object-fit: contain">
-				<img v-if="this.walletLoading" src="../img/loading.gif"/>
-				<h3 v-if="this.walletErr">{{ this.walletErr }}</h3>
+				<img style="height: 100" v-if="this.walletLoading" src="../img/loading.gif"/>
+				<h3 class="center_text" v-if="this.walletErr">{{ this.walletErr }}</h3>
 			</div>
-			<div id="buttons" class="row" style="display:flex; justify-content: space-around; position: relative;"> 
+			<div id="buttons" class="row"> 
 				<div id="ETH" class="button">
 					<!--<h3>current ETH wallet: {{current_eth}}</h3>-->
 					<button class="connectWallet" v-on:click="connectWallet('ETH')">(re)connect ETH</button>
