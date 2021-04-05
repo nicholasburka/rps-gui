@@ -229,7 +229,7 @@ li {
 				return this.activeGames.filter(x => x.playable && x.attached);
 			},
 			active_games_sorted: function() {
-				return this.playable_games.concat(this.awaiting_games).concat(this.accepted_games).concat(unattached_games)
+				return this.playable_games.concat(this.awaiting_games).concat(this.accepted_games).concat(this.unattached_games)
 			}
 		},
 		methods: {
