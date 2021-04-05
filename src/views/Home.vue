@@ -33,9 +33,9 @@
 #open-games div {
 	height: 5vh;
 	display: flex;
-	width: 80%;
+	width: 60%;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	font-size: 100%;
 	margin-bottom: .5%;
 	/*flex-shrink:0;*/
@@ -56,17 +56,6 @@
 #search-game {
 	display: flex;
 	flex-basis: 100%;
-}
-.gameclipboard {
-	position: relative;
-	left: 0%;
-	align-self: flex-start;
-	height: 100%;
-	width: auto;
-	max-height: 100%;
-	max-width: 20vw;
-	z-index: 5;
-	object-fit: contain;
 }
 .gamex {
 	height: 80%;
@@ -105,9 +94,20 @@ ul {
   flex-direction: row;
   flex-wrap: wrap;
 }
+.gameclipboard {
+	position: relative;
+	flex-basis: 5vw;
+	height: 100%;
+	width: auto;
+	max-height: 100%;
+	max-width: 20vw;
+	z-index: 5;
+	object-fit: contain;
+}
 li {
 	max-width: 80vw;
 	max-height: 3vh;
+	flex-grow: 1;
 }
 </style>
 

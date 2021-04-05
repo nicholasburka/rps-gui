@@ -37,7 +37,7 @@
 						<input id="public" type="radio" style="flex-basis:20%" name="permissions" checked="true" v-on:click="private_game = false;">Public   
 					</label>
 					<label class="column">
-						<input id="priv" type="radio" style="flex-basis:20%" name="permissions" v-on:click="private_game = true; console.log(private_game);">Private
+						<input id="priv" type="radio" style="flex-basis:20%" name="permissions" v-on:click="private_game = true;">Private
 					</label>
 					<p style="flex-basis: 30%"></p>
 				</div>
