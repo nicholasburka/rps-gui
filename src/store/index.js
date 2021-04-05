@@ -87,6 +87,7 @@ export default new Vuex.Store({
   	},
   	setGameJoined: function(state, {game, opp}) {
   		game.status = 'In Progress'
+      game.p2 = opp
   		state.setPopup = opp + ' joined your game with wager ' + game.wager + ' ' + game.currency
   	},
   	setGamePlayable: function(state, game) {
@@ -154,6 +155,7 @@ export default new Vuex.Store({
       console.log(ind)
   	},
   	dismissOutcome: function(state) {
+      console.log("dismissOutcome in store")
   		state.displayGameOutcome = false
   	}
   	/*addGameNotification: function(state, msg, game) {

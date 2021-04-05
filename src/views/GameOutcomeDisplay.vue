@@ -68,6 +68,7 @@
 				p2Hands: state => state.gameOutcome.p2Hands,*/
 			}),
 			dismissOutcome: function () {
+				console.log("dismiss outcome in GameOutcomeDisplay")
 				this.$store.commit('dismissOutcome')
 			},
 			reasonWinner: function() {
