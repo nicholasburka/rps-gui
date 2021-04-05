@@ -52,7 +52,6 @@ button {
 	display: flex;
 	position: relative;
 	margin: auto;
-	width: 50%;
 	justify-content: center;
 }
 </style>

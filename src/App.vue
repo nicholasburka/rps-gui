@@ -131,6 +131,7 @@
     max-height: 50px;
     font-size: 18px;
     align-self: center;
+    text-align: center;
   }
   .bottomBanner {
     position: absolute;
