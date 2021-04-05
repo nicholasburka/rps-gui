@@ -84,7 +84,7 @@ export const main =
 			A.publish(AFirstHands, addrA)
 			  .pay(wager)
 			  .timeout(deadline, () => closeTo(D, () => {informTimeout(1)}));
-			  
+
 			commit();
 
 			assert(balance() == (2*wager));

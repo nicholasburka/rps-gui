@@ -1,10 +1,10 @@
 import { loadStdlib } from '@reach-sh/stdlib';
-import * as stdlib from '@reach-sh/stdlib/ALGO.mjs'
+import * as stdlib from '@reach-sh/stdlib/ETH.mjs'
 import * as backend from './build/index.main.mjs';
 import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
 (async () => {
-  const stdlib = await loadStdlib();
+  //const stdlib = await loadStdlib();
 
   const isDeployer = await ask(
     `Are you the deployer?`,
@@ -104,6 +104,8 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
   }
 
   interact.getBatch = getBatch;
+  interact.getHands = getBatch;
+  interact.firstHands = await getBatch();
 
   if (isDeployer) {
     const amt = await ask(
