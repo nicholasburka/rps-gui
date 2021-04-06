@@ -46,6 +46,33 @@ li:hover {
 #accept {
 	height: 100vh;
 }
+#game {
+	display: flex;
+	height: 60vh;
+}
+#history {
+	display: flex;
+	height: 20vh;
+	width: 100%;
+	flex-wrap: wrap;
+}
+#history img {
+	/*border: solid;
+	height: 100%;*/
+	align-self: center;
+}
+.rps-piece {
+	position:relative;
+	display: block;
+	max-height: 90%;
+	max-width: 18vw;
+	object-fit: contain;
+	margin-left: auto;
+	margin-right: auto;
+}
+#game-header {
+	max-height: 10vh;
+}
 </style>
 
 <template>
@@ -58,7 +85,7 @@ li:hover {
 		</div>
 		<!--<PlayGame id="play" v-if="this.play" :game="this.game" v-on:back="cancelPlay()" v-on:submithands="this.submitHands"></PlayGame>-->
 		<div v-if="this.play">
-			<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="this.back">
+			<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="cancelPlay()">
 			<div class="row" id="game-header">
 				<h3 v-if="game.title" class="column">{{ game.title }}</h3>
 				<h3 class="column" id="wager">{{game.wagerreadable}} {{game.currency}}</h3>
@@ -116,7 +143,10 @@ li:hover {
 			return {
 				confirm: false,
 				play: false,
-				game: undefined
+				game: undefined,
+				chosen_hands: [],
+				hands: [],
+				err: ""
 			};
 		},
 		components: {
@@ -152,6 +182,56 @@ li:hover {
 			  return "hsl(" + 360 * Math.random() + ',' +
 			             (25 + 70 * Math.random()) + '%,' + 
 			             (65 + 10 * Math.random()) + '%)'
+			},
+			choose_hand: function(hand) {
+				chosen_hands.push(hand);
+			},
+			remove_hand: function() {
+				if (this.hands.length > 0) {
+					this.chosen_hands.pop();
+				}
+			},
+			addHand: function(hand) {
+				if (this.hands.length < 5) {
+					this.hands.push(hand);
+				}
+			},
+			imsrc: function(hand) {
+				switch (hand) {
+					case "Rock": return require("../img/rock.png");
+					case "Paper": return require("../img/paper.jpg");
+					case "Scissors": return require("../img/scissors2.png");
+					case 0: return require("../img/rock.png");
+					case 1: return require("../img/paper.jpg");
+					case 2: return require("../img/scissors2.png");
+				}
+			},
+			removeHand: function(hand) {
+				const index = this.hands.indexOf(hand)
+				if (index > -1) {
+				  this.hands.splice(index, 1)
+				}
+			},
+			removeLastHand: function() {
+				this.hands.pop()
+			},
+			handStrToNum: function(hand) {
+			  switch (hand) {
+			    case "Rock": return 0;
+			    case "Paper": return 1;
+			    case "Scissors": return 2;
+			  }
+			},
+			submithands: function() {
+				if (this.hands.length === 5) {
+					//this.game.resolveHands(this.hands)
+					//this.$router.push('home')
+					//const hands = this.hands.map((hand) => this.handStrToNum(hand))
+					this.submitHands(this.hands);
+				} else {
+					this.$store.commit('setPopup', '5 hands to play')
+					this.err = "Need 5 hands!"
+				}
 			}
 		}
 	}
