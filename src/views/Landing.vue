@@ -18,7 +18,7 @@
 }
 .rock-entrance {
 	animation-name: rockOver;
-	animation-duration: .5s;
+	animation-duration: 1s;
 	animation-fill-mode: forwards;
 	animation-timing-function: ease-out;
 	z-index: -1;
@@ -48,7 +48,7 @@
 }
 .paper-entrance {
 	animation-name: paper-entrance;
-	animation-duration: .5s;
+	animation-duration: 1s;
 	/*animation-delay: .5s;*/
 	animation-timing-function: ease-out;
 }
@@ -71,10 +71,10 @@
 }
 .scissors-entrance {
 	animation-name: scissors-entrance;
-	animation-duration: .5s;
+	animation-duration: 1s;
 	animation-timing-function: ease-out;
 }
-@keyframes scissor-entrance {
+@keyframes scissors-entrance {
 	0% {
 		transform: translateX(-300px);
 	}
