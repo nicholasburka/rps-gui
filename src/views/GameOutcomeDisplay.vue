@@ -6,6 +6,7 @@
 }
 .handsdisplay {
 	max-width: 100%;
+	max-height: 20vh;
 }
 </style>
 

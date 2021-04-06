@@ -97,7 +97,6 @@
     text-align: center;
     border: solid;
     top: 20vh;
-    height: 60vh;
     left: 15vw;
     width: 70vw;
     font-size: 1vw;
