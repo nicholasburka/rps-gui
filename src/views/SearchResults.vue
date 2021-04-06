@@ -39,6 +39,12 @@ li:hover {
     -webkit-filter: invert(100%);
     filter: invert(100%);
   }
+#play {
+	height: 100vh;
+}
+#accept {
+	height: 100vh;
+}
 </style>
 
 <template>
@@ -49,8 +55,8 @@ li:hover {
 		<li v-for="game in searchResults" v-on:click="onclick(game)" v-bind:style="{'background-color': randomcolor()}">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} - made by {{ game.p1 }} </li>
 
 	</div>
-	<PlayGame v-else-if="this.play" :game="this.game" v-on:back="cancelPlay()" v-on:submithands="this.submitHands"></PlayGame>
-	<AcceptGame v-else-if="this.confirm" :game="this.game" :blocktime="100" :currency="currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></AcceptGame>
+	<PlayGame id="play" v-else-if="this.play" :game="this.game" v-on:back="cancelPlay()" v-on:submithands="this.submitHands"></PlayGame>
+	<AcceptGame id="confirm" v-else-if="this.confirm" :game="this.game" :blocktime="100" :currency="currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></AcceptGame>
 </template>
 
 <script>
