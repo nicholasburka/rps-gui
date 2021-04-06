@@ -6,7 +6,7 @@
 	top: 20vh;
 	width: 70vw;
 	left: 15vw;
-	background-color: hsla(120, 80%, 80%, 0.7);
+	background-color: hsla(120, 80%, 80%, 0.85);
 	flex: 1;
 	flex-direction: column;
 }
@@ -66,7 +66,7 @@ button {
 				<img id="x" src="../img/x2.png" v-on:click="dismissWalletConfig()">
 				<img id="faucet" src="../img/faucet.png" alt="faucet (only available on local devnets)"v-on:click="tryfaucet()">
 			</div>
-			<h3 class="row smaller center_text" style="top: 2vh; width: 90%;"> Connect a cryptocurrency wallet using ETH <a href="https://metamask.io/download.html">&nbsp;&nbsp;MetaMask</a>&nbsp;or [available soon on Algorand Betanet, Chrome only]<a href="https://www.purestake.com/technology/algosigner/">&nbsp;AlgoSigner</a></h3>
+			<h3 class="row smaller center_text" style="width: 90%;"> Connect a cryptocurrency wallet using ETH <a href="https://metamask.io/download.html">&nbsp;&nbsp;MetaMask</a>&nbsp;or [available soon on Algorand Betanet, Chrome only]<a href="https://www.purestake.com/technology/algosigner/">&nbsp;AlgoSigner</a></h3>
 			<!--<div v-if="this.walletAddress" id="current" class="flex-center">
 				<h3 class="smalltext">{{ this.walletAddress }}</h3>
 				<div class="row"><h3> {{ this.thebalance }} </h3><h3 class="currency"> {{ this.currency }} </h3><img class="currency-icon" v-bind:src="imsrc(this.currency)"></div>
