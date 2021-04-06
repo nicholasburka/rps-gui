@@ -38,9 +38,10 @@
 		props: [],
 		computed: {
 			...mapState({
-				walletAddress: 'wallet.address',
-				balance: 'wallet.balance',
-				currency: 'wallet.currency',
+				walletAddress: state => state.wallet.address,
+				balance: state => state.wallet.balance,
+				network: state => state.wallet.networkName,
+				currency: state => state.wallet.currency,
 				prevopponents: 'recentOpponents'
 			})
 		},
@@ -73,6 +74,11 @@
 					searchparams["searchforaddr"] = p2addrentry;//this.addrentry//p2addrentry;
 				} else {
 
+				}
+				if (this.network) {
+					searchparams.networkName = this.network
+				} else {
+					searchparams.networkName = undefined
 				}
 
 				console.log("search params");

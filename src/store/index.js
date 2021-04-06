@@ -34,7 +34,8 @@ export default new Vuex.Store({
   		'currency': undefined,
   		'acc': undefined,
   		'address': undefined,
-  		'balance': undefined
+  		'balance': undefined,
+      'networkName': undefined
   	},
   	walletLoading: false,
   	walletErr: '',
@@ -56,6 +57,9 @@ export default new Vuex.Store({
   		state.wallet.acc = acc
   		state.wallet.address = address
   		state.wallet.balance = balance
+      if (state.wallet.acc.networkAccount._network.name) {
+        state.wallet.networkName = state.wallet.acc.networkAccount._network.name
+      }
       state.walletErr = ''
   	},
   	setBalance: function(state, newBalance) {
@@ -477,6 +481,9 @@ export default new Vuex.Store({
   			game.ContractAddress = game.contractInfo.address
   			game.status = "Awaiting Opponent"
   			game.playable = false
+        if (state.wallet.networkName) {
+          game.network = state.wallet.networkName
+        }
 
   			if (!localhost) {
   				try {
