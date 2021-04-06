@@ -1,6 +1,15 @@
 <style scoped>
 #game-search-results {
-	flex-wrap: wrap;
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+	align-items: center;
+	padding: 0;
+	min-height: 100vh;
+	max-height: 100vh;
+	overflow-y: scroll;
+	margin: 0;
+	flex-shrink: 0;
 }
 .game-search-result {
 	min-height: 23vh;
@@ -8,13 +17,33 @@
 	flex-direction: column;
 	justify-content: space-around;
 }
+#search-results {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 60%;
+	align-items: center;
+	padding: 0;
+	min-height: 30vh;
+	max-height: 35vh;
+	overflow-y: scroll;
+	margin: 0;
+	margin-top: 13vh;
+	flex-shrink: 0;
+}
+li {
+	max-width: 100vw;
+	max-height: 7vh;
+	flex-grow: 1;
+}
 </style>
 
 <template>
 	<div v-if="!this.play" id="game-search-results" class="column" style="margin-top:2vh;">
 		<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="$router.go(-1);">
-		<SearchResult v-for="game in searchResults" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
-		</SearchResult>
+		<!--<SearchResult v-for="game in searchResults" v-bind:game="game" v-bind:title="game.title" v-bind:wager="game.wagerreadable" v-bind:playerAddr="game.p1" v-bind:style="{'background-color': randomcolor()}" v-on:click.native="onclick(game);">
+		</SearchResult>!-->
+		<li v-for="game in searchResults" v-on:click="onclick(game)" v-bind:style="{'background-color': randomcolor()}">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} - made by {{ game.p1 }} </li>
+
 	</div>
 	<PlayGame v-else-if="this.play" :game="this.game" v-on:back="cancelPlay()" v-on:submithands="this.submitHands"></PlayGame>
 	<AcceptGame v-else-if="this.confirm" :game="this.game" :blocktime="100" :currency="currency" v-on:confirm="confirmgame()" v-on:deny="deny()"></AcceptGame>
