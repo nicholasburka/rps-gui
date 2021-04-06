@@ -49,7 +49,7 @@
 .paper-entrance {
 	animation-name: paper-entrance;
 	animation-duration: 1s;
-	/*animation-delay: .5s;*/
+	animation-delay: .3s;
 	animation-timing-function: ease-out;
 }
 @keyframes paper-entrance {
