@@ -142,7 +142,10 @@ li {
 							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: (!game.playable && !game.unattached), unattached: game.unattached}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4.5vh; max-width: 100vw">
 								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 								<!--<img v-if="!game.attached" src="../img/redo.png" class="reattach" v-on:click="reattach(game)" alt="reattach to game contract" title="reattach to game contract">-->
-								<li v-on:click="gameSelect(game)">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li> <!--{{ timeLeft(game) }}-->
+								<li v-on:click="gameSelect(game)">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li>
+								<h3 v-if="game.playable" style="color: green; font-weight: bold"> - Your turn!</h3>
+
+								 <!--{{ timeLeft(game) }}-->
 								<!--<img src="../img/x2.png" class="gamex" v-on:click="deleteConfirm(game)">-->
 							</div>
 							<h3> waiting on {{ activeGames.length - playable_games.length }} games... </h3>

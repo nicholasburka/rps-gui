@@ -5,7 +5,8 @@
 		<p class="row"> {{ game.title }}</p>
 		<p class="row"> {{ game.wagerreadable }} {{currency}} </p>
 		<p class="row"> {{ game.delay }} block timeout</p>
-		<p v-if="currency==='ETH'" class="row"> (Est. time with ~15s per block: {{ game.delay * 15 }}s) (see https://etherscan.io/chart/blocktime for current blocktime) </p>
+		<p class="row"> {{ game.deadline }} block timeout (Est. time with ~15s per block: {{ game.deadline * 15 }}s) </p>
+		<p class="row" v-if="currency==='ETH'"> (see https://etherscan.io/chart/blocktime for current blocktime) </p>
 		<p class="row"> Opponent: {{ game.p1 }}</p>
 		<HandsDisplayPanel :hands="game.firstHands"></HandsDisplayPanel>
 		<div id="buttons" class="row">
@@ -16,7 +17,11 @@
 </template>
 
 <script>
+	import HandsDisplayPanel from './HandsDisplayPanel.vue';
 	export default {
+		components: {
+			HandsDisplayPanel
+		},
 		props: ['game', 'action', 'blocktime', 'currency', 'hands']
 	};
 </script>
