@@ -57,8 +57,12 @@ export default new Vuex.Store({
   		state.wallet.acc = acc
   		state.wallet.address = address
   		state.wallet.balance = balance
-      if (state.wallet.acc.networkAccount._network.name) {
-        state.wallet.networkName = state.wallet.acc.networkAccount._network.name
+      try {
+        if (state.wallet.acc.networkAccount.provider._network.name && (state.wallet.acc.networkAccount.provider._network.name !== "unknown")) {
+          state.wallet.networkName = state.wallet.acc.networkAccount.provider._network.name
+        }
+      } catch(err) {
+        state.wallet.networkName = ''
       }
       state.walletErr = ''
   	},
