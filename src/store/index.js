@@ -341,6 +341,7 @@ export default new Vuex.Store({
   	},
     reattachDeployer: async function({state, commit, dispatch}, game) {
       try {
+        const ctc = state.wallet.acc.attach(contractBackend, game.contractInfo)
         const interact = {
           ...state.reach[state.wallet.currency].hasRandom,
           wager: game.wager,
@@ -372,7 +373,7 @@ export default new Vuex.Store({
           }
         }
         game.attached = true
-        await contractBackend.Deployer(game.contract, interact)
+        await contractBackend.Deployer(ctc, interact)
       } catch (err) {
         game.attached = false
         console.log("error reattaching to contract")
@@ -382,6 +383,7 @@ export default new Vuex.Store({
     },
     reattachAttacher: async function({state, commit, dispatch}, game) {
       try {
+        const ctc = state.wallet.acc.attach(contractBackend, game.contractInfo)
         const interact = {
           ...state.reach[state.wallet.currency].hasRandom,
           firstHands: game.firstHands,
@@ -411,7 +413,7 @@ export default new Vuex.Store({
           }
         }
         game.attached = true
-        await contractBackend.Attacher(game.contract, interact)
+        await contractBackend.Attacher(ctc, interact)
       } catch (err) {
         game.attached = false
         console.log("error reattaching to contract")
@@ -421,12 +423,14 @@ export default new Vuex.Store({
     },
     reattachOne: async function({state,commit,dispatch}, game) {
       console.log('reattaching game')
-      game.contract.stdlib = state.reach[state.wallet.currency]
+      //game.contract.stdlib = state.reach[state.wallet.currency]
       console.log(game)
       try {
         if (game.p1 === state.wallet.address) {
+          console.log('reattaching deployer')
           dispatch('reattachDeployer', game)
         } else if (game.p2 === state.wallet.address) {
+          console.log('reattaching attacher')
           dispatch('reattachAttacher', game)
         } else {
           console.log("reattachOne: game does not have this wallet address")
