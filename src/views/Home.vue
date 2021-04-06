@@ -29,14 +29,15 @@
 #open-games-header {
 	height: 4vh;
 	max-height: 4vh;
+	font-size: min(2vw, 3vh);
 }
 #open-games div {
 	height: 5vh;
 	display: flex;
-	width: 60%;
+	width: 80%;
 	align-items: center;
 	justify-content: flex-start;
-	font-size: 100%;
+	font-size: min(2.3vw, 2.8vh);
 	margin-bottom: .5%;
 	/*flex-shrink:0;*/
 }
@@ -138,7 +139,7 @@ li {
 						<div class="row column" style="width: 33vw; flex-direction: row;"><h3>Committed: ~ {{balanceCommitted}} </h3><h3 class="currency">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
 					</div>
 						<div class="column" id="open-games">
-							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: (!game.playable && !game.unattached), unattached: game.unattached}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4vh; max-width: 100vw">
+							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: (!game.playable && !game.unattached), unattached: game.unattached}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4.5vh; max-width: 100vw">
 								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 								<!--<img v-if="!game.attached" src="../img/redo.png" class="reattach" v-on:click="reattach(game)" alt="reattach to game contract" title="reattach to game contract">-->
 								<li v-on:click="gameSelect(game)">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li> <!--{{ timeLeft(game) }}-->
