@@ -31,10 +31,14 @@
 	flex-shrink: 0;
 }
 li {
-	max-width: 100vw;
-	max-height: 7vh;
+	width: 100vw;
+	height: 7vh;
 	flex-grow: 1;
 }
+li:hover {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+  }
 </style>
 
 <template>
