@@ -138,7 +138,7 @@
 			walletConfigPanel
 		},
 		created: function() {
-			setTimeout(() => {this.$router.push('home')}, 1000);
+			setTimeout(() => {this.$router.push('home')}, 3000);
 		},
 		//props: [walletLoading, walletAddr, walletFound, displayWalletText],
 		methods: {
