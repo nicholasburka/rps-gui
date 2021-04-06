@@ -72,13 +72,13 @@
 	animation-name: scissors-entrance;
 	animation-duration: 1s;
 	animation-delay: .4s;
-	transform: tranlateX(-300px);
+	transform: translateX(-400px);
 	animation-fill-mode: forwards;
 	animation-timing-function: ease-out;
 }
 @keyframes scissors-entrance {
 	0% {
-		transform: translateX(-300px);
+		transform: translateX(-400px);
 	}
 	100% {
 		transform: translateX(0);
