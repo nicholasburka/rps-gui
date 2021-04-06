@@ -421,7 +421,7 @@ export default new Vuex.Store({
     },
     reattachOne: async function({state,commit,dispatch}, game) {
       console.log('reattaching game')
-      //game.contract.stdlib = state.reach[state.wallet.currency]
+      game.contract.stdlib = state.reach[state.wallet.currency]
       console.log(game)
       try {
         if (game.p1 === state.wallet.address) {

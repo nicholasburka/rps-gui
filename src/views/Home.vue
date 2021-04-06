@@ -138,7 +138,7 @@ li {
 						<div class="row column" style="width: 33vw; flex-direction: row;"><h3>Committed: ~ {{balanceCommitted}} </h3><h3 class="currency">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
 					</div>
 						<div class="column" id="open-games">
-							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: !game.playable, unattached: game.unattached}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4vh; max-width: 100vw">
+							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: (!game.playable && !game.unattached), unattached: game.unattached}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4vh; max-width: 100vw">
 								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 								<img v-if="!game.attached" src="../img/redo.png" class="reattach" v-on:click="reattach(game)" alt="reattach to game contract" title="reattach to game contract">
 								<li v-on:click="gameSelect(game)">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li> <!--{{ timeLeft(game) }}-->
@@ -222,7 +222,7 @@ li {
 				return this.activeGames.filter(x => (x.status !== "Awaiting Opponent" && !x.playable && x.attached));
 			},
 			unattached_games: function() {
-				return this.activeGames.filter(x => (!x.attached))
+				return this.activeGames.filter(x => (!x.attached && (x.status !== "Completed")))
 			},
 			playable_games: function() {
 				console.log('playable_games ' + this.activeGames)
