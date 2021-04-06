@@ -84,7 +84,7 @@ li:hover {
 			<li v-for="game in searchResults" v-on:click="onclick(game)" v-bind:style="{'background-color': randomcolor()}">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} - made by {{ game.p1 }} </li>
 		</div>
 		<!--<PlayGame id="play" v-if="this.play" :game="this.game" v-on:back="cancelPlay()" v-on:submithands="this.submitHands"></PlayGame>-->
-		<div v-if="this.play">
+		<div v-if="this.play" style="width: 100vw">
 			<img id="back-arrow" src="../img/back-arrow.png" alt="back" v-on:click="cancelPlay()">
 			<div class="row" id="game-header">
 				<h3 v-if="game.title" class="column">{{ game.title }}</h3>
