@@ -49,7 +49,6 @@
 .paper-entrance {
 	animation-name: paper-entrance;
 	animation-duration: 1s;
-	animation-delay: .3s;
 	animation-timing-function: ease-out;
 }
 @keyframes paper-entrance {
@@ -72,6 +71,9 @@
 .scissors-entrance {
 	animation-name: scissors-entrance;
 	animation-duration: 1s;
+	animation-delay: .4s;
+	transform: tranlateX(-300px);
+	animation-fill-mode: forwards;
 	animation-timing-function: ease-out;
 }
 @keyframes scissors-entrance {
