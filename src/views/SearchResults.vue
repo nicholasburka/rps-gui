@@ -87,6 +87,7 @@ li:hover {
 		methods: {
 			onclick: function(game) {
 				console.log("clicked " + game.title);
+				console.log(game)
 				this.game = game;
 				this.play = true;
 				console.log(this);
