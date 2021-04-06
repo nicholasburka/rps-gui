@@ -42,6 +42,7 @@
 				balance: state => state.wallet.balance,
 				network: state => state.wallet.networkName,
 				currency: state => state.wallet.currency,
+				searchResults: state => state.searchResults,
 				prevopponents: 'recentOpponents'
 			})
 		},
@@ -98,7 +99,11 @@
 					//this.$emit('ongamesearch', searchparams);
 					try {
 						await this.$store.dispatch('searchGames', searchparams)
-						this.$router.push('search-results')
+						if (!searchResults) {
+							this.$store.commit('setPopup', 'No games found')
+						} else {
+							this.$router.push('search-results')
+						}
 					} catch (err) {
 						console.log(err)
 					}
