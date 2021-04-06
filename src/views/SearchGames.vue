@@ -99,7 +99,7 @@
 					//this.$emit('ongamesearch', searchparams);
 					try {
 						await this.$store.dispatch('searchGames', searchparams)
-						if (!this.searchResults) {
+						if (this.searchResults.length === 0) {
 							this.$store.commit('setPopup', 'No games found')
 						} else {
 							this.$router.push('search-results')
