@@ -97,7 +97,7 @@ export const main =
 			  .timeout(deadline, () => closeTo(A, () => {informTimeout(0)}));
 			checkCommitment(DFirstCommit, DFirstHandsSalt, DFirstHands);
 
-			var [outcome, round, DHands, AHands] = [batchWinner(DFirstHands, AFirstHands), 0, Array.iota(batchSize), Array.iota(batchSize)];
+			var [outcome, round, DHands, AHands] = [batchWinner(DFirstHands, AFirstHands), 0, DFirstHands, AFirstHands];
 			invariant( balance() == 2 * wager && isOutcome(outcome) );
 			while ( outcome == DRAW ) {
 			  const doRound = (first, second, firstNum, secondNum) => {
@@ -130,11 +130,11 @@ export const main =
 			  	
 			  if (round % 2 == 0) {
 			  	const [roundAHands, roundDHands] = doRound(A,D,1,0);
-			  	[outcome, round, DHands, AHands] = [batchWinner(roundDHands, roundAHands), round + 1, roundAHands, roundDHands];
+			  	[outcome, round, DHands, AHands] = [batchWinner(roundDHands, roundAHands), round + 1, roundDHands, roundAHands];
 			  	continue;
 			  } else {
 			  	const [roundDHands, roundAHands]  = doRound(D,A,0,1);
-			  	[outcome, round, DHands, AHands] = [batchWinner(roundDHands, roundAHands), round + 1, roundAHands, roundDHands];
+			  	[outcome, round, DHands, AHands] = [batchWinner(roundDHands, roundAHands), round + 1, roundDHands, roundAHands];
 			  	continue;
 			  }
 
