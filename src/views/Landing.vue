@@ -20,7 +20,7 @@
 	animation-name: rockOver;
 	animation-duration: 1s;
 	animation-fill-mode: forwards;
-	animation-timing-function: ease-out;
+	animation-timing-function: linear;
 	z-index: -1;
 }
 @keyframes rockOver {
@@ -49,7 +49,7 @@
 .paper-entrance {
 	animation-name: paper-entrance;
 	animation-duration: 1s;
-	animation-timing-function: ease-out;
+	animation-timing-function: linear;
 }
 @keyframes paper-entrance {
 	0% {
@@ -74,7 +74,7 @@
 	animation-delay: .4s;
 	transform: translateX(-400px);
 	animation-fill-mode: forwards;
-	animation-timing-function: ease-out;
+	animation-timing-function: linear;
 }
 @keyframes scissors-entrance {
 	0% {
