@@ -204,6 +204,7 @@
 					case 1: return require("../img/paper.jpg");
 					case 2: return require("../img/scissors2.png");
 				}
+			}	
 		}
 	}
 </script>
