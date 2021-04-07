@@ -6,7 +6,40 @@
 }
 .handsdisplay {
 	max-width: 100%;
-	max-height: 20vh;
+	height: 15vh;
+}
+.winningHandTop {
+	animation: handDown;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+	border-radius:50%;
+	background-color: hsla(125, 100%, 50%, 70%);
+	overflow: hidden;
+}
+.winningHandBottom {
+	animation: handUp;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+	border-radius:50%;
+	background-color: hsla(348, 100%, 54%, 70%);
+	overflow: hidden;
+}
+
+@keyframes handDown {
+	0% {
+		transform: translateY(0px);
+	}
+	100% {
+		transform: translateY(7.5vh);
+	}
+}
+@keyframes handUp {
+	0% {
+		transform: translateY(0px);
+	}
+	100% {
+		transform: translateY(-7.5vh);
+	}
 }
 </style>
 
@@ -19,8 +52,14 @@
 				<h1 class="row" v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
 				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerreadable }}</h3><h3 class="currency"> {{game.currency}}</h3></div>
 				<h3 class="row">game {{game.ContractAddress}}</h3>
-				<HandsDisplayPanel class="handsdisplay" v-bind:hands="playerHands"></HandsDisplayPanel>
-				<HandsDisplayPanel class="handsdisplay" v-bind:hands="opponentHands"></HandsDisplayPanel>
+				<div class="row">
+					<HandsDisplayPanel class="handsdisplay" v-bind:hands="playerPreHand"></HandsDisplayPanel>
+					<HandsDisplayPanel class="handsdisplay" v-bind:class="{winningHandTop: (this.isWinner && (this.why === 'winner'))}" v-bind:hands="playerHand"></HandsDisplayPanel>
+				</div>
+				<div class="row">
+					<HandsDisplayPanel class="handsdisplay" v-bind:hands="oppPreHand"></HandsDisplayPanel>
+					<HandsDisplayPanel class="handsdisplay" v-bind:class="{winningHandBottom: (!this.isWinner && (this.why === 'winner'))}" v-bind:hands="oppHand"></HandsDisplayPanel>
+				</div>
 				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>
 			<div class="column" v-else>
@@ -98,6 +137,13 @@
 					return (this.opp)
 				}
 			},
+			firstDifferentHand: function() {
+				this.p1Hands.forEach((x,i) => 
+					if (this.p2Hands[i] !== x) {
+					return i;
+				});
+				return -1;
+			},
 			playerHands: function() {
 				console.log(this.isP1 ? this.p1Hands : this.p2Hands)
 				return this.isP1 ? this.p1Hands : this.p2Hands
@@ -105,6 +151,18 @@
 			opponentHands: function() {
 				console.log(this.isP1 ? this.p2Hands : this.p1Hands)
 				return this.isP1 ? this.p2Hands : this.p1Hands
+			},
+			playerPreHand: function() {
+				return this.playerHands.splice(0, this.firstDifferentHand)
+			},
+			oppPreHand: function() {
+				return this.opponentHands.splice(0, this.firstDifferentHand)
+			},
+			playerHand: function() {
+				return this.playerHands[firstDifferentHand] 
+			},
+			oppHand: function() {
+				return this.opponentHands[firstDifferentHand]
 			}
 		}
 	}
