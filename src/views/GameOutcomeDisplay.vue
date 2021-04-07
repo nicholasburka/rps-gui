@@ -53,13 +53,13 @@
 				<h1 class="row" v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
 				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerreadable }}</h3><h3 class="currency"> {{game.currency}}</h3></div>
 				<h3 class="row">game {{game.ContractAddress}}</h3>
-				<div class="handsdisplay">
-					<HandsDisplayPanel class="handsdisplay" v-bind:hands="playerPreHand"></HandsDisplayPanel>
-					<HandsDisplayPanel class="handsdisplay" v-bind:class="{winningHandTop: (this.isWinner && (this.why === 'winner'))}" v-bind:hands="playerHand"></HandsDisplayPanel>
+				<div class="row handsdisplay">
+					<img v-for="hand in playerPreHand" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand">
+					<img v-bind:src="imsrc(playerHand)" v-bind:class="{winningHandTop: (this.isWinner && (this.why === 'winner'))}">
 				</div>
-				<div class="handsdisplay">
-					<HandsDisplayPanel class="handsdisplay" v-bind:hands="oppPreHand"></HandsDisplayPanel>
-					<HandsDisplayPanel class="handsdisplay" v-bind:class="{winningHandBottom: (!this.isWinner && (this.why === 'winner'))}" v-bind:hands="oppHand"></HandsDisplayPanel>
+				<div class="row handsdisplay">
+					<img v-for="hand in oppPreHand" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand">
+					<img v-bind:src="imsrc(oppHand)" v-bind:class="{winningHandBottom: (!this.isWinner && (this.why === 'winner'))}">
 				</div>
 				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>

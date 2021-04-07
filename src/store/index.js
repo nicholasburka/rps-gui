@@ -97,7 +97,7 @@ export default new Vuex.Store({
   	setGameJoined: function(state, {game, opp}) {
   		game.status = 'In Progress'
       game.p2 = opp
-  		state.textDisplay = opp + ' joined your game with wager ' + game.wager + ' ' + game.currency + ', declassifying hands...'
+  		state.textDisplay = opp + ' joined your game with wager ' + game.wagerreadable + ' ' + game.currency + ', declassifying hands...'
   	},
   	setGamePlayable: function(state, game) {
   		game.resolveHands = () => {
