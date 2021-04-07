@@ -132,7 +132,7 @@ li {
 							<div class="row">
 								<img class="column" id="wallet" src="../img/wallet.jpg" v-on:click="walletConfig()">
 								<div v-if="walletAddress" class="column">
-									<h3 style="font-size: 1vw;">{{walletAddress}}</h3>
+									<h3 style="font-size: min(1vw,3vh);">{{walletAddress}}</h3>
 									<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
 								</div>
 								<h3 v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
@@ -142,11 +142,13 @@ li {
 						<div class="row column" style="width: 33vw; flex-direction: row;"><h3>Committed: ~ {{balanceCommitted}} </h3><h3 class="currency">{{currency}}</h3></div> <!--{{ committed }}{{ money-committed }} {{ currency }}-->
 					</div>
 						<div class="column" id="open-games">
-							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: (!game.playable && !game.unattached && !game.status === 'In Progress'), unattached: game.unattached, inprogress: game.status === 'In Progress'}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4.5vh; max-width: 100vw">
+							<div class="row activeitem" v-bind:class="{playable: game.playable, waiting: (!game.playable && game.attached && (game.status !== 'In Progress')), unattached: (!game.attached), inprogress: (game.status === 'In Progress' && game.attached)}" v-for="game in active_games_sorted" v-bind:game="game" v-bind:key="game.ContractAddress" style="height: 4.5vh; max-width: 100vw">
 								<img src="../img/clipboard.png" class="gameclipboard" v-on:click="contractInfo(game)" alt="game contract info" title="click to see contract info">
 								<!--<img v-if="!game.attached" src="../img/redo.png" class="reattach" v-on:click="reattach(game)" alt="reattach to game contract" title="reattach to game contract">-->
-								<li v-on:click="gameSelect(game)">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li>
+								<li v-if="game.attached" v-on:click="gameSelect(game)">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - {{game.status}} </li>
+								<li v-else-if="!game.attached">{{game.wagerreadable}} {{game.currency}} - {{game.title}} - Contract Unattached! Cannot update game status.</li>
 								<h3 v-if="game.playable" style="color: green; font-weight: bold"> - Your turn!</h3>
+
 
 								 <!--{{ timeLeft(game) }}-->
 								<!--<img src="../img/x2.png" class="gamex" v-on:click="deleteConfirm(game)">-->
