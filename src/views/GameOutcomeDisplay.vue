@@ -6,7 +6,8 @@
 }
 .handsdisplay {
 	max-width: 100%;
-	height: 10vh;
+	height: 13vh;
+	margin: 1vh auto;
 }
 .winningHandTop {
 	animation: handDown;
@@ -52,11 +53,11 @@
 				<h1 class="row" v-bind:class="{playerWon: playerWon}">{{ headlineString }}</h1>
 				<div class="row" style="display:flex; flex-direction: row"><h3>{{ winnerString }} won {{ game.wagerreadable }}</h3><h3 class="currency"> {{game.currency}}</h3></div>
 				<h3 class="row">game {{game.ContractAddress}}</h3>
-				<div class="row">
+				<div class="handsdisplay">
 					<HandsDisplayPanel class="handsdisplay" v-bind:hands="playerPreHand"></HandsDisplayPanel>
 					<HandsDisplayPanel class="handsdisplay" v-bind:class="{winningHandTop: (this.isWinner && (this.why === 'winner'))}" v-bind:hands="playerHand"></HandsDisplayPanel>
 				</div>
-				<div class="row">
+				<div class="handsdisplay">
 					<HandsDisplayPanel class="handsdisplay" v-bind:hands="oppPreHand"></HandsDisplayPanel>
 					<HandsDisplayPanel class="handsdisplay" v-bind:class="{winningHandBottom: (!this.isWinner && (this.why === 'winner'))}" v-bind:hands="oppHand"></HandsDisplayPanel>
 				</div>
@@ -97,8 +98,8 @@
 			var firstDiffHand = this.gameoutcome.p1Hands.findIndex((hand, index) => {return hand !== this.gameoutcome.p2Hands[index]})
 			var playerPreHand = playerHands.splice(0, firstDiffHand)
 			var oppPreHand = opponentHands.splice(0, firstDiffHand)
-			var playerHand = playerHands[firstDiffHand]
-			var oppHand = opponentHands[firstDiffHand]
+			var playerHand = playerHands[0]
+			var oppHand = opponentHands[0]
 			console.log('isp1, playerhands, opphands')
 			console.log(isP1)
 			console.log(playerHands)
