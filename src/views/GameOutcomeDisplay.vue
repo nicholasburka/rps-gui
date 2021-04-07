@@ -6,7 +6,7 @@
 }
 .handsdisplay {
 	max-width: 100%;
-	height: 13vh;
+	height: 20vh;
 	margin: 1vh auto;
 }
 .playerhands {
@@ -74,7 +74,7 @@
 					<img v-bind:src="imsrc(playerHand)" class="rps-piece" v-bind:class="{winningHandTop: (this.isWinner && (this.why === 'winner'))}">
 					<img v-for="hand in playerPostHand" v-bind:id="hand" class="rps-piece post-hands" v-bind:src="imsrc(hand)" v-bind:alt="hand">
 				</div>
-				<div class="row handsdisplay playerhands">
+				<div class="row handsdisplay opphands">
 					<img v-for="hand in oppPreHand" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand">
 					<img v-bind:src="imsrc(oppHand)" class="rps-piece" v-bind:class="{winningHandBottom: (!this.isWinner && (this.why === 'winner'))}">
 					<img v-for="hand in oppPostHand" v-bind:id="hand" class="rps-piece post-hands" v-bind:src="imsrc(hand)" v-bind:alt="hand">
