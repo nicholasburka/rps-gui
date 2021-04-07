@@ -145,8 +145,8 @@
 				playerPreHand,
 				oppPreHand,
 				firstDiffHand,
-				playerHandsPost,
-				oppHandsPost
+				playerPostHand,
+				oppPostHand
 			}
 		},//
 		computed: {
