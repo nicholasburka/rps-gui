@@ -44,10 +44,10 @@ button {
 		},
 		methods: {
 			getGame: async function() {
-				this.contractInfo = JSON.parse(this.contractInfo)
+				const parsedContractInfo = JSON.parse(this.contractInfo)
 				try {
-					console.log(this.contractInfo)
-					this.game = await this.$store.dispatch('apiGetGame', this.contractInfo)
+					console.log(parsedContractInfo)
+					this.game = await this.$store.dispatch('apiGetGame', parsedContractInfo)
 					console.log(this.game)
 					this.play = true
 				} catch (err) {

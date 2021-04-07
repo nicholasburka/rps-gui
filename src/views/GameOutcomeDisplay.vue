@@ -97,8 +97,8 @@
 			var firstDiffHand = this.gameoutcome.p1Hands.findIndex((hand, index) => {return hand !== this.gameoutcome.p2Hands[index]})
 			var playerPreHand = playerHands.splice(0, firstDiffHand)
 			var oppPreHand = opponentHands.splice(0, firstDiffHand)
-			var playerHand = playerHands[firstDifferentHand]
-			var oppHand = opponentHands[firstDifferentHand]
+			var playerHand = playerHands[firstDiffHand]
+			var oppHand = opponentHands[firstDiffHand]
 			console.log('isp1, playerhands, opphands')
 			console.log(isP1)
 			console.log(playerHands)
@@ -121,7 +121,8 @@
 				playerHand: playerHand,
 				oppHand: oppHand,
 				playerPreHand: playerPreHand,
-				oppPreHand: oppPreHand
+				oppPreHand: oppPreHand,
+				firstDiffHand: firstDiffHand
 			}
 		},//
 		computed: {
@@ -164,7 +165,7 @@
 					return (this.opp)
 				}
 			},
-			/*firstDifferentHand: function() {
+			/*firstDiffHand: function() {
 				this.p1Hands.forEach((x,i) => 
 					{if (this.p2Hands[i] !== x) {
 					return i;
@@ -180,16 +181,16 @@
 				return this.isP1 ? this.p2Hands : this.p1Hands
 			},
 			playerPreHand: function() {
-				return this.playerHands.splice(0, this.firstDifferentHand)
+				return this.playerHands.splice(0, this.firstDiffHand)
 			},
 			oppPreHand: function() {
-				return this.opponentHands.splice(0, this.firstDifferentHand)
+				return this.opponentHands.splice(0, this.firstDiffHand)
 			},
 			playerHand: function() {
-				return this.playerHands[this.firstDifferentHand] 
+				return this.playerHands[this.firstDiffHand] 
 			},
 			oppHand: function() {
-				return this.opponentHands[this.firstDifferentHand]
+				return this.opponentHands[this.firstDiffHand]
 			}*/
 		}
 	}
