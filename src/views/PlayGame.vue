@@ -55,7 +55,7 @@
 					<p class="count-used" style="position: relative; text-align: center; display: block;">{{scissorsCount}}</p>
 				</div>
 			</div>
-			<div id="chosen" class="row" style="height: 25vh; background-color: purple" v-on:click="removeLastHand()">
+			<div id="chosen" class="row" style="height: 25vh; background-color: purple" v-on:click="">
 				<img v-for="hand in hands" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand" v-on:click="removeHand(hand)">
 			</div>
 			<div id="submit" class="row" style="height: 10vh">
