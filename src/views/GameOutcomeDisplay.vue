@@ -159,10 +159,10 @@
 				return this.opponentHands.splice(0, this.firstDifferentHand)
 			},
 			playerHand: function() {
-				return this.playerHands[firstDifferentHand] 
+				return this.playerHands[this.firstDifferentHand] 
 			},
 			oppHand: function() {
-				return this.opponentHands[firstDifferentHand]
+				return this.opponentHands[this.firstDifferentHand]
 			}
 		}
 	}
