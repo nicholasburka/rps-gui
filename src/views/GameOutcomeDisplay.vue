@@ -21,6 +21,7 @@
 	animation-fill-mode: forwards;
 	background-color: hsla(125, 100%, 50%, 70%);
 	overflow: hidden;
+	z-index: 20;
 }
 .winningHandBottom {
 	animation: handUp;
@@ -28,6 +29,7 @@
 	animation-fill-mode: forwards;
 	background-color: hsla(348, 100%, 54%, 70%);
 	overflow: hidden;
+	z-index: 20;
 }
 .rps-piece {
 	position:relative;
