@@ -121,6 +121,9 @@ export default new Vuex.Store({
       console.log(game)
       console.log(who)
       console.log(why)
+      console.log('p1Hands, p2Hands')
+      console.log(p1Hands)
+      console.log(p2Hands)
 
       console.log("game outcome")
       var outcome_msg = ''
