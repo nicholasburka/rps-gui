@@ -25,7 +25,15 @@
 	background-color: hsla(348, 100%, 54%, 70%);
 	overflow: hidden;
 }
-
+.rps-piece {
+	position:relative;
+	display: block;
+	max-height: 100%;
+	max-width: 13vw;
+	object-fit: contain;
+	margin-left: auto;
+	margin-right: auto;
+}
 @keyframes handDown {
 	0% {
 		transform: translateY(0px);
