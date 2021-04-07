@@ -94,14 +94,7 @@
 			var isWinner = (this.gameoutcome.who ? (!(isP1)) : isP1)
 			var playerHands = isP1 ? this.gameoutcome.p1Hands : this.gameoutcome.p2Hands
 			var opponentHands = isP1 ? this.gameoutcome.p2Hands : this.gameoutcome.p1Hands
-			function firstDifferentHand(p1Hands, p2Hands) {
-				p1Hands.forEach((x,i) => 
-					{if (p2Hands[i] !== x) {
-					return i;
-				}});
-				return -1;
-			};
-			var firstDiffHand = firstDifferentHand(this.gameoutcome.p1Hands, this.gameoutcome.p2Hands)
+			var firstDiffHand = this.gameoutcome.p1Hands.findIndex((hand, index) => {return hand !== this.gameoutcome.p2Hands[index]})
 			var playerPreHand = playerHands.splice(0, firstDiffHand)
 			var oppPreHand = opponentHands.splice(0, firstDiffHand)
 			var playerHand = playerHands[firstDifferentHand]
