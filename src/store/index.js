@@ -306,12 +306,16 @@ export default new Vuex.Store({
         console.log(acc)
         console.log(reach[currency].getDefaultAccount)
         console.log(reach[currency].getDefaultAccount())
-  			const address = await acc.networkAccount.getAddress()
-        const balance = await reach[currency].balanceOf(acc)
-        var balReadable = undefined;
+  			var address = undefined
+        var balance = undefined
+        var balReadable = undefined
         if (currency === 'ETH') {
+          address = await acc.networkAccount.getAddress()
+          balance = await reach[currency].balanceOf(acc)
           balReadable = await reach[currency].formatCurrency(balance, 4);
         } else if (currency === 'ALGO') {
+          address = await acc.networkAccount.addr
+          balance = await reach[currency].balanceOf(acc)
           balReadable = await reach[currency].formatCurrency(balance, 6);
         }
 
