@@ -106,6 +106,16 @@
 			var oppPreHand = opponentHands.splice(0, firstDiffHand)
 			var playerHand = playerHands[firstDifferentHand]
 			var oppHand = opponentHands[firstDifferentHand]
+			console.log('isp1, playerhands, opphands')
+			console.log(isP1)
+			console.log(playerHands)
+			console.log(opponentHands)
+			console.log('first diff, ppre, opre, player, opp')
+			console.log(firstDiffHand)
+			console.log(playerPreHand)
+			console.log(oppPreHand)
+			console.log(playerHand)
+			console.log(oppHand)
 
 			return {
 				game: this.gameoutcome.game,
