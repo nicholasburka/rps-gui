@@ -13,7 +13,6 @@
 	animation: handDown;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
-	border-radius:15%;
 	background-color: hsla(125, 100%, 50%, 70%);
 	overflow: hidden;
 }
@@ -21,7 +20,6 @@
 	animation: handUp;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
-	border-radius:15%;
 	background-color: hsla(348, 100%, 54%, 70%);
 	overflow: hidden;
 }
@@ -33,6 +31,9 @@
 	object-fit: contain;
 	margin-left: auto;
 	margin-right: auto;
+}
+.post-hands {
+	opacity: 50%;
 }
 @keyframes handDown {
 	0% {
@@ -63,11 +64,13 @@
 				<h3 class="row">game {{game.ContractAddress}}</h3>
 				<div class="row handsdisplay">
 					<img v-for="hand in playerPreHand" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand">
-					<img v-bind:src="imsrc(playerHand)" v-bind:class="{winningHandTop: (this.isWinner && (this.why === 'winner'))}">
+					<img v-bind:src="imsrc(playerHand)" class="rps-piece" v-bind:class="{winningHandTop: (this.isWinner && (this.why === 'winner'))}">
+					<img v-for="hand in playerPostHands" v-bind:id="hand" class="rps-piece post-hands" v-bind:src="imsrc(hand)" v-bind:alt="hand">
 				</div>
 				<div class="row handsdisplay">
 					<img v-for="hand in oppPreHand" v-bind:id="hand" class="rps-piece" v-bind:src="imsrc(hand)" v-bind:alt="hand">
-					<img v-bind:src="imsrc(oppHand)" v-bind:class="{winningHandBottom: (!this.isWinner && (this.why === 'winner'))}">
+					<img v-bind:src="imsrc(oppHand)" class="rps-piece" v-bind:class="{winningHandBottom: (!this.isWinner && (this.why === 'winner'))}">
+					<img v-for="hand in oppPreHand" v-bind:id="hand" class="rps-piece post-hands" v-bind:src="imsrc(hand)" v-bind:alt="hand">
 				</div>
 				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>
@@ -106,8 +109,10 @@
 			var firstDiffHand = this.gameoutcome.p1Hands.findIndex((hand, index) => {return hand !== this.gameoutcome.p2Hands[index]})
 			var playerPreHand = playerHands.splice(0, firstDiffHand)
 			var oppPreHand = opponentHands.splice(0, firstDiffHand)
-			var playerHand = playerHands[0]
-			var oppHand = opponentHands[0]
+			var playerHand = playerHands.splice(0,1)[0]
+			var oppHand = opponentHands.splice(0,1)[0]
+			var playerHandsPost = playerHands
+			var oppHandsPost = opponentHands
 			console.log('isp1, playerhands, opphands')
 			console.log(isP1)
 			console.log(playerHands)
@@ -125,13 +130,15 @@
 				why: this.gameoutcome.why,
 				p1Hands: this.gameoutcome.p1Hands,
 				p2Hands: this.gameoutcome.p2Hands,
-				isP1: isP1,
-				isWinner: isWinner,
-				playerHand: playerHand,
-				oppHand: oppHand,
-				playerPreHand: playerPreHand,
-				oppPreHand: oppPreHand,
-				firstDiffHand: firstDiffHand
+				isP1,
+				isWinner,
+				playerHand,
+				oppHand,
+				playerPreHand,
+				oppPreHand,
+				firstDiffHand,
+				playerHandsPost,
+				oppHandsPost
 			}
 		},//
 		computed: {
