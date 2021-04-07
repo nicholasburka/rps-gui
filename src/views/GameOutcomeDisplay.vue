@@ -139,9 +139,9 @@
 			},
 			firstDifferentHand: function() {
 				this.p1Hands.forEach((x,i) => 
-					if (this.p2Hands[i] !== x) {
+					{if (this.p2Hands[i] !== x) {
 					return i;
-				});
+				}});
 				return -1;
 			},
 			playerHands: function() {
