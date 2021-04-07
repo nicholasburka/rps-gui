@@ -35,7 +35,7 @@
 	position:relative;
 	display: block;
 	max-height: 100%;
-	max-width: 13vw;
+	max-width: 10vw;
 	object-fit: contain;
 	margin-left: auto;
 	margin-right: auto;
@@ -63,7 +63,6 @@
 
 <template>
 	<div id="GameOutcome">
-		<div>
 			<div class="column" v-if="reasonWinner">
 				<h1 class="row"> </h1>
 				<h1 class="row"> </h1>
@@ -84,17 +83,15 @@
 			</div>
 			<div class="column" v-else>
 				<h1 class="row">{{ this.winnerString }} timed out</h1>
-				<h3 class="row">{{ this.game.wagerReadable }} {{game.currency}}</h3>
+				<h3 class="row">{{ this.game.wagerreadable }} {{this.game.currency}}</h3>
 				<h3 class="row">Against {{ this.opp }}</h3>
-				<h3 class="row">game {{game.ContractAddress}}</h3>
+				<h3 class="row">game {{this.game.ContractAddress}}</h3>
 				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>
 			<!--<ul v-for="move in game.moves">
 					<img v-bind:src="imsrc(move.p1)" class="{playerMove: isP1, opponentMove: !isP1}">
 					<img v-bind:src="imsrc(move.p2)" class="{playerMove: !isP1, opponentMove: isP1}">
 			</ul>-->
-			
-		</div>
 	</div>
 </template>
 <script>
