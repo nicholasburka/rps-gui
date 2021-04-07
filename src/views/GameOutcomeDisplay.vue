@@ -6,13 +6,13 @@
 }
 .handsdisplay {
 	max-width: 100%;
-	height: 15vh;
+	height: 10vh;
 }
 .winningHandTop {
 	animation: handDown;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
-	border-radius:50%;
+	border-radius:15%;
 	background-color: hsla(125, 100%, 50%, 70%);
 	overflow: hidden;
 }
@@ -20,7 +20,7 @@
 	animation: handUp;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
-	border-radius:50%;
+	border-radius:15%;
 	background-color: hsla(348, 100%, 54%, 70%);
 	overflow: hidden;
 }
@@ -87,14 +87,38 @@
 		},
 		props: ["gameoutcome"],
 		data: function() {
+			var walletAddress = this.$store.state.wallet.address
 			//console.log(gameoutcome)
 			//console.log(this.gameoutcome)
+			var isP1 = (this.gameoutcome.game.p1 === walletAddress)
+			var isWinner = (this.gameoutcome.who ? (!(isP1)) : isP1)
+			var playerHands = isP1 ? this.gameoutcome.p1Hands : this.gameoutcome.p2Hands
+			var opponentHands = isP1 ? this.gameoutcome.p2Hands : this.gameoutcome.p1Hands
+			function firstDifferentHand(p1Hands, p2Hands) {
+				p1Hands.forEach((x,i) => 
+					{if (p2Hands[i] !== x) {
+					return i;
+				}});
+				return -1;
+			};
+			var firstDiffHand = firstDifferentHand(this.gameoutcome.p1Hands, this.gameoutcome.p2Hands)
+			var playerPreHand = playerHands.splice(0, firstDiffHand)
+			var oppPreHand = opponentHands.splice(0, firstDiffHand)
+			var playerHand = playerHands[firstDifferentHand]
+			var oppHand = opponentHands[firstDifferentHand]
+
 			return {
 				game: this.gameoutcome.game,
 				who: this.gameoutcome.who,
 				why: this.gameoutcome.why,
 				p1Hands: this.gameoutcome.p1Hands,
-				p2Hands: this.gameoutcome.p2Hands
+				p2Hands: this.gameoutcome.p2Hands,
+				isP1: isP1,
+				isWinner: isWinner,
+				playerHand: playerHand,
+				oppHand: oppHand,
+				playerPreHand: playerPreHand,
+				oppPreHand: oppPreHand
 			}
 		},//
 		computed: {
@@ -114,12 +138,12 @@
 			reasonWinner: function() {
 				return this.why === "winner"
 			},
-			isWinner: function() {
+			/*isWinner: function() {
 				return (this.who ? !(this.isP1) : this.isP1)
 			},
 			isP1: function() {
 				return (this.game.p1 === this.walletAddress)
-			},
+			},*/
 			opp: function() {
 				return this.isP1 ? this.game.p2 : this.game.p1
 			},
@@ -137,7 +161,7 @@
 					return (this.opp)
 				}
 			},
-			firstDifferentHand: function() {
+			/*firstDifferentHand: function() {
 				this.p1Hands.forEach((x,i) => 
 					{if (this.p2Hands[i] !== x) {
 					return i;
@@ -163,7 +187,7 @@
 			},
 			oppHand: function() {
 				return this.opponentHands[this.firstDifferentHand]
-			}
+			}*/
 		}
 	}
 </script>
