@@ -79,7 +79,10 @@ export default new Vuex.Store({
   		state.activeGames = games
   	},
   	addActiveGame: function(state, game) {
+      console.log("adding active game")
+      console.log(game)
   		state.activeGames.push(game)
+      console.log(state.activeGames)
   	},
   	setPopup: function(state, text) {
   		state.popup = text
@@ -305,7 +308,6 @@ export default new Vuex.Store({
   			const acc = await reach[currency].getDefaultAccount()
         console.log(acc)
         console.log(reach[currency].getDefaultAccount)
-        console.log(reach[currency].getDefaultAccount())
   			var address = undefined
         var balance = undefined
         var balReadable = undefined
@@ -488,12 +490,18 @@ export default new Vuex.Store({
   	createGame: async function({state, commit, dispatch}, game) {
   		try {
   			//this.$router.push('home')
+        console.log("create game")
   			commit('setPopup', 'Deploying contract...')
+        //await setTimeout(() => {return true}, 1000)
 
   			game.contract = state.wallet.acc.deploy(contractBackend)
+        console.log("contract deployed")
+        console.log(game.contract)
   			game.contractInfo = await game.contract.getInfo()
 
   			commit('setPopup', 'Contract deployed.')
+        console.log("contract info received")
+        console.log(game.contractInfo)
 
   			game.wagerreadable = game.wager
   			game.wager = reach[state.wallet.currency].parseCurrency(game.wager)

@@ -19,7 +19,7 @@
 	animation: handDown;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
-	background-color: hsla(125, 100%, 50%, 70%);
+	/*background-color: hsla(125, 100%, 50%, 70%);*/
 	overflow: hidden;
 	z-index: 20;
 }
@@ -27,7 +27,7 @@
 	animation: handUp;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
-	background-color: hsla(348, 100%, 54%, 70%);
+	/*background-color: hsla(348, 100%, 54%, 70%);*/
 	overflow: hidden;
 	z-index: 20;
 }
