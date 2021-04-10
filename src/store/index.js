@@ -15,8 +15,8 @@ const reach = {
   ETH: ethstdlib,
   ALGO: algostdlib
 }
-//reach.ALGO.setSignStrategy('AlgoSigner')
-reach.ALGO.setSignStrategy('mnemonic')
+reach.ALGO.setSignStrategy('AlgoSigner')
+//reach.ALGO.setSignStrategy('mnemonic')
 
 
 const handStrToNum = function(hand) {
