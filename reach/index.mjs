@@ -1,5 +1,5 @@
 import { loadStdlib } from '@reach-sh/stdlib';
-import * as stdlib from '@reach-sh/stdlib/ETH.mjs'
+import * as stdlib from '@reach-sh/stdlib/ALGO.mjs'
 import * as backend from './build/index.main.mjs';
 import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 

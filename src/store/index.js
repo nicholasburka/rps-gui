@@ -27,6 +27,10 @@ const handStrToNum = function(hand) {
   }
 }
 
+const genAlgoContractAddress = function(contractInfo) {
+  return String(contractInfo.ApplicationID) + String(contractInfo.creationRound) + contractInfo.Deployer;
+}
+
 export default new Vuex.Store({
   state: {
   	reach,
@@ -233,11 +237,11 @@ export default new Vuex.Store({
   		  throw new Error(err)
   		}
   	},
-  	apiGetGame: async function({state, commit, dispatch}, gameContractInfo) {
+  	apiGetGame: async function({state, commit, dispatch}, contractAddress) {
   		try {
   			const res = await axios({
   				method: 'GET',
-  				url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(gameContractInfo.address))
+  				url: 'https://3gnz0gxbcc.execute-api.us-east-2.amazonaws.com/reach-rps-getGameFunction-5SZ0BCNK8Z5W?contractAddress='.concat(String(contractAddress))
   			})
         console.log('got game from db')
         console.log(res)
@@ -507,7 +511,12 @@ export default new Vuex.Store({
   			game.wager = reach[state.wallet.currency].parseCurrency(game.wager)
         //game.firstHandsReadable = game.firstHands
         //game.firstHands = game.firstHands.map((hand) => handStrToNum(hand))
-  			game.ContractAddress = game.contractInfo.address
+        if (state.wallet.currency === "ETH") {
+          game.ContractAddress = game.contractInfo.address
+        } else if (state.wallet.currency === "ALGO") {
+          game.ContractAddress = genAlgoContractAddress(game.contractInfo)
+        }
+  			
   			game.status = "Awaiting Opponent"
   			game.playable = false
         if (state.wallet.networkName) {
@@ -578,35 +587,25 @@ export default new Vuex.Store({
   		}  		
   		
   	},
-  	/*joinGameByContract: async function({state, commit, dispatch}, {contractInfo, }) {
+  	getGameByContract: async function({state, commit, dispatch}, contractInfo) {
   		try {
   			if (!localhost) {
-  				const game = await dispatch('apiGetGame', contractInfo)
+          var contractAddress = '';
+          if (state.wallet.currency === 'ALGO') {
+            contractAddress = genAlgoContractAddress(contractInfo)
+          } else if (state.wallet.currency === 'ETH') {
+            contractAddress = contractInfo.address
+          }
+  				const game = await dispatch('apiGetGame', contractAddress)
+          return game
   			} else {
-  				const game = {title: 'localgame', wager: 1, currency: this.currency, contractinfo: contractInfo}
-  			}
+          commit('setPopup', 'Cannot get game from DB on localhost')
+        }
 
-  			try {
-  				const contract = state.wallet.acc.attach(contractBackend)
-
-  				if (!localhost) {await dispatch('apiJoinGame', game)}
-
-  				const interact = {
-  					...state.reach[state.wallet.currency].hasRandom,
-  					firstHands: 
-  				}
-
-  				await contractBackend.Attacher(contract, interact)
-  			} catch (err) {
-  				commit('setPopup', 'Error attaching to contract')
-  			}
-
-  			//upload to db
-  			//add game to active games
   		} catch (err) {
   			commit('setPopup', 'Error connecting to games database')
   		}
-  	},*/
+  	},
   	searchGames: async function({state, commit, dispatch}, params) {
   		try {
   			commit('setPopup', 'Searching...')

@@ -47,7 +47,7 @@ button {
 				const parsedContractInfo = JSON.parse(this.contractInfo)
 				try {
 					console.log(parsedContractInfo)
-					this.game = await this.$store.dispatch('apiGetGame', parsedContractInfo)
+					this.game = await this.$store.dispatch('getGameByContract', parsedContractInfo)
 					console.log(this.game)
 					this.play = true
 				} catch (err) {
