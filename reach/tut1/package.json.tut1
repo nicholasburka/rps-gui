@@ -1,0 +1,12 @@
+{
+  "name": "@reach-sh/tut1-tut1",
+  "type": "module",
+  "dependencies": {
+  },
+  "author": "reach.sh",
+  "license": "Apache-2.0",
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore --ext .mjs .",
+    "tut1": "node --experimental-modules --unhandled-rejections=strict tut1.mjs"
+  }
+}

@@ -1,10 +1,9 @@
 import { loadStdlib } from '@reach-sh/stdlib';
-//import * as stdlib from '@reach-sh/stdlib/ALGO.mjs'
-import * as backend from './build/tut1.main.mjs';
+import * as backend from './build/tut8.main.mjs';
 import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
 (async () => {
-  const stdlib = await loadStdlib(process.env);
+  const stdlib = await loadStdlib();
 
   const isAlice = await ask(
     `Are you Alice?`,
@@ -14,11 +13,27 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
   console.log(`Starting Rock, Paper, Scissors! as ${who}`);
 
-  let acc = await stdlib.newTestAccount(stdlib.parseCurrency(1000));
+  let acc = null;
+  const createAcc = await ask(
+    `Would you like to create an account? (only possible on devnet)`,
+    yesno
+  );
+  if (createAcc) {
+    acc = await stdlib.newTestAccount(stdlib.parseCurrency(1000));
+  } else {
+    const secret = await ask(
+      `What is your account secret?`,
+      (x => x)
+    );
+    acc = await stdlib.newAccountFromSecret(secret);
+  }
 
   let ctc = null;
-  if (isAlice) {
-    console.log("deploying contract...");
+  const deployCtc = await ask(
+    `Do you want to deploy the contract? (y/n)`,
+    yesno
+  );
+  if (deployCtc) {
     ctc = acc.deploy(backend);
     const info = await ctc.getInfo();
     console.log(`The contract is deployed as = ${JSON.stringify(info)}`);
@@ -38,22 +53,38 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
   const interact = { ...stdlib.hasRandom };
 
-  interact.informTimeout = (part_num) => {
-    console.log(`There was a timeout`);
+  interact.informTimeout = () => {
+    console.log(`There was a timeout.`);
+    process.exit(1);
   };
 
-  interact.informDraw = () => {
-    console.log(`Draw, play again`);
-  };
+  if (isAlice) {
+    const amt = await ask(
+      `How much do you want to wager?`,
+      stdlib.parseCurrency
+    );
+    interact.wager = amt;
+  } else {
+    interact.acceptWager = async (amt) => {
+      const accepted = await ask(
+        `Do you accept the wager of ${fmt(amt)}?`,
+        yesno
+      );
+      if (accepted) {
+        return;
+      } else {
+        process.exit(0);
+      }
+    };
+  }
 
   const HAND = ['Rock', 'Paper', 'Scissors'];
-  const getHand = async () => {
-    const HANDS = {
-      'Rock': 0, 'R': 0, 'r': 0,
-      'Paper': 1, 'P': 1, 'p': 1,
-      'Scissors': 2, 'S': 2, 's': 2,
-    };
-
+  const HANDS = {
+    'Rock': 0, 'R': 0, 'r': 0,
+    'Paper': 1, 'P': 1, 'p': 1,
+    'Scissors': 2, 'S': 2, 's': 2,
+  };
+  interact.getHand = async () => {
     const hand = await ask(`What hand will you play?`, (x) => {
       const hand = HANDS[x];
       if ( hand == null ) {
@@ -64,35 +95,6 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     console.log(`You played ${HAND[hand]}`);
     return hand;
   };
-
-  if (isAlice) {
-    const amt = await ask(
-      `How much do you want to wager?`,
-      stdlib.parseCurrency
-    );
-    interact.wager = amt;
-    const deadline = await ask(
-      'How many blocks until a timeout?', (x) => x);
-    interact.DEADLINE = deadline;
-    interact.firstHand = await getHand();
-  } else {
-    interact.acceptGame = async (wager, deadline) => {
-      console.log(wager)
-      console.log(deadline)
-      interact.firstHand = await getHand();
-      /*const accepted = await ask(
-        `Do you accept the wager of ${fmt(wager)}? with the deadline of ${deadline} blocks`,
-        yesno
-      );
-      if (accepted) {
-        interact.firstHand = await getHand();
-        return;
-      } else {
-        process.exit(0);
-      }*/
-    };
-  }
-
 
   const OUTCOME = ['Bob wins', 'Draw', 'Alice wins'];
   interact.seeOutcome = async (outcome) => {

@@ -1,0 +1,1 @@
+/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl src/index.js src/store/index.js src/App.vue src/views/*

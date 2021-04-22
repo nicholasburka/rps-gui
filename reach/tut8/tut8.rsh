@@ -19,20 +19,17 @@ forall(UInt, (hand) =>
 
 const Player =
       { ...hasRandom,
-        firstHand: UInt,
         getHand: Fun([], UInt),
         seeOutcome: Fun([UInt], Null),
         informTimeout: Fun([], Null) };
 const Alice =
       { ...Player,
-        wager: UInt,
-        DEADLINE: UInt,
-         };
+        wager: UInt };
 const Bob =
       { ...Player,
-        acceptWager: Fun([UInt, UInt], Null) };
+        acceptWager: Fun([UInt], Null) };
 
-//const DEADLINE = 150;
+const DEADLINE = 10;
 export const main =
   Reach.App(
     {},
@@ -43,35 +40,17 @@ export const main =
           interact.informTimeout(); }); };
 
       A.only(() => {
-        const wager = declassify(interact.wager); 
-        const DEADLINE = declassify(interact.DEADLINE);
-        const _AFirstHand = interact.firstHand;
-        const [_AFirstHandCommitment, _AFirstHandSalt] = makeCommitment(interact, _AFirstHand);
-        const AFirstCommit = declassify(_AFirstHandCommitment);
-      });
-
-      A.publish(wager, DEADLINE, AFirstCommit)
+        const wager = declassify(interact.wager); });
+      A.publish(wager)
         .pay(wager);
       commit();
 
-      unknowable(B, A(_AFirstHandSalt, _AFirstHand))
       B.only(() => {
-        interact.acceptWager(wager, DEADLINE); 
-        const BFirstHand = declassify(interact.firstHand);
-      });
-      B.publish(BFirstHand)
-        .pay(wager)
+        interact.acceptWager(wager); });
+      B.pay(wager)
         .timeout(DEADLINE, () => closeTo(A, informTimeout));
-      commit();
 
-      A.only(() => {
-        const [AFirstHandSalt, AFirstHand] = declassify([_AFirstHandSalt, _AFirstHand]);
-      });
-      A.publish(AFirstHandSalt, AFirstHand)
-       .timeout(DEADLINE, () => closeTo(B, informTimeout));
-      checkCommitment(AFirstCommit, AFirstHandSalt, AFirstHand);
-
-      var outcome = winner(AFirstHand, BFirstHand);
+      var outcome = DRAW;
       invariant(balance() == 2 * wager && isOutcome(outcome) );
       while ( outcome == DRAW ) {
         commit();

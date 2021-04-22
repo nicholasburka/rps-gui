@@ -596,6 +596,7 @@ export default new Vuex.Store({
   				commit('setPopup', 'Error attaching to contract')
   			}
   		} catch (err) {
+        console.log(err)
   			commit('setPopup', 'Error deploying contract')
   		}  		
   		
