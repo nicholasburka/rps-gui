@@ -52,7 +52,8 @@ export default new Vuex.Store({
   	textDisplay: '',
   	displayGameOutcome: false,
   	gameOutcome: {},
-  	currentGame: {}
+  	currentGame: {},
+    localhost: localhost
   	//notifications: []
   },
   mutations: {
@@ -379,7 +380,9 @@ export default new Vuex.Store({
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
             commit('setGameOutcome', {game, who, why: 'timeout'})
             const winner = !who
-            dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            }
           },
           informOpponent: function (opp) {
             commit('setGameJoined', {game, opp})
@@ -398,7 +401,9 @@ export default new Vuex.Store({
             p1Hands = p1Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
             p2Hands = p2Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
             commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
-            dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            }
             dispatch('updateBalance')
           }
         }
@@ -421,7 +426,9 @@ export default new Vuex.Store({
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
             commit('setGameOutcome', {game, who, why: 'timeout'})
             const winner = !who
-            dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            }
           },
           informOpponent: function (opp) {
             commit('setGameJoined', {game, opp})
@@ -440,7 +447,9 @@ export default new Vuex.Store({
             p1Hands = p1Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
             p2Hands = p2Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
             commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
-            dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            }
             dispatch('updateBalance')
           }
         }
@@ -545,7 +554,9 @@ export default new Vuex.Store({
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
   					commit('setGameOutcome', {game, who, why: 'timeout'})
   					const winner = !who
-  					dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            }
   				},
   				informOpponent: function (opp) {
   					commit('setGameJoined', {game, opp})
@@ -567,7 +578,9 @@ export default new Vuex.Store({
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
             who = (who === 2) ? 0 : 1
   					commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
-  					dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            }
             dispatch('updateBalance')
   				}
   			}
@@ -599,6 +612,7 @@ export default new Vuex.Store({
   				const game = await dispatch('apiGetGame', contractAddress)
           return game
   			} else {
+          return {title: 'localgame', wagerreadable: 0, currency: state.wallet.currency, contractInfo: contractInfo}
           commit('setPopup', 'Cannot get game from DB on localhost')
         }
 
@@ -640,7 +654,9 @@ export default new Vuex.Store({
             who = state.reach[state.wallet.currency].bigNumberToNumber(who)
   					commit('setGameOutcome', {game, who, why: 'timeout'})
             const winner = !who
-            dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, winner, why: 'timeout'})
+            }
   				},
   				informOpponent: function (opp) {
   					commit('setGameJoined', {game, opp})
@@ -659,7 +675,9 @@ export default new Vuex.Store({
             p1Hands = p1Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
             p2Hands = p2Hands.map((hand) => state.reach[state.wallet.currency].bigNumberToNumber(hand))
   					commit('setGameOutcome', {game, who, why: 'winner', p1Hands, p2Hands})
-            dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            if (!localhost) {
+              dispatch('apiCompleteGame', {game, who, why: 'winner', p1Hands, p2Hands})
+            } 
             dispatch('updateBalance')
   				}
   			}
