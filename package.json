@@ -12,7 +12,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@reach-sh/stdlib": "^0.1.2-rc.39",
+    "@reach-sh/stdlib": "^0.1.2-rc.40",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "howler": "^2.2.1",
