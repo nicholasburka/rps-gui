@@ -122,7 +122,6 @@ li {
 	align-self: flex-start;
 }
 #wallet {
-	position: absolute;
 	left: .5vw;
 	top: .5vw;
 }
@@ -143,7 +142,7 @@ li {
 									<h3 style="font-size: min(.7vw,3vh);">{{walletAddress}}</h3>
 									<div class="row balance"><h3>{{balance}}</h3><h3 class="balance currency">{{currency}}</h3></div>
 								</div>
-								<h3 v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
+								<h3 style="position:absolute; left: 6vw; " v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
 							</div>
 						</div>
 						<h3 class="column" style="width: 33vw;">Open Games</h3>
