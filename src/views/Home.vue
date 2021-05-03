@@ -118,6 +118,14 @@ li {
 	max-height: 3vh;
 	flex-grow: 1;
 }
+.balance h3 {
+	align-self: flex-start;
+}
+#wallet {
+	position: absolute;
+	left: .5vw;
+	top: .5vw;
+}
 </style>
 
 <template>
@@ -132,8 +140,8 @@ li {
 							<div class="row">
 								<img class="column" id="wallet" src="../img/wallet.jpg" v-on:click="walletConfig()">
 								<div v-if="walletAddress" class="column">
-									<h3 style="font-size: min(1vw,3vh);">{{walletAddress}}</h3>
-									<div class="row"><h3>{{balance}}</h3><h3 class="currency">{{currency}}</h3></div>
+									<h3 style="font-size: min(.7vw,3vh);">{{walletAddress}}</h3>
+									<div class="row balance"><h3>{{balance}}</h3><h3 class="balance currency">{{currency}}</h3></div>
 								</div>
 								<h3 v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
 							</div>
