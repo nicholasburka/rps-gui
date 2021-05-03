@@ -85,7 +85,8 @@
 				<h1 class="row">{{ this.winnerString }} timed out</h1>
 				<h3 class="row">{{ this.game.wagerreadable }} {{this.game.currency}}</h3>
 				<h3 class="row">Against {{ this.opp }}</h3>
-				<h3 class="row">game {{this.game.ContractAddress}}</h3>
+				<h3 v-if="this.blockExplorerLink !== undefined" class="row"><a v-bind:href="this.blockExplorerLink">{{this.game.ContractAddress}}</a></h3>
+				<h3 v-else class="row">game {{this.game.ContractAddress}}</h3>
 				<button class="row" v-on:click="dismissOutcome()">Dismiss</button>
 			</div>
 			<!--<ul v-for="move in game.moves">
@@ -129,6 +130,16 @@
 			console.log(playerHand)
 			console.log(oppHand)
 
+			var blockExplorerLink = undefined;
+			if (this.gameoutcome.game.currency === "ETH") {
+
+			} else {
+				if (this.$store.ALGO_NET === "MainNet") {
+					blockExplorerLink = 'https://algoexplorer.io/application/' + game.contractInfo.ApplicationID
+				} else if (this.$store.ALGO_NET === "TestNet") {
+					blockExplorerLink = 'https://testnet.algoexplorer.io/application/' + game.contractInfo.ApplicationID
+				}
+			}
 			return {
 				game: this.gameoutcome.game,
 				who: this.gameoutcome.who,
@@ -143,7 +154,8 @@
 				oppPreHand,
 				firstDiffHand,
 				playerPostHand,
-				oppPostHand
+				oppPostHand,
+				blockExplorerLink
 			}
 		},//
 		computed: {

@@ -16,7 +16,8 @@ const reach = {
   ALGO: algostdlib
 }
 reach.ALGO.setSignStrategy('AlgoSigner')
-reach.ALGO.setProviderByName('MainNet')
+const ALGO_NET = 'TestNet'
+reach.ALGO.setProviderByName(ALGO_NET)
 //reach.ALGO.setSignStrategy('mnemonic')
 
 
@@ -35,6 +36,7 @@ const genAlgoContractAddress = function(contractInfo) {
 export default new Vuex.Store({
   state: {
   	reach,
+    ALGO_NET,
   	wallet: {
   		'currency': undefined,
   		'acc': undefined,

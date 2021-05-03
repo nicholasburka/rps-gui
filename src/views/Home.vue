@@ -124,6 +124,7 @@ li {
 #wallet {
 	left: .5vw;
 	top: .5vw;
+	position: absolute;
 }
 </style>
 
@@ -138,11 +139,11 @@ li {
 						<div class="column" style="width: 33vw; max-height: 13vh;">
 							<div class="row">
 								<img class="column" id="wallet" src="../img/wallet.jpg" v-on:click="walletConfig()">
-								<div v-if="walletAddress" class="column">
+								<div v-if="walletAddress" style="position: absolute; left: min(11vw,11vh); top: .5vw" class="column">
 									<h3 style="font-size: min(.7vw,3vh);">{{walletAddress}}</h3>
 									<div class="row balance"><h3>{{balance}}</h3><h3 class="balance currency">{{currency}}</h3></div>
 								</div>
-								<h3 style="left: 6vw; " v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
+								<h3 style="position: absolute; left: min(13vw, 11vh); top: .5vw; margin-top: 0; max-width: 20vw; color: darkviolet" v-else>Please connect a cryptowallet by clicking on the wallet icon.</h3>
 							</div>
 						</div>
 						<h3 class="column" style="width: 33vw;">Open Games</h3>
