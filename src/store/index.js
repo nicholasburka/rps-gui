@@ -16,7 +16,7 @@ const reach = {
   ALGO: algostdlib
 }
 reach.ALGO.setSignStrategy('AlgoSigner')
-const ALGO_NET = 'TestNet'
+const ALGO_NET = 'MainNet'
 reach.ALGO.setProviderByName(ALGO_NET)
 //reach.ALGO.setSignStrategy('mnemonic')
 
