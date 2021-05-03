@@ -4,8 +4,7 @@ import * as backend from './build/tut1.main.mjs';
 import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
 
 (async () => {
-  const stdlib = await loadStdlib(process.env);
-
+  const stdlib = await loadStdlib();
   const isAlice = await ask(
     `Are you Alice?`,
     yesno
@@ -64,6 +63,7 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     console.log(`You played ${HAND[hand]}`);
     return hand;
   };
+  interact.getHand = getHand;
 
   if (isAlice) {
     const amt = await ask(
@@ -74,22 +74,17 @@ import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
     const deadline = await ask(
       'How many blocks until a timeout?', (x) => x);
     interact.DEADLINE = deadline;
-    interact.firstHand = await getHand();
   } else {
-    interact.acceptGame = async (wager, deadline) => {
-      console.log(wager)
-      console.log(deadline)
-      interact.firstHand = await getHand();
-      /*const accepted = await ask(
+    interact.acceptWager = async (wager, deadline) => {
+      const accepted = await ask(
         `Do you accept the wager of ${fmt(wager)}? with the deadline of ${deadline} blocks`,
         yesno
       );
       if (accepted) {
-        interact.firstHand = await getHand();
         return;
       } else {
         process.exit(0);
-      }*/
+      }
     };
   }
 
